@@ -1,10 +1,16 @@
 import * as React from 'react';
-import LogIn from './LogIn'
-
+import LogIn from './LogIn';
+import SignUp from './SignUp';
+import {Route,Routes} from 'react-router-dom';
 
 function App() {
   return (
-      <LogIn />
+    <div>
+      <Routes>
+        <Route exact path = "/" element = {<LogIn/>} />
+        <Route exact path = "/SignUp" element = {<SignUp/>} />
+      </Routes>
+    </div>
   );
 }
 

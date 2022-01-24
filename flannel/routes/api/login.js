@@ -48,13 +48,13 @@ router.post('/', function(request, response, next) {
     
 })
 
-router.post('/register', function(request, response, next) {
+router.post('/register', function(request, response, next) { //create a new user profile 
     if(!request.body.username || !request.body.password) 
     {
         response.status(401).send("unauthorized!");
         return;
     }
-    //
+    
     let users = client.db('flannel').collection('users');
     let query_string = {"username": request.body.username}
     users.find(query_string).toArray((err, res) => {
@@ -62,12 +62,21 @@ router.post('/register', function(request, response, next) {
             return response.status(400).send("user exists");
         } //otherwise we can add the user to the databse 
 
+        //to add the user to the databse, need to first validate the email
+        let email = request.body.username;
+        let split_email = email.split('@')
+
+        if(split_email.length == 1 || (split_email[1] !== 'g.ucla.edu' && split_email[1] !== "ucla.edu")) { //does not contain the @ symbol so forsure not an email
+            return response.status(400).send();
+        } 
+
+
         var password = request.body.password
         bcrypt.genSalt(10, function(err, salt) {
             bcrypt.hash(password, salt, function(err, hashvalue) {
                 users.insertOne({"username": request.body.username, password: hashvalue}, function(err, inserted) {
                     //handle error later 
-                    response.status(200).send(inserted)
+                    return response.status(200).send(inserted);
                 })
             })
         })

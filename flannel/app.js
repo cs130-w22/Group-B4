@@ -5,7 +5,6 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const port = 3000;
-const url = 'mongodb+srv://<flannel>:<cs130sux>@cluster0.elmnm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 const app = express();
 
 const indexRouter = require('./routes/index');

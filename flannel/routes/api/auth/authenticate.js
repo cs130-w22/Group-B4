@@ -8,8 +8,8 @@ dotenv.config();
 const auth = (req, res, next) => {
     let cookies = req.headers['cookie'].split(";")
     let token = "";
-    for(cookie in cookies) {
-        broken = cookies[cookie].split("=")
+    for(const cookie in cookies) {
+        const broken = cookies[cookie].split("=")
         if(broken[0] === 'jwt') {
             token = broken[1]
             break;

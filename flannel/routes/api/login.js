@@ -28,6 +28,8 @@ router.post('/', function(request, response, next) {
             }
         })
 
+        if(temp_array.length == 0)
+            response.status(400).send()
         //if temp array has an item then a user exists in the databse 
         const now = new Date();
         const seconds = (Math.round(now.getTime() / 1000) + 7200);
@@ -40,7 +42,7 @@ router.post('/', function(request, response, next) {
         jwt.sign(payload, private_key, {}, function(err, token) {
             response.cookie('jwt', token);
             //can do the redirect next
-            response.status(200).send("user authenticated"); //this will be a redirect if we choose to add it 
+            response.status(200).send('user authenticated'); //this will be a redirect if we choose to add it 
         })
         
     })

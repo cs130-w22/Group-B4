@@ -2,10 +2,12 @@ const express = require('express');
 const users = express.Router();
 const client = require('../../../db');
 let authenticate = require('../authenticate.js');
+let ObjectID = require('mongodb').ObjectID;
 
 users.post('/createUserInfo', authenticate, createUserInfo);
 users.post('/updateUserInfo', authenticate, updateUserInfo);
 users.post('/findUsersByTag', authenticate, findUsersByTag);
+users.get('/getUserProfile', authenticate, getUserProfile);
 
 users.get('/', authenticate, function(req, res, next) {
     let users = client.db('flannel').collection('users');
@@ -14,6 +16,16 @@ users.get('/', authenticate, function(req, res, next) {
         res.status(200).send(data);//.send(data)
     })
 })
+
+function getUserProfile(req, res) {
+    let userId = req.query.ID; //get the userID 
+    let users = client.db('flannel').collection('users');
+    users.find({"_id" : new ObjectID(userId)}).toArray(function (err, document) {
+        if(err) res.status(500).send(); //internal error
+        delete document[0].password;
+        res.status(200).send(document[0]); //send the entire user minus the pswd 
+    })
+}
 
 //return a list of all users who have some sort of similar interest
 function findUsersByTag(req, res) {

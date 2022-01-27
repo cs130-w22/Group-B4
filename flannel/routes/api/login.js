@@ -4,6 +4,22 @@ let client = require("../../db.js");
 let bcrypt = require('bcryptjs');
 let jwt = require('jsonwebtoken');
 
+function generateJWT(username) {
+    const now = new Date();
+    const seconds = (Math.round(now.getTime() / 1000) + 7200);
+
+    let payload = {
+        exp: seconds,
+        usr: username
+    }
+    let private_key = process.env.SALT_HASH;
+    jwt.sign(payload, private_key, {}, function(err, token) {
+
+        return token;
+    })
+}
+
+
 router.post('/', function(request, response, next) {
     if(!request.body.username || !request.body.password) 
     {
@@ -31,20 +47,10 @@ router.post('/', function(request, response, next) {
         if(temp_array.length == 0)
             response.status(400).send()
         //if temp array has an item then a user exists in the databse 
-        const now = new Date();
-        const seconds = (Math.round(now.getTime() / 1000) + 7200);
 
-        let payload = {
-            exp: seconds,
-            usr: temp_array[0].username
-        }
-        let private_key = process.env.SALT_HASH;
-        jwt.sign(payload, private_key, {}, function(err, token) {
-            response.cookie('jwt', token);
-            //can do the redirect next
-            response.status(200).send('user authenticated'); //this will be a redirect if we choose to add it 
-        })
-        
+        let token = generateJWT(temp_array[0].username);
+        response.cookie('jwt', token);
+        response.status(200).send('user authenticated')
     })
 
     
@@ -78,7 +84,9 @@ router.post('/register', function(request, response, next) { //create a new user
             bcrypt.hash(password, salt, function(err, hashvalue) {
                 users.insertOne({"username": request.body.username, password: hashvalue}, function(err, inserted) {
                     //handle error later 
-                    return response.status(200).send(inserted);
+                    let token = generateJWT(request.body.username);
+                    response.cookie('jwt', token);
+                    return response.status(201).send(inserted);
                 })
             })
         })

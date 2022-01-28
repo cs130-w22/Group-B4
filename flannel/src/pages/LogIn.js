@@ -1,12 +1,21 @@
 import React, {useState} from "react";
 import {Link} from "react-router-dom";
-import {IconButton,Button, Typography, FormControl, InputLabel,Input} from '@mui/material'
+import {IconButton,Button, Typography, TextField, FormControl, InputLabel,Input} from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import "../App.css"
 
 function LogIn(){
     const [isExpanded,setIsExpanded] = useState(false);
+    const [username,setUsername] = useState("");
+    const [password,setPassword] = useState("");
+    const [loginError,setLoginError] = useState(false);
+    function handleSubmit(){
+        console.log(username);
+        console.log(password);
+        setLoginError(!loginError);
+        //prolly just input api verification call right here
+    }
     return(
         <div style = {{ backgroundColor: "#F5F5DC", width: "100vw", minHeight: "100vh",display: "flex", flexDirection:"row", justifyContent:"space-between"}}>  
             <div></div>
@@ -17,15 +26,34 @@ function LogIn(){
                 <div>
                     <form style = {{display:"flex",flexDirection:"column",padding:"70px",backgroundColor:"white",borderRadius:"5%"}}>
                         <h1 style ={{textAlign:"center",fontFamily:"Work Sans",fontSize:40,fontWeight:"bold"}}>Sign In</h1>
-                        <FormControl style ={{padding:"20px"}}>
-                            <InputLabel>Username</InputLabel>
-                            <Input />
-                        </FormControl>  
-                        <FormControl style ={{padding:"20px"}}>
-                            <InputLabel>Password</InputLabel>
-                            <Input />
-                        </FormControl>  
-                        <Button variant="outlined" type = "submit" style={{padding:"10px"}}>Sign In!</Button>
+                        <TextField
+                            required
+                            label = "Username"
+                            value = {username}
+                            style = {{padding:"5px"}}
+                            onChange={(e) => {
+                                setUsername(e.target.value);
+                            }}
+                            error = {loginError}
+                            />
+                        <TextField
+                            required
+                            style = {{padding:"5px"}}
+                            type = "password"
+                            value = {password}
+                            onChange = {(e) =>{
+                                setPassword(e.target.value);
+                                }
+                            }
+                            error = {loginError}
+                            label = "Password" 
+                        />
+                        {loginError && 
+                            (<p style ={{color:"red"}}>
+                                Username or Password is incorrect
+                            </p>)
+                        }
+                        <Button variant="outlined" onClick={handleSubmit} style={{padding:"10px"}}>Sign In!</Button>
                         <Typography style = {{padding:"5px"}}>
                             <Link to ="/SignUp">Create an Account</Link>
                         </Typography>
@@ -59,43 +87,6 @@ function LogIn(){
             </div>
             <div></div>
         </div>
-        // <div>
-        // <Button>Hello</Button>
-        // <section className = 'hero is-fullheight is-primary'>
-        //     <div className = "tile is-ancestor hero-body">
-        //         <div className = "tile is-parent"></div>
-        //         <div className = "tile is-parent">
-        //             <div className = "tile is-child">
-        //             <h1 className="title has-text-danger is-size-1 has-text-centered">FLANNEL</h1>
-        //             <form action="" className="box">
-        //                 <h1 className="title has-text-black has-text-centered">Welcome!</h1>
-        //                 <div className = "field" >
-        //                     <label htmlFor="" className="label">Email</label>
-        //                     <div className="control">
-        //                         <input className="input" type="email" placeholder="e.g. bobsmith@gmail.com" required />
-        //                     </div>
-        //                 </div>
-        //                 <div className = "field">
-        //                     <label htmlFor="" className="label">Password</label>
-        //                     <div className="control">
-        //                         <input type="password" placeholder="*************" className="input" required />
-        //                     </div>
-        //                 </div>
-        //                 <div className="field">
-        //                     <button className="button is-danger">
-        //                         Login
-        //                     </button>
-        //                 </div>
-        //                 <div>
-        //                     <Link to="/SignUp">Click to Sign Up!</Link>
-        //                 </div>
-        //             </form>
-        //             </div>
-        //         </div>
-        //         <div className = "tile is-parent"></div>
-        //     </div>
-        // </section>
-        // </div>
     )
 }
 

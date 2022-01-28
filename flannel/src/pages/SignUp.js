@@ -1,5 +1,5 @@
-import React from "react";
-import {Button, FormControl, InputLabel,Input, Select, MenuItem, TextField} from '@mui/material'
+import React, {useState} from "react";
+import {Button, FormControl, InputLabel,Input, Select, MenuItem, TextField, FormGroup} from '@mui/material'
 import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
@@ -27,8 +27,23 @@ function SignUp(){
     ]
 
     const handleFormSubmit = () =>{
-        alert("hello")
+        setSignupError(!signupError);
     }
+    const [name,setName] = useState("");
+    const [schoolYear,setSchoolYear] = useState("");
+    const [major,setMajor] = useState("");
+    const [email,setEmail] = useState("");
+    const [password,setPassword] = useState("");
+    const [confirmPassword,setConfirmPassword] = useState("");
+    const [hometown,setHometown] = useState("");
+    const [pronouns,setPronouns] = useState("");
+    const [bio,setBio] = useState("");
+    const [insta,setInsta] = useState("");
+    const [facebook,setFacebook] = useState("");
+    const [twitter,setTwitter] = useState("");
+    const [linkedIn,setLinkedIn] = useState("");
+    const [signupError,setSignupError] = useState(false);
+
     return(
         <div style = {{backgroundColor: "#F5F5DC", width: "100vw", minHeight: "100vh",display:"flex",flexDirection:"column",justifyContent:"space-around"}}>
             <div>
@@ -38,84 +53,113 @@ function SignUp(){
                 <div style = {{display:"flex",flexDirection:"column",justifyContent:"space-between"}}>
                     <div></div>
                     <form style = {{display:"flex",flexDirection:"row",backgroundColor:"white",borderRadius:"5%"}}>
-                        <div style = {{padding:"2px",display:"flex",flexDirection:"column"}}>
-                            <FormControl style={{padding:"10px"}}>
-                                <InputLabel>Name</InputLabel>
-                                <Input></Input>
-                            </FormControl>
-                            <FormControl style={{padding:"10px"}}>
+                        <div style = {{padding:"2px",display:"flex",flexDirection:"column",justifyContent:"space-evenly"}}>
+                            <TextField required label = "Full Name" value = {name}
+                                style = {{padding:"5px"}}
+                                onChange = {(e) =>{
+                                    setName(e.target.value);
+                                }}
+                                error = {signupError && name === ""}
+                            />
+                            <FormControl style={{padding:"5px"}}>
                                 <InputLabel>School Year</InputLabel>
-                                <Select label="schoolYear">
-                                    <MenuItem value={"freshman"}>Freshman</MenuItem>
+                                <Select value = {schoolYear} onChange = {(e,item) => {setSchoolYear(item.props.value)}} error = {signupError && schoolYear === ""} label="schoolYear">
+                                    <MenuItem value={"Freshman"}>Freshman</MenuItem>
                                     <MenuItem value={"Sophmore"}>Sophmore</MenuItem>
                                     <MenuItem value={"Junior"}>Junior</MenuItem>
                                     <MenuItem value={"Senior"}>Senior</MenuItem>
                                     <MenuItem value={"Senior+"}>Senior+</MenuItem>
                                 </Select>
                             </FormControl>
-                            <FormControl style={{padding:"10px"}}>
-                                <InputLabel>Major</InputLabel>
-                                <Input></Input>
-                            </FormControl>
-                            <FormControl style={{padding:"10px"}}>
-                                <InputLabel>Email</InputLabel>
-                                <Input></Input>
-                            </FormControl>
-                            <FormControl style={{padding:"10px"}}>
-                                <InputLabel>Password</InputLabel>
-                                <Input></Input>
-                            </FormControl>
-                            <FormControl style={{padding:"10px"}}>
-                                <InputLabel>Confirm Password</InputLabel>
-                                <Input></Input>
-                            </FormControl>
+                            <TextField required label = "Major" value = {major}
+                            style = {{padding:"5px"}}
+                                onChange = {(e) => {
+                                    setMajor(e.target.value);
+                                }}
+                                error = {signupError && major === ""}    
+                            />
+                            <TextField required label = "Email" value = {email}
+                            style = {{padding:"5px"}}
+                                onChange = {(e) => {
+                                    setEmail(e.target.value);
+                                }}
+                                error = {signupError && email === ""}    
+                            />
+                            <TextField required label = "Password" value = {password}
+                            style = {{padding:"5px"}}
+                                onChange = {(e) => {
+                                    setPassword(e.target.value);
+                                }}
+                                error = {signupError && (password === "" || password !== confirmPassword) }    
+                            />
+                            <TextField required label = "Confirm Password" value = {confirmPassword}
+                            style = {{padding:"5px"}}
+                                onChange = {(e) => {
+                                    setConfirmPassword(e.target.value);
+                                }}
+                                error = {signupError && (confirmPassword === "" || password !== confirmPassword) }  
+                            />
                         </div>
                         <div style = {{padding:"2px",display:"flex",flexDirection:"column"}}>
                             <FormControl style={{padding:"10px"}}>
                                 <InputLabel>Profile Picture</InputLabel>
                                 <Input style = {{padding:"5px"}} type = "file"/>
                             </FormControl>
-                            <FormControl style={{padding:"10px"}}>
-                                <InputLabel>Hometown</InputLabel>
-                                <Input />
-                            </FormControl>                    
+                            <TextField label = "Hometown" value ={hometown} style = {{padding:"10px"}}
+                                onChange = {(e) => {
+                                    setHometown(e.target.value);
+                                }}
+                            />                 
                             <FormControl style={{padding:"10px"}}>
                                 <InputLabel>Pronouns</InputLabel>
-                                <Select label="schoolYear">
+                                <Select value = {pronouns} onChange ={(e,item) => setPronouns(item.props.value)} label="Pronouns">
                                     <MenuItem value={"he"}>He/Him/His</MenuItem>
                                     <MenuItem value={"she"}>She/Her/Hers</MenuItem>
                                     <MenuItem value={"they"}>They/Them/Theirs</MenuItem>
                                 </Select>
                             </FormControl>                    
-                            <FormControl style={{padding:"10px"}}>
-                                <TextField
-                                    placeholder="Tell us a little about yourself!"
-                                    multiline
-                                    rows={5}
-                                    maxRows={5}
-                                />
-                            </FormControl>                    
-                            <FormControl style={{display:"flex",flexDirection:"column", padding:"10px"}}>
+                            <TextField
+                                style = {{padding:"10px"}}
+                                placeholder="Tell us a little about yourself!"
+                                value = {bio}
+                                onChange = {(e) => {setBio(e.target.value)}}
+                                multiline
+                                rows={5}
+                                maxRows={5}
+                            />
+                            <div style={{display:"flex",flexDirection:"column", padding:"10px"}}>
                                 <div>
                                     <p>Social Media Urls</p>
                                 </div>
                                 <div style = {{display:"flex",flexDirection:"row",alignItems:"center"}}>
                                     <InstagramIcon></InstagramIcon>
-                                    <Input />
+                                    <Input style = {{padding:"10px"}} 
+                                        value = {insta}
+                                        onChange = {(e) => {setInsta(e.target.value)}}
+                                    />
                                 </div>
                                 <div style = {{display:"flex",flexDirection:"row",alignItems:"center"}}>
                                     <FacebookIcon></FacebookIcon>
-                                    <Input />
+                                    <Input style = {{padding:"10px"}} 
+                                        value = {facebook}
+                                        onChange = {(e) => {setFacebook(e.target.value)}}
+                                    />
                                 </div>
                                 <div style = {{display:"flex",flexDirection:"row",alignItems:"center"}}>
                                     <TwitterIcon></TwitterIcon>
-                                    <Input />
+                                    <Input style = {{padding:"10px"}} 
+                                        value = {twitter}
+                                        onChange = {(e) => {setTwitter(e.target.value)}}
+                                    />
                                 </div>
                                 <div style = {{display:"flex",flexDirection:"row",alignItems:"center"}}>
                                     <LinkedInIcon></LinkedInIcon>
-                                    <Input />
+                                    <Input style = {{padding:"10px"}} 
+                                        value = {linkedIn}
+                                        onChange = {(e) => {setLinkedIn(e.target.value)}}
+                                    />
                                 </div>
-                            </FormControl>
+                            </div>
                             <div style={{padding:"10px"}}>
                                 <Button fullWidth variant = "contained" color = "success" onClick={handleFormSubmit}>Register</Button>
                             </div>
@@ -135,158 +179,6 @@ function SignUp(){
                 </div>
             </div>
         </div>
-        // <section className = 'hero is-fullheight is-primary'>
-        //     {/* <div className = "tile is-ancestor hero-body"> */}
-        //     <div className="columns is-multiline is-vcentered">
-        //         <div className="column is-12">
-        //             <h1 className="has-text-centered title is-1">Create an Account</h1>
-        //         </div>
-        //         <div className="column is-11">
-        //             <form action = "" className = "">
-        //                 <div className = "column is-12">
-        //                     <h2 className="title is-2">Tell us a little about you!</h2>
-        //                 </div>
-        //                 <div class="field is-horizontal">
-        //                     <div class="field-label is-normal">
-        //                         <label class="label">Full Name</label>
-        //                     </div>
-        //                     <div class="field-body">
-        //                         <div className="field">
-        //                             <div className="control">
-        //                                 <input className="input" type="text" placeholder="Firstname Lastname" required />
-        //                             </div>
-        //                         </div>
-        //                     </div>
-        //                 </div>
-        //                 <div class="field is-horizontal">
-        //                     <div class="field-label is-normal">
-        //                         <label class="label">School Year</label>
-        //                     </div>
-        //                     <div class="field-body">
-        //                         <div class="field">
-        //                             <div className="control">
-        //                                 <div className = "select">
-        //                                     <select>
-        //                                         <option>Freshman</option>
-        //                                         <option>Sophmore</option>
-        //                                         <option>Junior</option>
-        //                                         <option>Senior</option>
-        //                                         <option>Senior+</option>
-        //                                         <option>Graduated</option>
-        //                                     </select>
-        //                                 </div>
-        //                             </div>
-        //                         </div>
-        //                     </div>
-        //                 </div>
-        //                 <div class="field is-horizontal">
-        //                     <div class="field-label is-normal">
-        //                         <label class="label">Major</label>
-        //                     </div>
-        //                     <div class="field-body">
-        //                         <div class="field">
-        //                             <div className = "control">
-        //                                 <input className = "input" type="text" placeholder = "Computer Science" required/>
-        //                             </div>
-        //                         </div>
-        //                     </div>
-        //                 </div>
-        //                 <div class="field is-horizontal">
-        //                     <div class="field-label is-normal">
-        //                         <label class="label">Email</label>
-        //                     </div>
-        //                     <div class="field-body">
-        //                         <div class="field">
-        //                             <div className = "control">
-        //                                 <input className = "input" type="Email" placeholder = "asdf@gmail.com" required/>
-        //                             </div>
-        //                         </div>
-        //                     </div>
-        //                 </div>
-        //                 <div class="field is-horizontal">
-        //                     <div class="field-label is-normal">
-        //                         <label class="label">Password</label>
-        //                     </div>
-        //                     <div class="field-body">
-        //                         <div class="field">
-        //                             <div className = "control">
-        //                                 <input className = "input" type="password" placeholder = "password" required/>
-        //                             </div>
-        //                         </div>
-        //                     </div>
-        //                 </div>
-        //                 <div class="field is-horizontal">
-        //                     <div class="field-label is-normal">
-        //                         <label class="label">Confirm Password</label>
-        //                     </div>
-        //                     <div class="field-body">
-        //                         <div class="field">
-        //                             <div className = "control">
-        //                                 <input className = "input" type="password" placeholder = "password" required/>
-        //                             </div>
-        //                         </div>
-        //                     </div>
-        //                 </div>
-        //                 <div className="column is-12">
-        //                     <h2 className=" title is-2">Tell us about what you're interested in!</h2>
-        //                 </div>
-        //                 <div class="field is-horizontal">
-        //                     <div class="field-label is-normal">
-        //                         <label class="label">Classes</label>
-        //                     </div>
-        //                     <div class="field-body">
-        //                         <div className="field">
-        //                             <div className="control">
-        //                                 <div className = "select">
-        //                                     <select>
-        //                                         <option>CS130</option>
-        //                                     </select>
-        //                                 </div>
-        //                             </div>
-        //                         </div>
-        //                     </div>
-        //                 </div>
-        //                 <div class="field is-horizontal">
-        //                     <div class="field-label is-normal">
-        //                         <label class="label">Interests</label>
-        //                     </div>
-        //                     <div class="field-body">
-        //                         <div className="field">
-        //                             <div className="control">
-        //                                 <div className = "select">
-        //                                     <select>
-        //                                         <option>Rocket League</option>
-        //                                     </select>
-        //                                 </div>
-        //                             </div>
-        //                         </div>
-        //                     </div>
-        //                 </div>
-        //                 <div class="field is-horizontal">
-        //                     <div class="field-label is-normal">
-        //                         <label class="label">Affiliations</label>
-        //                     </div>
-        //                     <div class="field-body">
-        //                         <div className="field">
-        //                             <div className="control">
-        //                                 <div className = "select">
-        //                                     <select>
-        //                                         <option>ACM</option>
-        //                                     </select>
-        //                                 </div>
-        //                             </div>
-        //                         </div>
-        //                     </div>
-        //                 </div>
-        //                 <div className="column">
-        //                     <button className="button is-danger">
-        //                         Create Account
-        //                     </button>
-        //                 </div>
-        //             </form>
-        //         </div>
-        //     </div>
-        // </section>
     )
 };
 

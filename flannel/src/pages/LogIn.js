@@ -78,7 +78,6 @@ function LogIn(){
                                 </form>
                             </div>
                         )}
-                        
                     </form>
                 </div>
                 <div></div>
@@ -89,5 +88,4 @@ function LogIn(){
         </div>
     )
 }
-
 export default LogIn;

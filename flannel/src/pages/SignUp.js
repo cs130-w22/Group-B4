@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Button, FormControl, InputLabel,Input, Select, MenuItem, TextField, FormGroup} from '@mui/material'
+import {Button, FormControl, InputLabel,Input, Select, MenuItem, TextField} from '@mui/material'
 import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
@@ -25,10 +25,6 @@ function SignUp(){
         {label: "Gymming"},
         {label: "Walking"}
     ]
-
-    const handleFormSubmit = () =>{
-        setSignupError(!signupError);
-    }
     const [name,setName] = useState("");
     const [schoolYear,setSchoolYear] = useState("");
     const [major,setMajor] = useState("");
@@ -43,7 +39,17 @@ function SignUp(){
     const [twitter,setTwitter] = useState("");
     const [linkedIn,setLinkedIn] = useState("");
     const [signupError,setSignupError] = useState(false);
+    const [childClassList,setClassList] = useState([]);
+    const [childAffiliationList,setAffiliationList] = useState([]);
+    const [childInterestList,setInterestList] = useState([]);
 
+    function handleFormSubmit(){
+        setSignupError(!signupError);
+        console.log(childClassList);
+        console.log(childAffiliationList);
+        console.log(childInterestList);
+    }
+    
     return(
         <div style = {{backgroundColor: "#F5F5DC", width: "100vw", minHeight: "100vh",display:"flex",flexDirection:"column",justifyContent:"space-around"}}>
             <div>
@@ -90,8 +96,13 @@ function SignUp(){
                                 onChange = {(e) => {
                                     setPassword(e.target.value);
                                 }}
-                                error = {signupError && (password === "" || password !== confirmPassword) }    
+                                error = {signupError && (password === "" || password !== confirmPassword) }
                             />
+                            {
+                                password !== confirmPassword && (
+                                    <p style = {{color:"red"}}>Make sure passwords match</p>
+                                )
+                            }
                             <TextField required label = "Confirm Password" value = {confirmPassword}
                             style = {{padding:"5px"}}
                                 onChange = {(e) => {
@@ -101,10 +112,10 @@ function SignUp(){
                             />
                         </div>
                         <div style = {{padding:"2px",display:"flex",flexDirection:"column"}}>
-                            <FormControl style={{padding:"10px"}}>
+                            {/* <FormControl style={{padding:"10px"}}>
                                 <InputLabel>Profile Picture</InputLabel>
                                 <Input style = {{padding:"5px"}} type = "file"/>
-                            </FormControl>
+                            </FormControl> */}
                             <TextField label = "Hometown" value ={hometown} style = {{padding:"10px"}}
                                 onChange = {(e) => {
                                     setHometown(e.target.value);
@@ -162,17 +173,20 @@ function SignUp(){
                             </div>
                             <div style={{padding:"10px"}}>
                                 <Button fullWidth variant = "contained" color = "success" onClick={handleFormSubmit}>Register</Button>
+                                {
+                                    signupError && (<p style = {{color:"red"}}>Please fill out the highlighted fields</p>)
+                                }
                             </div>
                         </div>
                         <div>
                             <div>
                                 <h1>Classes</h1>
-                                <ChipFilter type ="Classes" listType = {classList} />
+                                <ChipFilter setParentList = {setClassList} type ="Classes" listType = {classList} />
                             </div>
                             <h1>Interests</h1>
-                                <ChipFilter type = "Interests" listType ={interestList}/>
+                                <ChipFilter setParentList = {setInterestList} type = "Interests" listType ={interestList} />
                             <h1>Affliations</h1>
-                                <ChipFilter type ="Affiliations" listType = {affiliationsList}/>
+                                <ChipFilter setParentList = {setAffiliationList} type ="Affiliations" listType = {affiliationsList} />
                         </div>
                     </form>
                     <div></div>

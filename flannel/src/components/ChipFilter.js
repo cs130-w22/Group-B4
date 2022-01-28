@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import { Box, Chip, Portal } from '@mui/material'
+import { Box, Chip} from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete';
 //import CustomChip from '../components/CustomChip'
 
@@ -12,6 +12,9 @@ export default function ChipFilter(props){
         const newList = itemList.filter((item) =>  item.item.label !== label);
         setList(newList);
     }
+    useEffect(() =>{
+        props.setParentList(itemList);
+    })
     return(
     <div style={{padding:"20px"}}>
         <Autocomplete
@@ -23,10 +26,10 @@ export default function ChipFilter(props){
                 let found = false;
                 itemList.map((e) => {
                     if (e.item.label === item.label){
-                        found=true;
+                        return true;
                     }
                 })
-                if (! found){
+                if (!found){
                     const newList = itemList.concat({item});
                     setList(newList);
                 }

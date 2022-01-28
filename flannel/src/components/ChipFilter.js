@@ -20,8 +20,16 @@ export default function ChipFilter(props){
             options={props.listType}
             sx={{ width: 300 }}
             onChange = {(_event,item) => {
-                const newList = itemList.concat({item});
-                setList(newList);
+                let found = false;
+                itemList.map((e) => {
+                    if (e.item.label === item.label){
+                        found=true;
+                    }
+                })
+                if (! found){
+                    const newList = itemList.concat({item});
+                    setList(newList);
+                }
             }}
             renderInput={(params) => <TextField {...params} label={props.type} />}
         />

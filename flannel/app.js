@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 let client = require('./db');
 const dotenv = require('dotenv');
+const bodyParser = require('body-parser');
 dotenv.config();
 
 const port = 3000;
@@ -14,6 +15,7 @@ const labelRouter = require('./routes/api/match/labels');
 
 
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/user', userRouter);

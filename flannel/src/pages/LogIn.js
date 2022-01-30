@@ -7,14 +7,18 @@ import "../App.css"
 
 function LogIn(){
     const [isExpanded,setIsExpanded] = useState(false);
-    const [username,setUsername] = useState("");
-    const [password,setPassword] = useState("");
     const [loginError,setLoginError] = useState(false);
-    function handleSubmit(){
-        console.log(username);
-        console.log(password);
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const username = event.target.elements.username.value;
+        const password = event.target.elements.password.value;
         setLoginError(!loginError);
         //prolly just input api verification call right here
+    }
+    const recoveryEmailMethod = (event) => {
+        event.preventDefault();
+        const email = event.target.elements.email.value;
+        alert("Password recovery instructions have been sent to your email");
     }
     return(
         <div style = {{ backgroundColor: "#F5F5DC", width: "100vw", minHeight: "100vh",display: "flex", flexDirection:"row", justifyContent:"space-between"}}>  
@@ -23,28 +27,21 @@ function LogIn(){
                 <div>
                     <Typography style = {{fontFamily:"-apple-system", fontSize:60,fontWeight:"bold",textAlign:"center"}}>Flannel</Typography>
                 </div>
-                <div>
-                    <form style = {{display:"flex",flexDirection:"column",padding:"70px",backgroundColor:"white",borderRadius:"5%"}}>
+                <div style = {{display:"flex",flexDirection:"column",backgroundColor:"white",borderRadius:"5%",padding:"70px"}}>
+                    <form onSubmit = {handleSubmit} style = {{display:"flex",flexDirection:"column"}}>
                         <h1 style ={{textAlign:"center",fontFamily:"Work Sans",fontSize:40,fontWeight:"bold"}}>Sign In</h1>
                         <TextField
                             required
+                            id="username"
                             label = "Username"
-                            value = {username}
                             style = {{padding:"5px"}}
-                            onChange={(e) => {
-                                setUsername(e.target.value);
-                            }}
                             error = {loginError}
                             />
                         <TextField
                             required
+                            id = "password"
                             style = {{padding:"5px"}}
                             type = "password"
-                            value = {password}
-                            onChange = {(e) =>{
-                                setPassword(e.target.value);
-                                }
-                            }
                             error = {loginError}
                             label = "Password" 
                         />
@@ -53,11 +50,11 @@ function LogIn(){
                                 Username or Password is incorrect
                             </p>)
                         }
-                        <Button variant="outlined" onClick={handleSubmit} style={{padding:"10px"}}>Sign In!</Button>
-                        <Typography style = {{padding:"5px"}}>
+                        <Button variant="outlined" type="submit" style={{padding:"10px"}}>Sign In!</Button>
+                        <Typography>
                             <Link to ="/SignUp">Create an Account</Link>
                         </Typography>
-                        <Typography style = {{padding:"5px"}}>
+                        <Typography>
                             Forgot Your Password?
                             <IconButton
                                 size="medium"
@@ -67,18 +64,17 @@ function LogIn(){
                                 {isExpanded && <ExpandLessIcon />}
                             </IconButton>
                         </Typography>
-                        {isExpanded && (
-                            <div>
-                                <form style = {{display:"flex", flexDirection: "column"}}>
-                                    <FormControl>
-                                        <InputLabel>Email</InputLabel>
-                                        <Input />
-                                    </FormControl>
-                                    <Button variant="outlined" onClick = {() => alert("Check this email for password recovery instructions")}>Recover</Button>
-                                </form>
-                            </div>
-                        )}
                     </form>
+                    {isExpanded && (
+                        <form onSubmit = {recoveryEmailMethod} style = {{display:"flex",flexDirection:"column"}}>
+                                <TextField 
+                                    type = "text" 
+                                    id = "email"
+                                    label = "Email"
+                                /> 
+                                <Button variant="outlined" type = "submit">Recover</Button>
+                        </form>
+                        )}
                 </div>
                 <div></div>
                 <div></div>

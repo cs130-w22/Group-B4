@@ -25,29 +25,40 @@ function SignUp(){
         {label: "Gymming"},
         {label: "Walking"}
     ]
-    const [name,setName] = useState("");
     const [schoolYear,setSchoolYear] = useState("");
-    const [major,setMajor] = useState("");
-    const [email,setEmail] = useState("");
     const [password,setPassword] = useState("");
     const [confirmPassword,setConfirmPassword] = useState("");
-    const [hometown,setHometown] = useState("");
     const [pronouns,setPronouns] = useState("");
-    const [bio,setBio] = useState("");
-    const [insta,setInsta] = useState("");
-    const [facebook,setFacebook] = useState("");
-    const [twitter,setTwitter] = useState("");
-    const [linkedIn,setLinkedIn] = useState("");
     const [signupError,setSignupError] = useState(false);
     const [childClassList,setClassList] = useState([]);
     const [childAffiliationList,setAffiliationList] = useState([]);
     const [childInterestList,setInterestList] = useState([]);
 
-    function handleFormSubmit(){
-        setSignupError(!signupError);
-        console.log(childClassList);
-        console.log(childAffiliationList);
-        console.log(childInterestList);
+    const handleFormSubmit = (event) => {
+        event.preventDefault();
+        const name = event.target.elements.name.value;
+        const schoolYear = event.target[2].value;
+        const major = event.target.elements.major.value;
+        const email = event.target.elements.email.value;
+        const password = event.target.elements.password.value;
+        const confirmPassword = event.target.elements.confirmPassword.value;
+        const hometown = event.target.elements.hometown.value;
+        const pronouns = event.target[14].value;
+        const bio = event.target.bio.value;
+        const insta = event.target.insta.value;
+        const facebook = event.target.facebook.value;
+        const twitter = event.target.twitter.value;
+        const linkedIn = event.target.LinkedIn.value;
+        // console.log(childClassList);
+        // console.log(childAffiliationList);
+        // console.log(childInterestList);
+        // INSERT API CALLS HERE FOR LOGIN
+        let success = true;
+        if (!success){
+            setSignupError(!signupError);
+        }
+        
+
     }
     
     return(
@@ -58,18 +69,15 @@ function SignUp(){
             <div style = {{ display: "flex", flexDirection:"row", justifyContent:"space-around"}}>
                 <div style = {{display:"flex",flexDirection:"column",justifyContent:"space-between"}}>
                     <div></div>
-                    <form style = {{display:"flex",flexDirection:"row",backgroundColor:"white",borderRadius:"5%"}}>
+                    <form onSubmit = {handleFormSubmit} style = {{display:"flex",flexDirection:"row",backgroundColor:"white",borderRadius:"5%"}}>
                         <div style = {{padding:"2px",display:"flex",flexDirection:"column",justifyContent:"space-evenly"}}>
-                            <TextField required label = "Full Name" value = {name}
+                            <TextField required label = "Full Name"
+                                id="name"
                                 style = {{padding:"5px"}}
-                                onChange = {(e) =>{
-                                    setName(e.target.value);
-                                }}
-                                error = {signupError && name === ""}
                             />
                             <FormControl style={{padding:"5px"}}>
                                 <InputLabel>School Year</InputLabel>
-                                <Select value = {schoolYear} onChange = {(e,item) => {setSchoolYear(item.props.value)}} error = {signupError && schoolYear === ""} label="schoolYear">
+                                <Select required value = {schoolYear} onChange = {(e,item) => {setSchoolYear(item.props.value)}} > 
                                     <MenuItem value={"Freshman"}>Freshman</MenuItem>
                                     <MenuItem value={"Sophmore"}>Sophmore</MenuItem>
                                     <MenuItem value={"Junior"}>Junior</MenuItem>
@@ -77,21 +85,14 @@ function SignUp(){
                                     <MenuItem value={"Senior+"}>Senior+</MenuItem>
                                 </Select>
                             </FormControl>
-                            <TextField required label = "Major" value = {major}
-                            style = {{padding:"5px"}}
-                                onChange = {(e) => {
-                                    setMajor(e.target.value);
-                                }}
-                                error = {signupError && major === ""}    
+                            <TextField required label = "Major"  id = "major"
+                                style = {{padding:"5px"}} 
                             />
-                            <TextField required label = "Email" value = {email}
-                            style = {{padding:"5px"}}
-                                onChange = {(e) => {
-                                    setEmail(e.target.value);
-                                }}
-                                error = {signupError && email === ""}    
+                            <TextField required label = "Email"  id = "email"
+                                style = {{padding:"5px"}}
                             />
-                            <TextField required label = "Password" value = {password}
+                            <TextField required label = "Password" value = {password} id = "password"
+                                type = "password"
                             style = {{padding:"5px"}}
                                 onChange = {(e) => {
                                     setPassword(e.target.value);
@@ -103,7 +104,8 @@ function SignUp(){
                                     <p style = {{color:"red"}}>Make sure passwords match</p>
                                 )
                             }
-                            <TextField required label = "Confirm Password" value = {confirmPassword}
+                            <TextField required label = "Confirm Password" value = {confirmPassword} id ="confirmPassword"
+                            type = "password"
                             style = {{padding:"5px"}}
                                 onChange = {(e) => {
                                     setConfirmPassword(e.target.value);
@@ -112,14 +114,7 @@ function SignUp(){
                             />
                         </div>
                         <div style = {{padding:"2px",display:"flex",flexDirection:"column"}}>
-                            {/* <FormControl style={{padding:"10px"}}>
-                                <InputLabel>Profile Picture</InputLabel>
-                                <Input style = {{padding:"5px"}} type = "file"/>
-                            </FormControl> */}
-                            <TextField label = "Hometown" value ={hometown} style = {{padding:"10px"}}
-                                onChange = {(e) => {
-                                    setHometown(e.target.value);
-                                }}
+                            <TextField label = "Hometown" style = {{padding:"10px"}} id = "hometown"
                             />                 
                             <FormControl style={{padding:"10px"}}>
                                 <InputLabel>Pronouns</InputLabel>
@@ -130,10 +125,9 @@ function SignUp(){
                                 </Select>
                             </FormControl>                    
                             <TextField
+                                id = "bio"
                                 style = {{padding:"10px"}}
                                 placeholder="Tell us a little about yourself!"
-                                value = {bio}
-                                onChange = {(e) => {setBio(e.target.value)}}
                                 multiline
                                 rows={5}
                                 maxRows={5}
@@ -145,34 +139,30 @@ function SignUp(){
                                 <div style = {{display:"flex",flexDirection:"row",alignItems:"center"}}>
                                     <InstagramIcon></InstagramIcon>
                                     <Input style = {{padding:"10px"}} 
-                                        value = {insta}
-                                        onChange = {(e) => {setInsta(e.target.value)}}
+                                        id = "insta"
                                     />
                                 </div>
                                 <div style = {{display:"flex",flexDirection:"row",alignItems:"center"}}>
                                     <FacebookIcon></FacebookIcon>
                                     <Input style = {{padding:"10px"}} 
-                                        value = {facebook}
-                                        onChange = {(e) => {setFacebook(e.target.value)}}
+                                        id = "facebook"
                                     />
                                 </div>
                                 <div style = {{display:"flex",flexDirection:"row",alignItems:"center"}}>
                                     <TwitterIcon></TwitterIcon>
                                     <Input style = {{padding:"10px"}} 
-                                        value = {twitter}
-                                        onChange = {(e) => {setTwitter(e.target.value)}}
+                                        id = "twitter"
                                     />
                                 </div>
                                 <div style = {{display:"flex",flexDirection:"row",alignItems:"center"}}>
                                     <LinkedInIcon></LinkedInIcon>
                                     <Input style = {{padding:"10px"}} 
-                                        value = {linkedIn}
-                                        onChange = {(e) => {setLinkedIn(e.target.value)}}
+                                        id = "LinkedIn"
                                     />
                                 </div>
                             </div>
                             <div style={{padding:"10px"}}>
-                                <Button fullWidth variant = "contained" color = "success" onClick={handleFormSubmit}>Register</Button>
+                                <Button fullWidth variant = "contained" color = "success" type="submit" >Register</Button>
                                 {
                                     signupError && (<p style = {{color:"red"}}>Please fill out the highlighted fields</p>)
                                 }

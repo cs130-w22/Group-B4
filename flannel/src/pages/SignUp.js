@@ -7,24 +7,6 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import ChipFilter from '../components/ChipFilter'
 
 function SignUp(){
-    const classList = [
-        {label:"CS130"},
-        {label:"CS118"},
-        {label:"CS131"},
-        {label:"CS111"}
-    ];
-    const affiliationsList = [
-        {label: "DevX"},
-        {label: "Bruin Racing"},
-        {label: "ACM"},
-        {label: "UPE"}
-    ];
-    const interestList = [
-        {label: "Hiking"},
-        {label: "Swimming"},
-        {label: "Gymming"},
-        {label: "Walking"}
-    ]
     const [schoolYear,setSchoolYear] = useState("");
     const [password,setPassword] = useState("");
     const [confirmPassword,setConfirmPassword] = useState("");
@@ -49,9 +31,9 @@ function SignUp(){
         const facebook = event.target.facebook.value;
         const twitter = event.target.twitter.value;
         const linkedIn = event.target.LinkedIn.value;
-        // console.log(childClassList);
-        // console.log(childAffiliationList);
-        // console.log(childInterestList);
+        console.log(childClassList);
+        console.log(childAffiliationList);
+        console.log(childInterestList);
         // INSERT API CALLS HERE FOR LOGIN
         let success = true;
         if (!success){
@@ -169,14 +151,7 @@ function SignUp(){
                             </div>
                         </div>
                         <div>
-                            <div>
-                                <h1>Classes</h1>
-                                <ChipFilter setParentList = {setClassList} type ="Classes" listType = {classList} />
-                            </div>
-                            <h1>Interests</h1>
-                                <ChipFilter setParentList = {setInterestList} type = "Interests" listType ={interestList} />
-                            <h1>Affliations</h1>
-                                <ChipFilter setParentList = {setAffiliationList} type ="Affiliations" listType = {affiliationsList} />
+                            <ChipFilter changeClasses = {setClassList} changeAffiliations = {setAffiliationList} changeInterests = {setInterestList}/>
                         </div>
                     </form>
                     <div></div>

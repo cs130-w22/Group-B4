@@ -1,6 +1,3 @@
-const { equal } = require('assert');
-let express = require('express');
-let router = express.Router();
 let jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 dotenv.config();

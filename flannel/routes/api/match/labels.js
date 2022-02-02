@@ -22,8 +22,8 @@ async function getLabelMatches(req, res) {
     const resultObject = {};
     if (labels.length === 0) {
         // send empty object for now
-        res.status(200);
-        res.send(resultObject);
+        res.status(200).send(resultObject);
+        return;
     }
 
     // get matching interests from db
@@ -35,14 +35,14 @@ async function getLabelMatches(req, res) {
         if(err) {
             console.err('error getting matching users: ', err)
             // return error with empty result object if there is a db error
-            res.status(500);
-            res.send({});
+            res.status(500).send({});
             return;
         } else {
             // success, set matches fields with array of matching users
-            resultObject['matches'] = result;
-            res.status(200);
-            res.send(resultObject);
+            resultObject['matches'] = result;            
+            res.status(200).send(resultObject);
+            return;
+            // res.send(resultObject);
         }
     });        
 }

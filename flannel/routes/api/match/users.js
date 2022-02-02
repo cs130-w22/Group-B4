@@ -2,9 +2,12 @@ const express = require('express');
 const users = express.Router();
 const client = require('../../../db');
 let authenticate = require('../auth/authenticate.js');
+let ObjectID = require('mongodb').ObjectID;
 
-users.post('/createUserInfo', createUserInfo);
-users.post('/updateUserInfo', updateUserInfo);
+users.post('/createUserInfo', authenticate, createUserInfo);
+users.post('/updateUserInfo', authenticate, updateUserInfo);
+users.post('/findUsersByTag', authenticate, findUsersByTag);
+users.get('/getUserProfile', authenticate, getUserProfile);
 
 users.get('/', authenticate, function(req, res, next) {
     let users = client.db('flannel').collection('users');
@@ -14,15 +17,63 @@ users.get('/', authenticate, function(req, res, next) {
     })
 })
 
+function getUserProfile(req, res) {
+    let userId = req.query.ID; //get the userID 
+    let users = client.db('flannel').collection('users');
+    users.find({"_id" : new ObjectID(userId)}).toArray(function (err, document) {
+        if(err) res.status(500).send(); //internal error
+        delete document[0].password;
+        res.status(200).send(document[0]); //send the entire user minus the pswd 
+    })
+}
+
+//return a list of all users who have some sort of similar interest
+function findUsersByTag(req, res) {
+    let interests = req.body.interests;
+    let users = client.db('flannel').collection('users');
+    users.aggregate(
+        [{"$unwind": "$interests"}, {"$match" : {"$expr": {"$in": ["$interests", interests]}}}]
+    ).toArray(function(err, docs) {
+        console.log(docs);
+        res.status(200).send(docs)
+    })
+
+}
 function createUserInfo(req, res) {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    res.send('createUserInfo');
+    let interests = req.body.interests;
+    let users = client.db('flannel').collection('users');
+    users.findOneAndUpdate(
+        {'username': req.body.username},
+        {$set: {"interests": interests}},
+        function(err, doc) {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'text/plain');
+            res.send('createUserInfo');
+
+            if(err) {
+                res.status(400).send()
+            }
+        }
+    )
+    
 }
 function updateUserInfo(req, res) {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    res.send('updateUserInfo');
+    let interests = req.body.interests;
+    let users = client.db('flannel').collection('users');
+    users.findOneAndUpdate(
+        {'username': req.body.username},
+        {$set: {"interests": interests}},
+        function(err, doc) {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'text/plain');
+            res.send('createUserInfo');
+
+            if(err) {
+                res.status(400).send()
+            }
+        }
+    )
+
 }
 
 module.exports = users;

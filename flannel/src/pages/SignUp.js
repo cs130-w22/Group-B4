@@ -5,6 +5,7 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import ChipFilter from '../components/ChipFilter'
+import { useCookies } from 'react-cookie';
 
 function SignUp(){
     const [schoolYear,setSchoolYear] = useState("");
@@ -15,8 +16,9 @@ function SignUp(){
     const [childClassList,setClassList] = useState([]);
     const [childAffiliationList,setAffiliationList] = useState([]);
     const [childInterestList,setInterestList] = useState([]);
+    const [cookies, setCookie] = useCookies(['jwt']);
 
-    const handleFormSubmit = (event) => {
+    const handleFormSubmit = async (event) => {
         event.preventDefault();
         const name = event.target.elements.name.value;
         const schoolYear = event.target[2].value;
@@ -30,15 +32,42 @@ function SignUp(){
         const insta = event.target.insta.value;
         const facebook = event.target.facebook.value;
         const twitter = event.target.twitter.value;
-        const linkedIn = event.target.LinkedIn.value;
-        console.log(childClassList);
-        console.log(childAffiliationList);
-        console.log(childInterestList);
+        const classes = [];
+
+        childClassList.forEach((currentItem) => {
+            classes.push(currentItem.item.label)
+        })
+
+        const data = {
+            "username": email,
+            "password": password,
+            "year": schoolYear, 
+            major, 
+            hometown, 
+            pronouns, 
+            bio, 
+            insta, 
+            facebook, 
+            twitter,
+            "interests": classes
+        }
         // INSERT API CALLS HERE FOR LOGIN
         let success = true;
         if (!success){
             setSignupError(!signupError);
         }
+
+        let requestObj = {
+            method: 'Post',
+            headers: {
+                'Content-Type' : 'application/json',
+            },
+            body: JSON.stringify(data),
+        }
+
+        const response = await fetch('http://localhost:3000/login/register', requestObj);
+        let responseObj = await response.json();
+        setCookie('jwt', responseObj.jwt, { path: '/' });
         
 
     }

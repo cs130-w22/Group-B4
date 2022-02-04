@@ -4,6 +4,10 @@ let client = require('./db');
 const socketio = require('socket.io');
 const http = require('http')
 const dotenv = require('dotenv');
+const bodyParser = require('body-parser')
+var cookieParser = require('cookie-parser');
+var cors = require('cors')
+
 dotenv.config();
 
 const port = 3000;
@@ -25,7 +29,22 @@ const userRouter = require('./routes/api/match/users');
 const labelRouter = require('./routes/api/match/labels');
 const { isObject } = require('util');
 
+app.use(bodyParser.urlencoded({
+  extended: true
+}))
 
+app.use((req, res, next)=>{  
+  res.setHeader("Access-Control-Allow-Origin", "*");  
+  res.setHeader(  
+    "Access-Control-Allow-Headers",  
+    "Origin, X-Requested-With, Content-Type, Accept, Cookie, Authorization");  
+    res.setHeader("Access-Control-Allow-Methods",  
+    "GET, POST, PATCH, DELETE, OPTIONS");  
+  next();  
+});  
+
+app.use(cookieParser());
+app.use(bodyParser.json())
 app.use(express.json());
 app.use('/', indexRouter);
 app.use('/login', loginRouter);

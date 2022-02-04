@@ -3,17 +3,51 @@ import {Link} from "react-router-dom";
 import {IconButton,Button, Typography, TextField, FormControl, InputLabel,Input} from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
+import { useCookies } from 'react-cookie';
 import "../App.css"
 
 function LogIn(){
     const [isExpanded,setIsExpanded] = useState(false);
     const [loginError,setLoginError] = useState(false);
-    const handleSubmit = (event) => {
+    const [cookies, setCookie] = useCookies(['jwt']);
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const username = event.target.elements.username.value;
         const password = event.target.elements.password.value;
         setLoginError(!loginError);
-        //prolly just input api verification call right here
+       
+        let data = {
+            username,
+            password
+        }
+
+        let requestObj = {
+            method: 'Post',
+            headers: {
+                'Content-Type' : 'application/json',
+            },
+            body: JSON.stringify(data),
+        }
+
+
+        const response = await fetch('http://localhost:3000/login', requestObj);
+        const responseObj = await response.json();
+        setCookie('jwt', responseObj.jwt, { path: '/' });
+        if(response.status === 200) {
+            var cookies = document.cookie;
+            requestObj = {
+                method: 'GET',
+                headers: {
+                    'Content-Type' : 'application/json',
+                    'Authorization' : cookies
+                },
+            }
+            const userList = await fetch(`http://localhost:3000/user/?username=${username}`, requestObj)
+            //let users = await userList.json()
+        } else { //have to try again -> bad login 
+
+        }
+        
     }
     const recoveryEmailMethod = (event) => {
         event.preventDefault();

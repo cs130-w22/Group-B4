@@ -43,7 +43,7 @@ function LogIn(){
                     'Authorization' : cookies
                 },
             }
-            const userList = await fetch(`http://localhost:3000/user/?username=${username.toLowerCase()}`, requestObj)
+            //const userList = await fetch(`http://localhost:3000/user/?username=${username.toLowerCase()}`, requestObj)
             //let users = await userList.json()
         } else { //have to try again -> bad login 
             console.log("bad login")

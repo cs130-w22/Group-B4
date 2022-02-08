@@ -29,9 +29,17 @@ export default function ChipFilter(props){
     const [affiliationSetList,setAffiliationSetList] =useState([]);
     const [interestSetList,setInterestSetList] =useState([]);
     const [itemList,setList] = useState([]);
-    const handleDelete = (label) => () =>{
-        const newList = itemList.filter((item) =>  item.item.label !== label);
-        setList(newList);
+    const classDelete = (label) => () => {
+        const newList = classSetList.filter((item) =>  item.item.label !== label);
+        setClassSetList(newList);
+    }
+    const affiliationDelete = (label) => () => {
+        const newList = affiliationSetList.filter((item) =>  item.item.label !== label);
+        setAffiliationSetList(newList);
+    }
+    const interestDelete = (label) => () => {
+        const newList = interestSetList.filter((item) =>  item.item.label !== label);
+        setInterestSetList(newList);
     }
     useEffect(() =>{
         props.changeClasses(classSetList);
@@ -64,7 +72,7 @@ export default function ChipFilter(props){
             <Box sx = {{display:"flex",flexWrap:"wrap", maxWidth: 300}}> 
                 {classSetList.map((item) =>(
                     <div>
-                        <Chip sx = {{borderRadius:3.5, backgroundColor: '#A4C3D2',color:"grey"}} label={item.item.label} key={item.item.label} deleteIcon = {<DeleteIcon/>} onDelete = {handleDelete(item.item.label)}/>
+                        <Chip sx = {{borderRadius:3.5, backgroundColor: '#A4C3D2',color:"grey"}} label={item.item.label} key={item.item.label} deleteIcon = {<DeleteIcon/>} onDelete = {classDelete(item.item.label)}/>
                     </div>
                 ))}
             </Box>
@@ -93,7 +101,7 @@ export default function ChipFilter(props){
             <Box sx = {{display:"flex",flexWrap:"wrap", maxWidth: 300}}> 
                 {affiliationSetList.map((item) =>(
                     <div>
-                        <Chip sx = {{borderRadius:3.5, backgroundColor: '#A4C3D2',color:"grey"}} label={item.item.label} key={item.item.label} deleteIcon = {<DeleteIcon/>} onDelete = {handleDelete(item.item.label)}/>
+                        <Chip sx = {{borderRadius:3.5, backgroundColor: '#A4C3D2',color:"grey"}} label={item.item.label} key={item.item.label} deleteIcon = {<DeleteIcon/>} onDelete = {affiliationDelete(item.item.label)}/>
                     </div>
                 ))}
             </Box>
@@ -122,7 +130,7 @@ export default function ChipFilter(props){
             <Box sx = {{display:"flex",flexWrap:"wrap", maxWidth: 300}}> 
                 {interestSetList.map((item) =>(
                     <div>
-                        <Chip sx = {{borderRadius:3.5, backgroundColor: '#A4C3D2',color:"grey"}} label={item.item.label} key={item.item.label} deleteIcon = {<DeleteIcon/>} onDelete = {handleDelete(item.item.label)}/>
+                        <Chip sx = {{borderRadius:3.5, backgroundColor: '#A4C3D2',color:"grey"}} label={item.item.label} key={item.item.label} deleteIcon = {<DeleteIcon/>} onDelete = {interestDelete(item.item.label)}/>
                     </div>
                 ))}
             </Box>

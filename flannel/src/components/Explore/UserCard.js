@@ -21,8 +21,8 @@ const style = {
         border: '1px solid #C4C4C4',
         borderLeftWidth: '15px',
         borderLeftColor: '#99C5C4',
-        marginTop: 5,
-        maxWidth: '65%',
+        width: '90%',
+        marginBottom: 2,
     },
     centeredRowContainer: {
         display: 'flex',
@@ -49,7 +49,7 @@ const style = {
     classChip: {
         margin: 0.25,
         borderRadius: 3.5,
-        backgroundColor: '#A4C3D2',
+        backgroundColor: '#BEDDEC',
         fontFamily: 'Work Sans',
         color: '#373737',
         fontWeight: 500,

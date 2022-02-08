@@ -77,7 +77,7 @@ router.post('/register', function(request, response, next) { //create a new user
     let query_string = {"username": request.body.username}
     users.find(query_string).toArray((err, res) => {
         if(res.length != 0) { //means that there is already a user in the databse with the email
-            return response.status(400).send("user exists");
+            return response.status(400).send({"msg": "exists"});
         } //otherwise we can add the user to the databse 
 
         //to add the user to the databse, need to first validate the email
@@ -107,6 +107,7 @@ router.post('/register', function(request, response, next) { //create a new user
                     jwt.sign(payload, private_key, {}, function(err, token) {
 
                         response.cookie('jwt', token);
+                        console.log("BB")
                         response.status(201).send({"jwt": token});
                         return
                     })

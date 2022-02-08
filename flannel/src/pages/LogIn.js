@@ -12,7 +12,7 @@ function LogIn(){
     const [cookies, setCookie] = useCookies(['jwt']);
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const username = event.target.elements.username.value;
+        const username = event.target.elements.username.value.toLowerCase()
         const password = event.target.elements.password.value;
         setLoginError(!loginError);
        
@@ -31,9 +31,10 @@ function LogIn(){
 
 
         const response = await fetch('http://localhost:3000/login', requestObj);
-        const responseObj = await response.json();
-        setCookie('jwt', responseObj.jwt, { path: '/' });
+        console.log(response)
         if(response.status === 200) {
+            const responseObj = await response.json();
+            setCookie('jwt', responseObj.jwt, { path: '/' });
             var cookies = document.cookie;
             requestObj = {
                 method: 'GET',
@@ -42,10 +43,10 @@ function LogIn(){
                     'Authorization' : cookies
                 },
             }
-            const userList = await fetch(`http://localhost:3000/user/?username=${username}`, requestObj)
+            const userList = await fetch(`http://localhost:3000/user/?username=${username.toLowerCase()}`, requestObj)
             //let users = await userList.json()
         } else { //have to try again -> bad login 
-
+            console.log("bad login")
         }
         
     }

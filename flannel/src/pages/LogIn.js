@@ -4,21 +4,21 @@ import {
     IconButton,
     Button,
     Typography,
-    TextField,
-    FormControl,
-    InputLabel,
-    Input,
+    TextField
 } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import { useCookies } from 'react-cookie'
+import { useNavigate } from "react-router-dom";
 import '../App.css'
 
 function LogIn() {
+    const navigate = useNavigate();
     const [isExpanded, setIsExpanded] = useState(false)
     const [loginError, setLoginError] = useState(false)
     const [cookies, setCookie] = useCookies(['jwt'])
     const handleSubmit = async (event) => {
+        navigate('/Explore')
         event.preventDefault()
         const username = event.target.elements.username.value
         const password = event.target.elements.password.value
@@ -54,8 +54,10 @@ function LogIn() {
                 requestObj
             )
             // let users = await userList.json()
+            
         } else {
             // have to try again -> bad login
+            
         }
     }
     const recoveryEmailMethod = (event) => {

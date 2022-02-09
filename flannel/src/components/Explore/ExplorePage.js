@@ -3,7 +3,7 @@ import { makeStyles } from '@mui/styles'
 import { Typography, Box, ButtonBase, TextField } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import UserCard from './UserCard'
-import ChipFilter from './ChipFilter'
+import ChipFilter from '../ChipFilter'
 import logo from '../../assets/bearLogo.png'
 import '../../styles/fonts.css'
 
@@ -77,11 +77,18 @@ const style = {
     },
 }
 
-export default function ExploreScreen() {
+export default function ExplorePage() {
     const classes = useStyles()
+    //selected tags
+    const [selectedClassTags,setSelectedClassTags] = useState([]);
+    const [selectedAffiliationTags,setSelectedAffiliationTags] = useState([]);
+    const [selectedInterestTags,setSelectedInterestTags] = useState([]);
+
+    //available tag options
     const [classesTagOptions, setClassesTagOptions] = useState([])
     const [interestsTagOptions, setInterestsTagOptions] = useState([])
     const [affiliationsTagOptions, setAffiliationsTagOptions] = useState([])
+
 
     useEffect(() => {
         setClassesTagOptions(['CS 31', 'MATH 32A', 'PHYSICS 1A', 'BIO 1'])
@@ -101,7 +108,7 @@ export default function ExploreScreen() {
                     fullWidth
                     variant="outlined"
                     InputProps={{
-                        disableUnderline: true,
+                        //disableUnderline: true,
                         classes: {
                             input: classes.inputText,
                         },
@@ -122,18 +129,24 @@ export default function ExploreScreen() {
                         type="Classes"
                         tagOptions={classesTagOptions}
                         defaultShownTags={['CS 130', 'CS 118', 'CS 151B']}
+                        setSelectedTags = {setSelectedClassTags}
+                        selectedTags = {selectedClassTags}
                     />
                     <ChipFilter
                         setTagOptions={setInterestsTagOptions}
                         type="Interests"
                         tagOptions={interestsTagOptions}
                         defaultShownTags={['Bouldering', 'Netflix', 'Gym', 'Reading']}
+                        setSelectedTags = {setSelectedInterestTags}
+                        selectedTags = {selectedInterestTags}
                     />
                     <ChipFilter
                         setTagOptions={setAffiliationsTagOptions}
                         type="Affiliations"
                         tagOptions={affiliationsTagOptions}
                         defaultShownTags={['Blueprint', 'UPE', 'NSU']}
+                        setSelectedTags = {setSelectedAffiliationTags}
+                        selectedTags = {selectedAffiliationTags}
                     />
                 </Box>
                 <Box sx={style.exploreBox}>

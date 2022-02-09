@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState,useEffect} from "react";
 import {Button, FormControl, InputLabel,Input, Select, MenuItem, TextField} from '@mui/material'
 import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
@@ -13,9 +13,33 @@ function SignUp(){
     const [confirmPassword,setConfirmPassword] = useState("");
     const [pronouns,setPronouns] = useState("");
     const [signupError,setSignupError] = useState(false);
-    const [childClassList,setClassList] = useState([]);
-    const [childAffiliationList,setAffiliationList] = useState([]);
-    const [childInterestList,setInterestList] = useState([]);
+
+    //selected tags
+    const [selectedClassTags,setSelectedClassTags] = useState([]);
+    const [selectedAffiliationTags,setSelectedAffiliationTags] = useState([]);
+    const [selectedInterestTags,setSelectedInterestTags] = useState([]);
+
+    //available tag options
+    const [classesTagOptions, setClassesTagOptions] = useState([])
+    const [interestsTagOptions, setInterestsTagOptions] = useState([])
+    const [affiliationsTagOptions, setAffiliationsTagOptions] = useState([])
+
+
+    // const [childClassList,setClassList] = useState([]);
+    // const [childAffiliationList,setAffiliationList] = useState([]);
+    // const [childInterestList,setInterestList] = useState([]);
+
+    // const [selectedTags,setSelectedTags] = useState([]);
+    // const [classesTagOptions, setClassesTagOptions] = useState([])
+    // const [interestsTagOptions, setInterestsTagOptions] = useState([])
+    // const [affiliationsTagOptions, setAffiliationsTagOptions] = useState([])
+
+    useEffect(() => {
+        setClassesTagOptions(['CS 31', 'MATH 32A', 'PHYSICS 1A', 'BIO 1'])
+        setInterestsTagOptions(['Biking', 'Skating', 'Dancing'])
+        setAffiliationsTagOptions(['Theta Chi', 'DevX', 'GlobeMed', 'Climbing Club'])
+    }, [])
+
     const [cookies, setCookie] = useCookies(['jwt']);
 
     const handleFormSubmit = async (event) => {
@@ -32,11 +56,12 @@ function SignUp(){
         const insta = event.target.insta.value;
         const facebook = event.target.facebook.value;
         const twitter = event.target.twitter.value;
-        const classes = [];
+        // const classes = [];
+        // console.log(selectedClassTags);
 
-        childClassList.forEach((currentItem) => {
-            classes.push(currentItem.item.label)
-        })
+        // childClassList.forEach((currentItem) => {
+        //     classes.push(currentItem.item.label)
+        // })
 
         const data = {
             "username": email,
@@ -49,7 +74,9 @@ function SignUp(){
             insta, 
             facebook, 
             twitter,
-            "interests": classes
+            "classes": selectedClassTags,
+            "interests":selectedInterestTags,
+            "affiliations":selectedAffiliationTags
         }
         // INSERT API CALLS HERE FOR LOGIN
         let success = true;
@@ -179,8 +206,31 @@ function SignUp(){
                                 }
                             </div>
                         </div>
-                        <div>
-                            <ChipFilter changeClasses = {setClassList} changeAffiliations = {setAffiliationList} changeInterests = {setInterestList}/>
+                        <div style ={{padding:"20px"}}>
+                            <ChipFilter
+                                setTagOptions={setClassesTagOptions}
+                                type="Classes"
+                                tagOptions={classesTagOptions}
+                                defaultShownTags={[]}
+                                setSelectedTags = {setSelectedClassTags}
+                                selectedTags = {selectedClassTags}
+                            />
+                            <ChipFilter
+                                setTagOptions={setInterestsTagOptions}
+                                type="Interests"
+                                tagOptions={interestsTagOptions}
+                                defaultShownTags={[]}
+                                setSelectedTags = {setSelectedInterestTags}
+                                selectedTags = {selectedInterestTags}
+                            />
+                            <ChipFilter
+                                setTagOptions={setAffiliationsTagOptions}
+                                type="Affiliations"
+                                tagOptions={affiliationsTagOptions}
+                                defaultShownTags={[]}
+                                setSelectedTags = {setSelectedAffiliationTags}
+                                selectedTags = {selectedAffiliationTags}
+                            />
                         </div>
                     </form>
                     <div></div>

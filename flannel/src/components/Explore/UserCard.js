@@ -190,15 +190,9 @@ export default function UserCard(props) {
 }
 
 UserCard.propTypes = {
-    classTags: PropTypes.arrayOf({
-        label: PropTypes.string.isRequired,
-    }).isRequired,
-    interestTags: PropTypes.arrayOf({
-        label: PropTypes.string.isRequired,
-    }).isRequired,
-    affiliationTags: PropTypes.arrayOf({
-        label: PropTypes.string.isRequired,
-    }).isRequired,
+    classTags: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+    interestTags: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+    affiliationTags: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
     displayName: PropTypes.string.isRequired,
     pronouns: PropTypes.string.isRequired,
     year: PropTypes.string.isRequired,

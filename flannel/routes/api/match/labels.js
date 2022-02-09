@@ -1,10 +1,11 @@
 const express = require('express');
 const labels = express.Router();
 const client = require("../../../db");
+const authenticate = require('../auth/authenticate.js');
 
-labels.get('/', getLabelMatches);
-labels.get('/getLabels', getAllLabels);
-labels.post("/createLabel", createLabel);
+labels.get('/', authenticate, getLabelMatches);
+labels.get('/getLabels', authenticate, getAllLabels);
+labels.post("/createLabel", authenticate, createLabel);
 
 
 

@@ -1,7 +1,7 @@
 const express = require('express');
 const users = express.Router();
 const client = require('../../../db');
-let authenticate = require('../authenticate.js');
+let authenticate = require('../auth/authenticate.js');
 let ObjectID = require('mongodb').ObjectID;
 
 users.post('/createUserInfo', authenticate, createUserInfo);

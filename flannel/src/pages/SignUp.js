@@ -95,8 +95,6 @@ function SignUp(){
         const response = await fetch('http://localhost:3000/login/register', requestObj);
         let responseObj = await response.json();
         setCookie('jwt', responseObj.jwt, { path: '/' });
-        
-
     }
     
     return(

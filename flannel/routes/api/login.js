@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 let express = require('express')
 let router = express.Router();
 let client = require("../../db.js");
@@ -117,4 +119,4 @@ router.post('/register', function(request, response, next) { //create a new user
     
 });
 
-module.exports = router;
+module.exports = router; 

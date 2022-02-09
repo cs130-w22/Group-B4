@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import React, {useState} from "react";
 import {Button, FormControl, InputLabel,Input, Select, MenuItem, TextField} from '@mui/material'
 import InstagramIcon from '@mui/icons-material/Instagram';
@@ -190,7 +188,7 @@ function SignUp(){
             </div>
         </div>
     )
-};
+}
 
 export default SignUp;
 

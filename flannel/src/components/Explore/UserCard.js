@@ -10,6 +10,8 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn'
 import PropTypes from 'prop-types'
 import '../../styles/fonts.css'
 
+// eslint-disable-next-line no-undef
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const profilePicture = require('../../assets/ProfilePicture.jpeg')
 
 const style = {

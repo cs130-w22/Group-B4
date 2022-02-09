@@ -1,10 +1,9 @@
-/* eslint-disable */
-
-let express = require('express')
-let router = express.Router();
-let client = require("../../db.js");
-let bcrypt = require('bcryptjs');
-let jwt = require('jsonwebtoken');
+/* eslint-disable no-undef */
+import { Router } from 'express';
+let router = Router();
+import { db } from "../../db.js";
+import { compareSync, genSalt, hash } from 'bcryptjs';
+import { sign } from 'jsonwebtoken';
 
 
 function generateJWT(username, response) {
@@ -16,7 +15,7 @@ function generateJWT(username, response) {
         usr: username
     }
     let private_key = process.env.SALT_HASH;
-    jwt.sign(payload, private_key, {}, function(err, token) {
+    sign(payload, private_key, {}, function(err, token) {
         return token;
     })
 }
@@ -29,7 +28,7 @@ router.post('/', function(request, response, next) {
         return;
     }
 
-    let users = client.db('flannel').collection('users');
+    let users = db('flannel').collection('users');
     let query_string = {"username": request.body.username}
     users.find(query_string).toArray((err, res) => {
         if(res.length == 0) { //no user exists so exit
@@ -39,7 +38,7 @@ router.post('/', function(request, response, next) {
 
         var temp_array = []
         res.forEach((item) => {
-            var compare = bcrypt.compareSync(request.body.password, item.password)
+            var compare = compareSync(request.body.password, item.password)
             if(compare) {
                 temp_array.push(item)
             }
@@ -56,7 +55,7 @@ router.post('/', function(request, response, next) {
             usr: request.body.username
         }
         let private_key = process.env.SALT_HASH;
-        jwt.sign(payload, private_key, {}, function(err, token) {
+        sign(payload, private_key, {}, function(err, token) {
 
             response.cookie('jwt', token);
             response.status(200).send({"jwt": token});
@@ -75,7 +74,7 @@ router.post('/register', function(request, response, next) { //create a new user
         return;
     }
     
-    let users = client.db('flannel').collection('users');
+    let users = db('flannel').collection('users');
     let query_string = {"username": request.body.username}
     users.find(query_string).toArray((err, res) => {
         if(res.length != 0) { //means that there is already a user in the databse with the email
@@ -92,8 +91,8 @@ router.post('/register', function(request, response, next) { //create a new user
 
 
         var password = request.body.password
-        bcrypt.genSalt(10, function(err, salt) {
-            bcrypt.hash(password, salt, function(err, hashvalue) {
+        genSalt(10, function(err, salt) {
+            hash(password, salt, function(err, hashvalue) {
                 let insertItem = request.body;
                 insertItem.password = hashvalue;
                 users.insertOne(insertItem, function(err, inserted) {
@@ -106,7 +105,7 @@ router.post('/register', function(request, response, next) { //create a new user
                         usr: request.body.username
                     }
                     let private_key = process.env.SALT_HASH;
-                    jwt.sign(payload, private_key, {}, function(err, token) {
+                    sign(payload, private_key, {}, function(err, token) {
 
                         response.cookie('jwt', token);
                         response.status(201).send({"jwt": token});
@@ -119,4 +118,4 @@ router.post('/register', function(request, response, next) { //create a new user
     
 });
 
-module.exports = router; 
+export default router; 

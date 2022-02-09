@@ -83,19 +83,16 @@ async function createLabel(req, res) {
                 // possibly use different status code
                 res.status(200).send(('Interest already exists'));
                 return;
+            } else {
+                // insert interest if it doesn't exist
+                await client.db('flannel').collection('interests').insertOne({
+                    name: interestName
+                });    
+                res.status(200).send('Interest created');
+                return;
             }
         }
-    })
-
-    // some sort of filter to make sure people aren't creating
-    // in appropriate interests
-
-    // insert interest if it doesn't exist
-    await client.db('flannel').collection('interests').insertOne({
-        name: interestName
-    });    
-
-    res.status(200).send('Interest created');
+    })    
 }
 
 module.exports = labels;

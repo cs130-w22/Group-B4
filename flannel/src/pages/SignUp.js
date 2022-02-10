@@ -64,7 +64,7 @@ function SignUp(){
         // })
 
         const data = {
-            "username": email,
+            "username": email.toLowerCase(),
             "password": password,
             "year": schoolYear, 
             major, 
@@ -93,8 +93,11 @@ function SignUp(){
         }
 
         const response = await fetch('http://localhost:3000/login/register', requestObj);
-        let responseObj = await response.json();
-        setCookie('jwt', responseObj.jwt, { path: '/' });
+        if(response.status === 201) { //successful login
+            let responseObj = await response.json();
+            setCookie('jwt', responseObj.jwt, { path: '/' });
+        } else if (response.status === 400) {
+        }
     }
     
     return(

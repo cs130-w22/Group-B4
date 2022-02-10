@@ -49,15 +49,12 @@ function LogIn() {
                     Authorization: cookies,
                 },
             }
-            const userList = await fetch(
-                `http://localhost:3000/user/?username=${username}`,
-                requestObj
-            )
-            // let users = await userList.json()
-            
-        } else {
-            // have to try again -> bad login
-            
+            // console.log('here');
+            // const labels = await fetch(`http://localhost:3000/label/getLabels?username=brandon@g.ucla.edu`, requestObj)
+            // console.log(labels);
+            //let users = await userList.json()
+        } else { //have to try again -> bad login 
+            console.log("bad login")
         }
     }
     const recoveryEmailMethod = (event) => {

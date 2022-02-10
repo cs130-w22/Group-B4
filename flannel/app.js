@@ -11,7 +11,6 @@ var cors = require('cors')
 dotenv.config();
 
 const port = 3000;
-const url = 'mongodb+srv://<flannel>:<cs130sux>@cluster0.elmnm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 const app = express();
 const server = http.createServer(app);
 const io = require('socket.io')(server, {
@@ -46,6 +45,7 @@ app.use((req, res, next)=>{
 app.use(cookieParser());
 app.use(bodyParser.json())
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/user', userRouter);

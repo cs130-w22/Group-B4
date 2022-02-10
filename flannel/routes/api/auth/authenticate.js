@@ -34,7 +34,6 @@ const auth = (req, res, next) => {
             res.status(401).send();
             return;
         }
-
         if(decoded.usr === req.query.username)
         {
             const now = new Date();

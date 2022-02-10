@@ -13,7 +13,14 @@ users.get('/', authenticate, function(req, res, next) {
     let users = client.db('flannel').collection('users');
     users.find().toArray((err, data) => {
         //get a list of all the users 
-        res.status(200).send(data);//.send(data)
+        let tmp_data = [];
+        data.forEach((item) => {
+            console.log(item.username, req.query.username)
+            if(item.username !== req.query.username) {
+                tmp_data.push(item)
+            }
+        })
+        res.status(200).send(tmp_data);//.send(data)
     })
 })
 

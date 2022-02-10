@@ -88,6 +88,7 @@ export default function ExplorePage() {
     const [classesTagOptions, setClassesTagOptions] = useState([])
     const [interestsTagOptions, setInterestsTagOptions] = useState([])
     const [affiliationsTagOptions, setAffiliationsTagOptions] = useState([])
+    const [userList, setUserList] = useState([])
 
 
     useEffect(async () => {
@@ -95,6 +96,8 @@ export default function ExplorePage() {
         // get jwt cookie & stored user object
         const cookies = document.cookie;
         const user = JSON.parse(localStorage.getItem('user'));
+        console.log("AAA")
+        console.log(user)
         const requestObj = {
             method: 'GET',
             headers: {
@@ -104,7 +107,11 @@ export default function ExplorePage() {
         };
         // get all labels in our database
         const response = (await fetch(`http://localhost:3000/label/getLabels?username=${user.username}`, requestObj));
+        const getUsers = await fetch(`http://localhost:3000/user?username=${user.username}`, requestObj);
         const labels = await response.json();
+        const users = await getUsers.json();
+        setUserList((old) => users)
+
         let labelsArr = labels.map(x => x.name);
         // hack while we have duplicates in our labels database -> get rid of duplicates
         labelsArr = [...new Set(labelsArr)];
@@ -212,6 +219,22 @@ export default function ExplorePage() {
                         affiliationTags={['Intermural Basketball', 'UPE', 'ACM', 'TeachLA']}
                         bio="However, the gardener's life is turned upside down when she goes to an engagement party in Sleepford where there are peculiar giants that like to fire each other."
                     />
+                    {
+
+                    userList.map((currentUser, index) => (
+                            
+                            <UserCard key={index}
+                            displayName={currentUser.username}
+                            year={currentUser.year}
+                            major={currentUser.major}
+                            pronouns={currentUser.pronouns}
+                            classTags={currentUser.classes}
+                            interestTags={currentUser.interests}
+                            affiliationTags={currentUser.affiliations}
+                            bio={currentUser.bio}
+                            />
+                        ))
+                    }
                 </Box>
             </Box>
         </Box>

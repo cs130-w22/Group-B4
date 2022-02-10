@@ -6,8 +6,10 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import ChipFilter from '../components/ChipFilter'
 import { useCookies } from 'react-cookie';
+import { useNavigate } from "react-router-dom";
 
 function SignUp(){
+    const navigate = useNavigate();
     const [schoolYear,setSchoolYear] = useState("");
     const [password,setPassword] = useState("");
     const [confirmPassword,setConfirmPassword] = useState("");
@@ -74,14 +76,9 @@ function SignUp(){
             insta, 
             facebook, 
             twitter,
-<<<<<<< HEAD
-            "interests": classes,
-            name
-=======
             "classes": selectedClassTags,
             "interests":selectedInterestTags,
             "affiliations":selectedAffiliationTags
->>>>>>> d23f8c40b660507a59565d4cc76a8fdeaaf01b79
         }
         // INSERT API CALLS HERE FOR LOGIN
         let success = true;
@@ -100,7 +97,13 @@ function SignUp(){
         const response = await fetch('http://localhost:3000/login/register', requestObj);
         if(response.status === 201) { //successful login
             let responseObj = await response.json();
+            console.log(responseObj)
             setCookie('jwt', responseObj.jwt, { path: '/' });
+            localStorage.setItem('user', JSON.stringify(responseObj.user));
+            console.log(localStorage.getItem('user'));
+            const cookies = document.cookie;
+            // navigate to explore if successful
+            navigate('/Explore');
         } else if (response.status === 400) {
             console.log('bad response');
         }

@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {IconButton,Button, Typography, TextField, FormControl, InputLabel,Input} from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
@@ -10,11 +10,12 @@ function LogIn(){
     const [isExpanded,setIsExpanded] = useState(false);
     const [loginError,setLoginError] = useState(false);
     const [cookies, setCookie] = useCookies(['jwt']);
+    const navigate = useNavigate();
     const handleSubmit = async (event) => {
         event.preventDefault();
         const username = event.target.elements.username.value.toLowerCase()
         const password = event.target.elements.password.value;
-        setLoginError(!loginError);
+        
        
         let data = {
             username,
@@ -31,8 +32,8 @@ function LogIn(){
 
 
         const response = await fetch('http://localhost:3000/login', requestObj);
-        console.log(response)
         if(response.status === 200) {
+            console.log(response)
             const responseObj = await response.json();
             setCookie('jwt', responseObj.jwt, { path: '/' });
             var cookies = document.cookie;
@@ -43,14 +44,14 @@ function LogIn(){
                     'Authorization' : cookies
                 },
             }
+            navigate('/Explore');
             // console.log('here');
             // const labels = await fetch(`http://localhost:3000/label/getLabels?username=brandon@g.ucla.edu`, requestObj)
             // console.log(labels);
             //let users = await userList.json()
         } else { //have to try again -> bad login 
-            console.log("bad login")
+            setLoginError(!loginError);
         }
-        
     }
     const recoveryEmailMethod = (event) => {
         event.preventDefault();

@@ -50,8 +50,8 @@ function LogIn() {
                 },
             }
             // console.log('here');
-            // const labels = await fetch(`http://localhost:3000/label/getLabels?username=brandon@g.ucla.edu`, requestObj)
-            // console.log(labels);
+            const labels = await fetch(`http://localhost:3000/label/getLabels?username=brandon@g.ucla.edu`, requestObj)
+            console.log(labels);
             //let users = await userList.json()
         } else { //have to try again -> bad login 
             console.log("bad login")

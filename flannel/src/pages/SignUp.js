@@ -97,6 +97,7 @@ function SignUp(){
             let responseObj = await response.json();
             setCookie('jwt', responseObj.jwt, { path: '/' });
         } else if (response.status === 400) {
+            console.log('bad response');
         }
     }
     

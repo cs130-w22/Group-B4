@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
-const expres = require('express');
+const express = require('express');
 const router = express.Router();
-const db = require("../../db");
+const client = require("../../db");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -22,13 +22,14 @@ function generateJWT(username, response) {
 
 
 router.post('/', function(request, response, next) {
+    console.log('here');
     if(!request.body.username || !request.body.password) 
     {
         response.status(401).send("unauthorized!");
         return;
     }
 
-    let users = db('flannel').collection('users');
+    let users = client.db('flannel').collection('users');
     let query_string = {"username": request.body.username}
     users.find(query_string).toArray((err, res) => {
         if(res.length == 0) { //no user exists so exit
@@ -119,4 +120,4 @@ router.post('/register', function(request, response, next) { //create a new user
     
 });
 
-export default router; 
+module.exports = router;

@@ -14,20 +14,17 @@ import '../App.css'
 
 function LogIn() {
     const navigate = useNavigate();
-    const [isExpanded, setIsExpanded] = useState(false)
-    const [loginError, setLoginError] = useState(false)
-    const [cookies, setCookie] = useCookies(['jwt'])
-    const handleSubmit = async (event) => {
-        navigate('/Explore')
-        event.preventDefault()
-        const username = event.target.elements.username.value
-        const password = event.target.elements.password.value
-        setLoginError(!loginError)
-
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [loginError, setLoginError] = useState(false);
+    const [cookies, setCookie] = useCookies(['jwt']);
+    const handleSubmit = async (event) => {        
+        event.preventDefault();
+        const username = event.target.elements.username.value;
+        const password = event.target.elements.password.value;
         const data = {
             username,
             password,
-        }
+        };
 
         let requestObj = {
             method: 'Post',
@@ -35,26 +32,33 @@ function LogIn() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
-        }
+        };
 
-        const response = await fetch('http://localhost:3000/login', requestObj)
-        const responseObj = await response.json()
-        setCookie('jwt', responseObj.jwt, { path: '/' })
+        const response = await fetch('http://localhost:3000/login', requestObj);
+        
         if (response.status === 200) {
-            const cookies = document.cookie
+            const responseObj = await response.json();
+            setCookie('jwt', responseObj.jwt, { path: '/' });
+            // store user object in user's browser
+            localStorage.setItem('user', JSON.stringify(responseObj.user));
+            console.log(localStorage.getItem('user'));
+            const cookies = document.cookie;
+            // navigate to explore if successful
+            navigate('/Explore');
             requestObj = {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: cookies,
                 },
-            }
+            };
             // console.log('here');
-            const labels = await fetch(`http://localhost:3000/label/getLabels?username=brandon@g.ucla.edu`, requestObj)
-            console.log(labels);
+            // const labels = await fetch(`http://localhost:3000/label/getLabels?username=brandon@g.ucla.edu`, requestObj)
+            // console.log(labels);
             //let users = await userList.json()
-        } else { //have to try again -> bad login 
-            console.log("bad login")
+        } else { //have to try again -> bad login
+            setLoginError(!loginError); 
+            console.log("bad login");
         }
     }
     const recoveryEmailMethod = (event) => {

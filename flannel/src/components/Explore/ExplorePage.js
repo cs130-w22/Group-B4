@@ -90,8 +90,26 @@ export default function ExplorePage() {
     const [affiliationsTagOptions, setAffiliationsTagOptions] = useState([])
 
 
-    useEffect(() => {
-        setClassesTagOptions(['CS 31', 'MATH 32A', 'PHYSICS 1A', 'BIO 1'])
+    useEffect(async () => {
+
+        // get jwt cookie & stored user object
+        const cookies = document.cookie;
+        const user = JSON.parse(localStorage.getItem('user'));
+        const requestObj = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: cookies
+            },
+        };
+        // get all labels in our database
+        const response = (await fetch(`http://localhost:3000/label/getLabels?username=${user.username}`, requestObj));
+        const labels = await response.json();
+        let labelsArr = labels.map(x => x.name);
+        // hack while we have duplicates in our labels database -> get rid of duplicates
+        labelsArr = [...new Set(labelsArr)];
+        // set options in classes list to be labels from db
+        setClassesTagOptions(labelsArr);
         setInterestsTagOptions(['Biking', 'Skating', 'Dancing'])
         setAffiliationsTagOptions(['Theta Chi', 'DevX', 'GlobeMed', 'Climbing Club'])
     }, [])

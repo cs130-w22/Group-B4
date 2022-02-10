@@ -3,18 +3,26 @@
     margin: auto;
 }
 
+#chat_page {
+    display: flex; 
+    flex-direction: row;
+    height: 750px;
+    margin-top: 20px;
+}
+
 #message {
     margin: auto;
     margin-top: 5px;
     width: 300px;
-    border: solid 1px black;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
+    background-color: #f0f0ed;
+    border: solid 1px #d9d9d9
 }
 
 #sender-text {
-    margin-top: -5px;
+    margin-top: 5px;
     margin-left: 5px;
     font-size: 18px;
 }
@@ -22,4 +30,76 @@
 #message-text {
     margin-left: 10px;
     margin-bottom: 20px;
+}
+
+body, html {
+    background-color: white;
+    height: 100%;
+  }
+
+#message_window {
+    border: solid 1px #d9d9d9;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#current_chats { 
+    width: 150px; 
+    height: 100%; 
+    border: solid 1px rgb(201, 214, 176);
+    background-color: #fefbe9;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+#current_chats > * {
+    margin: 2px 0;
+}
+
+
+#form_container {
+    width: 100%; 
+    height: 5%; 
+}
+
+#message_list{
+    width: 100%;
+    height: 95%;
+    overflow-x: scroll;
+}
+
+#msgform {
+    margin: 0 auto;
+    width: 50%;
+}
+
+#txtbox {
+    width: 60%;
+    height: 25px;
+}
+
+.sendmsg {
+    background-color: white; /* Green */
+    border: none;
+    color: black;
+    height: 27px;
+    margin-left: 5px;
+    border-radius: 3px;
+    border: solid 2px hsl(231, 69%, 65%);
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    
+}
+
+.sendmsg:hover {
+    background-color: hsl(231, 69%, 65%);
+    border: solid 1px hsl(231, 69%, 65%);
+    color: white
 }

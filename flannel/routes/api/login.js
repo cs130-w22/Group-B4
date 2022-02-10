@@ -107,7 +107,6 @@ router.post('/register', function(request, response, next) { //create a new user
                     jwt.sign(payload, private_key, {}, function(err, token) {
 
                         response.cookie('jwt', token);
-                        console.log("BB")
                         response.status(201).send({"jwt": token});
                         return
                     })

@@ -49,7 +49,8 @@ function SignUp(){
             insta, 
             facebook, 
             twitter,
-            "interests": classes
+            "interests": classes,
+            name
         }
         // INSERT API CALLS HERE FOR LOGIN
         let success = true;

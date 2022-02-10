@@ -1,0 +1,17 @@
+#current_match {
+    width: 96%; 
+    height: 50px; 
+    background-color: #9ec792;
+    border-radius: 5px;
+    border: solid 1px #5c6e56;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#current_match:hover {
+    width: 96%; 
+    height: 50px; 
+    background-color: #bae9ab;
+    border-radius: 5px;
+}

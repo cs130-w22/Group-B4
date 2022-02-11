@@ -7,13 +7,13 @@ import React, { useState, useEffect, useContext} from 'react';
 import socketClient  from "socket.io-client";
 import {SocketContext, socket} from './socket'
 
-function App({sender, reciever}) {
+function App() {
   const queryParams = new URLSearchParams(window.location.search);
   const from = queryParams.get('from')
   const to = queryParams.get('to')
   const [room, setRoom] = useState(""); //(to + "#" + from).split('#').sort().join("#")
   const [msg, setMsg] = useState(0);
-  const [users, setUsers] = useState([{"username": "Henry", "id": "6202ccd95532a766e2477e41"}, {"username": "Brandon", "id": "620306331112997f1a5faffb"}, {"username": "chi", "id": "6204b3f975b3b558c0c773a0"}])
+  const [users, setUsers] = useState([{"username": "Henry", "id": "62058ecec54374bc9112fc2d"}, {"username": "ishaan", "id": "6205904f308e7d7d8d84075f"}, {"username": "chi", "id": "6204b3f975b3b558c0c773a0"}])
   const [messages, setMessages] = useState([]);//{"timeStamp": 0, msg: "", sender: ""}
 
 

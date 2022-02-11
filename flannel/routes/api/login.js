@@ -15,7 +15,7 @@ function generateJWT(username, response) {
         usr: username
     }
     let private_key = process.env.SALT_HASH;
-    sign(payload, private_key, {}, function(err, token) {
+    jwt.sign(payload, private_key, {}, function(err, token) {
         return token;
     })
 }
@@ -75,7 +75,7 @@ router.post('/register', function(request, response, next) { //create a new user
         return;
     }
     
-    let users = db('flannel').collection('users');
+    let users = client.db('flannel').collection('users');
     let query_string = {"username": request.body.username}
     users.find(query_string).toArray((err, res) => {
         if(res.length != 0) { //means that there is already a user in the databse with the email
@@ -106,7 +106,7 @@ router.post('/register', function(request, response, next) { //create a new user
                         usr: request.body.username
                     }
                     let private_key = process.env.SALT_HASH;
-                    sign(payload, private_key, {}, function(err, token) {
+                    jwt.sign(payload, private_key, {}, function(err, token) {
 
                         response.cookie('jwt', token);
                         console.log("BB")

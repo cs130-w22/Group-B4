@@ -4,14 +4,49 @@ import {
     IconButton,
     Button,
     Typography,
-    TextField
+    TextField,
+    Box
 } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import { useCookies } from 'react-cookie'
 import { useNavigate } from "react-router-dom";
 import '../App.css'
+import logo from '../assets/bearLogo.png'
 
+const styles = {
+    root: {
+        display:"flex",
+        flexDirection: "column",
+        alignItems:"center",
+        padding: 3
+    },
+    rowContainer:{
+        display:"flex",
+        flexDirection:"row",
+        width:"95%"
+    },
+    title: {
+        paddingRight: 2,
+        fontFamily: 'Work Sans',
+        fontSize: 40,
+        marginBottom: 3,
+        fontWeight: 'bold',
+    },
+    logoContainer: {
+        padding: 2,
+        display: 'flex',
+        flexDirection: 'row',
+        width: 300,
+    },
+    formContainer:{
+        padding:5,
+        display:"flex",
+        flexDirection:"column",
+        backgroundColor:"#E0FFFF",
+        borderRadius:5
+    }
+}
 function LogIn() {
     const navigate = useNavigate();
     const [isExpanded, setIsExpanded] = useState(false);
@@ -67,109 +102,176 @@ function LogIn() {
         alert('Password recovery instructions have been sent to your email')
     }
     return (
-        <div
-            style={{
-                backgroundColor: '#F5F5DC',
-                width: '100vw',
-                minHeight: '100vh',
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-            }}
-        >
-            <div />
-            <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                }}
-            >
-                <div>
-                    <Typography
+        <Box sx = {styles.root}>
+            <Box sx = {styles.rowContainer}>
+                <Box sx = {styles.logoContainer}>
+                    <img src={logo} alt="Logo" style={styles.logo} />
+                    <Typography sx={styles.title}>FLANNEL</Typography>
+                </Box>
+            </Box>
+            <Box sx = {styles.formContainer}>
+                <form
+                    onSubmit={handleSubmit}
+                    style={{ display: 'flex', flexDirection: 'column' }}
+                >
+                    <h1
                         style={{
-                            fontFamily: '-apple-system',
-                            fontSize: 60,
-                            fontWeight: 'bold',
                             textAlign: 'center',
+                            fontFamily: 'Work Sans',
+                            fontSize: 40,
+                            fontWeight: 'bold',
                         }}
                     >
-                        Flannel
+                        Sign In
+                    </h1>
+                    <TextField
+                        required
+                        id="username"
+                        label="Username"
+                        style={{ padding: '5px' }}
+                        error={loginError}
+                    />
+                    <TextField
+                        required
+                        id="password"
+                        style={{ padding: '5px' }}
+                        type="password"
+                        error={loginError}
+                        label="Password"
+                    />
+                    {loginError && (
+                        <p style={{ color: 'red' }}>Username or Password is incorrect</p>
+                    )}
+                    <Button variant="outlined" type="submit" style={{ padding: '10px' }}>
+                        Sign In!
+                    </Button>
+                    <Typography>
+                        <Link to="/SignUp">Create an Account</Link>
                     </Typography>
-                </div>
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        backgroundColor: 'white',
-                        borderRadius: '5%',
-                        padding: '70px',
-                    }}
-                >
+                    <Typography>
+                        Forgot Your Password?
+                        <IconButton size="medium" onClick={() => setIsExpanded(!isExpanded)}>
+                            {!isExpanded && <ExpandMoreIcon />}
+                            {isExpanded && <ExpandLessIcon />}
+                        </IconButton>
+                    </Typography>
+                </form>
+                {isExpanded && (
                     <form
-                        onSubmit={handleSubmit}
+                        onSubmit={recoveryEmailMethod}
                         style={{ display: 'flex', flexDirection: 'column' }}
                     >
-                        <h1
-                            style={{
-                                textAlign: 'center',
-                                fontFamily: 'Work Sans',
-                                fontSize: 40,
-                                fontWeight: 'bold',
-                            }}
-                        >
-                            Sign In
-                        </h1>
-                        <TextField
-                            required
-                            id="username"
-                            label="Username"
-                            style={{ padding: '5px' }}
-                            error={loginError}
-                        />
-                        <TextField
-                            required
-                            id="password"
-                            style={{ padding: '5px' }}
-                            type="password"
-                            error={loginError}
-                            label="Password"
-                        />
-                        {loginError && (
-                            <p style={{ color: 'red' }}>Username or Password is incorrect</p>
-                        )}
-                        <Button variant="outlined" type="submit" style={{ padding: '10px' }}>
-                            Sign In!
+                        <TextField type="text" id="email" label="Email" />
+                        <Button variant="outlined" type="submit">
+                            Recover
                         </Button>
-                        <Typography>
-                            <Link to="/SignUp">Create an Account</Link>
-                        </Typography>
-                        <Typography>
-                            Forgot Your Password?
-                            <IconButton size="medium" onClick={() => setIsExpanded(!isExpanded)}>
-                                {!isExpanded && <ExpandMoreIcon />}
-                                {isExpanded && <ExpandLessIcon />}
-                            </IconButton>
-                        </Typography>
                     </form>
-                    {isExpanded && (
-                        <form
-                            onSubmit={recoveryEmailMethod}
-                            style={{ display: 'flex', flexDirection: 'column' }}
-                        >
-                            <TextField type="text" id="email" label="Email" />
-                            <Button variant="outlined" type="submit">
-                                Recover
-                            </Button>
-                        </form>
-                    )}
-                </div>
-                <div />
-                <div />
-                <div />
-            </div>
-            <div />
-        </div>
+                )}
+            </Box>
+        </Box>
+        // <div
+        //     style={{
+        //         backgroundColor: '#F5F5DC',
+        //         width: '100vw',
+        //         minHeight: '100vh',
+        //         display: 'flex',
+        //         flexDirection: 'row',
+        //         justifyContent: 'space-between',
+        //     }}
+        // >
+        //     <div />
+        //     <div
+        //         style={{
+        //             display: 'flex',
+        //             flexDirection: 'column',
+        //             justifyContent: 'space-between',
+        //         }}
+        //     >
+        //         <div>
+        //             <Typography
+        //                 style={{
+        //                     fontFamily: '-apple-system',
+        //                     fontSize: 60,
+        //                     fontWeight: 'bold',
+        //                     // textAlign: 'center',
+        //                 }}
+        //             >
+        //                 Flannel
+        //             </Typography>
+        //         </div>
+        //         <div
+        //             style={{
+        //                 display: 'flex',
+        //                 flexDirection: 'column',
+        //                 backgroundColor: 'white',
+        //                 borderRadius: '5%',
+        //                 padding: '70px',
+        //             }}
+        //         >
+        //             <form
+        //                 onSubmit={handleSubmit}
+        //                 style={{ display: 'flex', flexDirection: 'column' }}
+        //             >
+        //                 <h1
+        //                     style={{
+        //                         textAlign: 'center',
+        //                         fontFamily: 'Work Sans',
+        //                         fontSize: 40,
+        //                         fontWeight: 'bold',
+        //                     }}
+        //                 >
+        //                     Sign In
+        //                 </h1>
+        //                 <TextField
+        //                     required
+        //                     id="username"
+        //                     label="Username"
+        //                     style={{ padding: '5px' }}
+        //                     error={loginError}
+        //                 />
+        //                 <TextField
+        //                     required
+        //                     id="password"
+        //                     style={{ padding: '5px' }}
+        //                     type="password"
+        //                     error={loginError}
+        //                     label="Password"
+        //                 />
+        //                 {loginError && (
+        //                     <p style={{ color: 'red' }}>Username or Password is incorrect</p>
+        //                 )}
+        //                 <Button variant="outlined" type="submit" style={{ padding: '10px' }}>
+        //                     Sign In!
+        //                 </Button>
+        //                 <Typography>
+        //                     <Link to="/SignUp">Create an Account</Link>
+        //                 </Typography>
+        //                 <Typography>
+        //                     Forgot Your Password?
+        //                     <IconButton size="medium" onClick={() => setIsExpanded(!isExpanded)}>
+        //                         {!isExpanded && <ExpandMoreIcon />}
+        //                         {isExpanded && <ExpandLessIcon />}
+        //                     </IconButton>
+        //                 </Typography>
+        //             </form>
+        //             {isExpanded && (
+        //                 <form
+        //                     onSubmit={recoveryEmailMethod}
+        //                     style={{ display: 'flex', flexDirection: 'column' }}
+        //                 >
+        //                     <TextField type="text" id="email" label="Email" />
+        //                     <Button variant="outlined" type="submit">
+        //                         Recover
+        //                     </Button>
+        //                 </form>
+        //             )}
+        //         </div>
+        //         <div />
+        //         <div />
+        //         <div />
+        //     </div>
+        //     <div />
+        // </div>
     )
 }
 export default LogIn

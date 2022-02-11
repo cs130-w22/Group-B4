@@ -76,7 +76,7 @@ export default function ChipFilter(props) {
                 disablePortal
                 id="combo-box-demo"
                 options={tagOptions}
-                renderInput={(params) => <TextField {...params} label={type} />}
+                renderInput={(params) => <TextField style= {{width:250}} {...params} label={type} />}
                 onChange={(_event, selectedItem) => {
                     if (selectedItem !== null && selectedItem !== '') {
                         const newShownTags = selectedTags.concat(selectedItem)

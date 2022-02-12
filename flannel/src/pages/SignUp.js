@@ -38,8 +38,8 @@ const styles = {
         padding:5,
         display:"flex",
         flexDirection:"row",
-        backgroundColor:"#E0FFFF",
-        borderRadius:5
+        boxShadow: '0 0px 4px rgba(0, 0, 0, 0.3)',
+        borderRadius: 4,
     },
     formColumn:{
         display:"flex",
@@ -65,15 +65,6 @@ function SignUp(){
     const [interestsTagOptions, setInterestsTagOptions] = useState([])
     const [affiliationsTagOptions, setAffiliationsTagOptions] = useState([])
 
-
-    // const [childClassList,setClassList] = useState([]);
-    // const [childAffiliationList,setAffiliationList] = useState([]);
-    // const [childInterestList,setInterestList] = useState([]);
-
-    // const [selectedTags,setSelectedTags] = useState([]);
-    // const [classesTagOptions, setClassesTagOptions] = useState([])
-    // const [interestsTagOptions, setInterestsTagOptions] = useState([])
-    // const [affiliationsTagOptions, setAffiliationsTagOptions] = useState([])
     const navigate = useNavigate();
     useEffect(() => {
         setClassesTagOptions(['CS 31', 'MATH 32A', 'PHYSICS 1A', 'BIO 1'])
@@ -97,49 +88,43 @@ function SignUp(){
         const insta = event.target.insta.value;
         const facebook = event.target.facebook.value;
         const twitter = event.target.twitter.value;
-        // const classes = [];
-        // console.log(selectedClassTags);
 
-        // childClassList.forEach((currentItem) => {
-        //     classes.push(currentItem.item.label)
-        // })
-
-        const data = {
-            "username": email.toLowerCase(),
-            "password": password,
-            "year": schoolYear, 
-            major, 
-            hometown, 
-            pronouns, 
-            bio, 
-            insta, 
-            facebook, 
-            twitter,
-            "classes": selectedClassTags,
-            "interests":selectedInterestTags,
-            "affiliations":selectedAffiliationTags
+        if (password !== confirmPassword){
+            setSignupError(true);
         }
-        // INSERT API CALLS HERE FOR LOGIN
-        let success = true;
-        if (!success){
-            setSignupError(!signupError);
-        }
-
-        let requestObj = {
-            method: 'Post',
-            headers: {
-                'Content-Type' : 'application/json',
-            },
-            body: JSON.stringify(data),
-        }
-
-        const response = await fetch('http://localhost:3000/login/register', requestObj);
-        if(response.status === 201) { //successful login
-            let responseObj = await response.json();
-            setCookie('jwt', responseObj.jwt, { path: '/' });
-            navigate('/Explore');
-        } else if (response.status === 400) {
-            console.log('bad response');
+        else{
+            setSignupError(false);
+            const data = {
+                "name":name,
+                "username": email.toLowerCase(),
+                "password": password,
+                "year": schoolYear, 
+                major, 
+                hometown, 
+                pronouns, 
+                bio, 
+                insta, 
+                facebook, 
+                twitter,
+                "classes": selectedClassTags,
+                "interests":selectedInterestTags,
+                "affiliations":selectedAffiliationTags
+            }
+            let requestObj = {
+                method: 'Post',
+                headers: {
+                    'Content-Type' : 'application/json',
+                },
+                body: JSON.stringify(data),
+            }
+            const response = await fetch('http://localhost:3000/login/register', requestObj);
+            if(response.status === 201) { //successful login
+                let responseObj = await response.json();
+                setCookie('jwt', responseObj.jwt, { path: '/' });
+                navigate('/Explore');
+            } else if (response.status === 400) {
+                console.log('bad response');
+            }
         }
     }
     
@@ -174,26 +159,18 @@ function SignUp(){
                         <TextField required label = "Email"  id = "email"
                             style = {{padding:"5px"}}
                         />
-                        <TextField required label = "Password" value = {password} id = "password"
+                        <TextField required label = "Password" id = "password"
                             type = "password"
-                        style = {{padding:"5px"}}
-                            onChange = {(e) => {
-                                setPassword(e.target.value);
-                            }}
-                            error = {signupError && (password === "" || password !== confirmPassword) }
+                            style = {{padding:"5px"}}
                         />
                         {
-                            password !== confirmPassword && (
+                            signupError && (
                                 <p style = {{color:"red"}}>Make sure passwords match</p>
                             )
                         }
-                        <TextField required label = "Confirm Password" value = {confirmPassword} id ="confirmPassword"
-                        type = "password"
-                        style = {{padding:"5px"}}
-                            onChange = {(e) => {
-                                setConfirmPassword(e.target.value);
-                            }}
-                            error = {signupError && (confirmPassword === "" || password !== confirmPassword) }  
+                        <TextField required label = "Confirm Password" id ="confirmPassword"
+                            type = "password"
+                            style = {{padding:"5px"}}
                         />
                     </Box>
                     <Box sx = {styles.formColumn}>
@@ -272,9 +249,6 @@ function SignUp(){
                     </Box>
                 </Box>
             <Button fullWidth variant = "contained" color = "success" type="submit" >Register</Button>
-            {
-                signupError && (<p style = {{color:"red"}}>Please fill out the highlighted fields</p>)
-            }
             </form>
         </Box>
     )

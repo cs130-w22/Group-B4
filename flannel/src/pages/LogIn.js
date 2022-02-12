@@ -43,8 +43,8 @@ const styles = {
         padding:5,
         display:"flex",
         flexDirection:"column",
-        backgroundColor:"#E0FFFF",
-        borderRadius:5
+        boxShadow: '0 0px 4px rgba(0, 0, 0, 0.3)',
+        borderRadius: 4,
     }
 }
 function LogIn() {

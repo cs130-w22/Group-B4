@@ -95,6 +95,7 @@ router.post('/register', function(request, response, next) { //create a new user
             bcrypt.hash(password, salt, function(err, hashvalue) {
                 let insertItem = request.body;
                 insertItem.password = hashvalue;
+                insertItem.matches = [];
                 users.insertOne(insertItem, function(err, inserted) {
                     //handle error later 
                     const now = new Date();

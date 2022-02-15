@@ -96,7 +96,6 @@ export default function ExplorePage() {
         // get jwt cookie & stored user object
         const cookies = document.cookie;
         const user = JSON.parse(localStorage.getItem('user'));
-        console.log("AAA")
         console.log(user)
         const requestObj = {
             method: 'GET',

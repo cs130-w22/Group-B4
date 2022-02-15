@@ -33,11 +33,13 @@ app.use(bodyParser.urlencoded({
 }))
 
 app.use((req, res, next)=>{  
+  // req["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept, Cookie, Authorization";
+  // req["Access-Control-Allow-Methods"] = "GET, POST, PATCH, DELETE, OPTIONS"
   res.setHeader("Access-Control-Allow-Origin", "*");  
   res.setHeader(  
     "Access-Control-Allow-Headers",  
     "Origin, X-Requested-With, Content-Type, Accept, Cookie, Authorization");  
-    res.setHeader("Access-Control-Allow-Methods",  
+  res.setHeader("Access-Control-Allow-Methods",  
     "GET, POST, PATCH, DELETE, OPTIONS");  
   next();  
 });  

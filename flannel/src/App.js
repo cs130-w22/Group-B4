@@ -1,7 +1,7 @@
 import React from 'react';
 import LogIn from './pages/LogIn';
 import SignUp from './pages/SignUp';
-import Chat from './Chat';
+import Chat from './pages/Chat';
 import ExplorePage from './components/Explore/ExplorePage'
 import {Route,Routes} from 'react-router-dom';
 import './App.css'

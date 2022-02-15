@@ -6,7 +6,6 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const auth = (req, res, next) => {
-    
     let auth = req.headers.authorization;
     let jwt_index = auth.indexOf("jwt=")
     if(jwt_index === -1) {

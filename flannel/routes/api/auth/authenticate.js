@@ -6,13 +6,24 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const auth = (req, res, next) => {
-    
     let auth = req.headers.authorization;
-    console.log(auth);
+    let jwt_index = auth.indexOf("jwt=")
+    if(jwt_index === -1) {
+        res.status(401).send();
+        return;
+    }
+    auth = auth.substring(jwt_index)
+    auth_arr = auth.split(";")
+
+    for(cookie in auth) {
+        if (cookie.indexOf("jwt=") !== -1) {
+            auth = cookie;
+            break;
+        }
+    }
     let broken = auth.split('=')
     let token = broken[1]
-    console.log('\nhere\n');
-    console.log(token)
+
     
 
     jwt.verify(token, process.env.SALT_HASH, function(err, decoded) {
@@ -22,7 +33,6 @@ const auth = (req, res, next) => {
             res.status(401).send();
             return;
         }
-
         if(decoded.usr === req.query.username)
         {
             const now = new Date();

@@ -33,11 +33,13 @@ app.use(bodyParser.urlencoded({
 }))
 
 app.use((req, res, next)=>{  
+  // req["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept, Cookie, Authorization";
+  // req["Access-Control-Allow-Methods"] = "GET, POST, PATCH, DELETE, OPTIONS"
   res.setHeader("Access-Control-Allow-Origin", "*");  
   res.setHeader(  
     "Access-Control-Allow-Headers",  
     "Origin, X-Requested-With, Content-Type, Accept, Cookie, Authorization");  
-    res.setHeader("Access-Control-Allow-Methods",  
+  res.setHeader("Access-Control-Allow-Methods",  
     "GET, POST, PATCH, DELETE, OPTIONS");  
   next();  
 });  
@@ -75,8 +77,17 @@ client.connect(`mongodb+srv://flannel:${process.env.DATABASE_PWD}@cluster0.elmnm
 io.on('connection', socket => {
   let messages = client.db('flannel').collection('messages');
 
+  socket.on('leaveRoom', ({room}) => {
+    if (room !== "") {
+      console.log("leave room: ", room);
+      socket.leave(room);
+    }
+  })
 
   socket.on('joinRoom', ({username, room}) => {
+    if(room === "")
+      return;
+    console.log("join room: ", room);
     socket.join(room); //when we join the room, send the user the entire chat history to render 
     messages.find({"roomName": room}).toArray(function (err, document) {
       let messageHistory = document; //can change this later 
@@ -92,14 +103,16 @@ io.on('connection', socket => {
     const msgObj = JSON.parse(msg);
     let currentRoom = msgObj.room; //need to get whatever room the user is in
     let sender = msgObj.sender;
+    let sender_name = msgObj.sender_name;
     let currentMsg = msgObj.data; //will change this later
     let currentTime = Date.now();
-    console.log(currentMsg)
+    console.log("Emit: ", currentMsg)
     //save the message to our database 
     messages.insertOne(
       {
         "roomName": currentRoom, 
         "sender": sender, 
+        "sender_name": sender_name,
         "timeStamp": currentTime,
         "msg": currentMsg
       }, 
@@ -107,7 +120,7 @@ io.on('connection', socket => {
         if(err) {
           console.log(err)
         }
-        io.to(currentRoom).emit('message', {"msg": currentMsg, "timeStamp": currentTime, "sender": sender}); //send the message to the room 
+        io.to(currentRoom).emit('message', {"msg": currentMsg, "timeStamp": currentTime, "sender": sender, "sender_name": sender_name}); //send the message to the room 
     })
   })
 

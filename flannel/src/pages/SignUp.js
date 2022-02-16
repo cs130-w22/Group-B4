@@ -49,6 +49,7 @@ const styles = {
 }
 
 function SignUp(){
+    const navigate = useNavigate();
     const [schoolYear,setSchoolYear] = useState("");
     const [password,setPassword] = useState("");
     const [confirmPassword,setConfirmPassword] = useState("");
@@ -92,6 +93,7 @@ function SignUp(){
         if (password !== confirmPassword){
             setSignupError(true);
         }
+<<<<<<< HEAD
         else{
             setSignupError(false);
             const data = {
@@ -125,6 +127,21 @@ function SignUp(){
             } else if (response.status === 400) {
                 console.log('bad response');
             }
+=======
+
+        const response = await fetch('http://localhost:3000/login/register', requestObj);
+        if(response.status === 201) { //successful login
+            let responseObj = await response.json();
+            console.log(responseObj)
+            setCookie('jwt', responseObj.jwt, { path: '/' });
+            localStorage.setItem('user', JSON.stringify(responseObj.user));
+            console.log(localStorage.getItem('user'));
+            const cookies = document.cookie;
+            // navigate to explore if successful
+            navigate('/Explore');
+        } else if (response.status === 400) {
+            console.log('bad response');
+>>>>>>> chat-feature
         }
     }
     

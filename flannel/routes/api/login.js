@@ -22,7 +22,6 @@ function generateJWT(username, response) {
 
 
 router.post('/', function(request, response, next) {
-    console.log('here');
     if(!request.body.username || !request.body.password) 
     {
         response.status(401).send("unauthorized!");
@@ -96,6 +95,7 @@ router.post('/register', function(request, response, next) { //create a new user
             bcrypt.hash(password, salt, function(err, hashvalue) {
                 let insertItem = request.body;
                 insertItem.password = hashvalue;
+                insertItem.matches = [];
                 users.insertOne(insertItem, function(err, inserted) {
                     //handle error later 
                     const now = new Date();
@@ -109,8 +109,7 @@ router.post('/register', function(request, response, next) { //create a new user
                     jwt.sign(payload, private_key, {}, function(err, token) {
 
                         response.cookie('jwt', token);
-                        console.log("BB")
-                        response.status(201).send({"jwt": token});
+                        response.status(201).send({"jwt": token, "user": insertItem});
                         return
                     })
                 })

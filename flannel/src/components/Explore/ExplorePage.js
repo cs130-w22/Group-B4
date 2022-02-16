@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
+import {useNavigate} from 'react-router-dom'
 import { makeStyles } from '@mui/styles'
 import { Typography, Box, ButtonBase, TextField } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import UserCard from './UserCard'
 import ChipFilter from '../ChipFilter'
 import logo from '../../assets/bearLogo.png'
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import { IconButton } from '@mui/material';
 import '../../styles/fonts.css'
 
 const useStyles = makeStyles({
@@ -75,6 +78,13 @@ const style = {
         height: 50,
         paddingRight: 10,
     },
+    header:{
+        display:"flex",
+        flexDirection:"row",
+        width:'95%',
+        justifyContent:'space-around',
+        alignItems:'baseline'
+    }
 }
 
 export default function ExplorePage() {
@@ -118,7 +128,11 @@ export default function ExplorePage() {
         setClassesTagOptions(labelsArr);
         setInterestsTagOptions(['Biking', 'Skating', 'Dancing'])
         setAffiliationsTagOptions(['Theta Chi', 'DevX', 'GlobeMed', 'Climbing Club'])
-    }, [])
+    }, []);
+    let navigate = useNavigate();
+    const NavigateProfile = () => {
+        navigate('/Profile')
+    }
     return (
         <Box sx={style.root}>
             <Box sx={style.rowContainer}>
@@ -126,24 +140,29 @@ export default function ExplorePage() {
                     <img src={logo} alt="Logo" style={style.logo} />
                     <Typography sx={style.title}>FLANNEL</Typography>
                 </Box>
-                <TextField
-                    sx={style.searchBarContainer}
-                    placeholder="Search for Users"
-                    fullWidth
-                    variant="outlined"
-                    InputProps={{
-                        //disableUnderline: true,
-                        classes: {
-                            input: classes.inputText,
-                        },
-                        endAdornment: (
-                            <ButtonBase type="submit">
-                                <SearchIcon />
-                            </ButtonBase>
-                        ),
-                    }}
-                    size="small"
-                />
+                <Box sx = {style.header}>
+                    <TextField
+                        sx={style.searchBarContainer}
+                        placeholder="Search for Users"
+                        fullWidth
+                        variant="outlined"
+                        InputProps={{
+                            //disableUnderline: true,
+                            classes: {
+                                input: classes.inputText,
+                            },
+                            endAdornment: (
+                                <ButtonBase type="submit">
+                                    <SearchIcon />
+                                </ButtonBase>
+                            ),
+                        }}
+                        size="small"
+                    />
+                    <IconButton onClick = {NavigateProfile}>
+                        <AccountCircleOutlinedIcon />
+                    </IconButton>
+                </Box>
             </Box>
             <Box sx={style.rowContainer}>
                 <Box sx={style.filterSidebar}>

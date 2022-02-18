@@ -1,11 +1,11 @@
 language: node_js
- node_js:
+node_js:
  - "stable"
- cache:
- directories:
-   - flannel/node_modules
- script:
- - cd flannel
+cache:
+directories:
+   - node_modules
+script:
+ - cd 
  - npm test
  - npm run build
 deploy:
@@ -15,3 +15,4 @@ deploy:
  local_dir: build
  on:
    branch: master
+

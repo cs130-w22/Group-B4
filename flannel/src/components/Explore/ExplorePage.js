@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@mui/styles'
 import { Typography, Box, ButtonBase, TextField } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
+import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications'
 import UserCard from './UserCard'
 import ChipFilter from '../ChipFilter'
 import logo from '../../assets/bearLogo.png'
@@ -80,9 +81,9 @@ const style = {
 export default function ExplorePage() {
     const classes = useStyles()
     //selected tags
-    const [selectedClassTags,setSelectedClassTags] = useState([]);
-    const [selectedAffiliationTags,setSelectedAffiliationTags] = useState([]);
-    const [selectedInterestTags,setSelectedInterestTags] = useState([]);
+    const [selectedClassTags, setSelectedClassTags] = useState([])
+    const [selectedAffiliationTags, setSelectedAffiliationTags] = useState([])
+    const [selectedInterestTags, setSelectedInterestTags] = useState([])
 
     //available tag options
     const [classesTagOptions, setClassesTagOptions] = useState([])
@@ -90,32 +91,36 @@ export default function ExplorePage() {
     const [affiliationsTagOptions, setAffiliationsTagOptions] = useState([])
     const [userList, setUserList] = useState([])
 
-
     useEffect(async () => {
-
         // get jwt cookie & stored user object
-        const cookies = document.cookie;
-        const user = JSON.parse(localStorage.getItem('user'));
+        const cookies = document.cookie
+        const user = JSON.parse(localStorage.getItem('user'))
         console.log(user)
         const requestObj = {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: cookies
+                Authorization: cookies,
             },
-        };
+        }
         // get all labels in our database
-        const response = (await fetch(`http://localhost:3000/label/getLabels?username=${user.username}`, requestObj));
-        const getUsers = await fetch(`http://localhost:3000/user?username=${user.username}`, requestObj);
-        const labels = await response.json();
-        const users = await getUsers.json();
+        const response = await fetch(
+            `http://localhost:3000/label/getLabels?username=${user.username}`,
+            requestObj
+        )
+        const getUsers = await fetch(
+            `http://localhost:3000/user?username=${user.username}`,
+            requestObj
+        )
+        const labels = await response.json()
+        const users = await getUsers.json()
         setUserList((old) => users)
 
-        let labelsArr = labels.map(x => x.name);
+        let labelsArr = labels.map((x) => x.name)
         // hack while we have duplicates in our labels database -> get rid of duplicates
-        labelsArr = [...new Set(labelsArr)];
+        labelsArr = [...new Set(labelsArr)]
         // set options in classes list to be labels from db
-        setClassesTagOptions(labelsArr);
+        setClassesTagOptions(labelsArr)
         setInterestsTagOptions(['Biking', 'Skating', 'Dancing'])
         setAffiliationsTagOptions(['Theta Chi', 'DevX', 'GlobeMed', 'Climbing Club'])
     }, [])
@@ -144,6 +149,7 @@ export default function ExplorePage() {
                     }}
                     size="small"
                 />
+                <SettingsApplicationsIcon />
             </Box>
             <Box sx={style.rowContainer}>
                 <Box sx={style.filterSidebar}>
@@ -153,24 +159,24 @@ export default function ExplorePage() {
                         type="Classes"
                         tagOptions={classesTagOptions}
                         defaultShownTags={['CS 130', 'CS 118', 'CS 151B']}
-                        setSelectedTags = {setSelectedClassTags}
-                        selectedTags = {selectedClassTags}
+                        setSelectedTags={setSelectedClassTags}
+                        selectedTags={selectedClassTags}
                     />
                     <ChipFilter
                         setTagOptions={setInterestsTagOptions}
                         type="Interests"
                         tagOptions={interestsTagOptions}
                         defaultShownTags={['Bouldering', 'Netflix', 'Gym', 'Reading']}
-                        setSelectedTags = {setSelectedInterestTags}
-                        selectedTags = {selectedInterestTags}
+                        setSelectedTags={setSelectedInterestTags}
+                        selectedTags={selectedInterestTags}
                     />
                     <ChipFilter
                         setTagOptions={setAffiliationsTagOptions}
                         type="Affiliations"
                         tagOptions={affiliationsTagOptions}
                         defaultShownTags={['Blueprint', 'UPE', 'NSU']}
-                        setSelectedTags = {setSelectedAffiliationTags}
-                        selectedTags = {selectedAffiliationTags}
+                        setSelectedTags={setSelectedAffiliationTags}
+                        selectedTags={selectedAffiliationTags}
                     />
                 </Box>
                 <Box sx={style.exploreBox}>
@@ -218,11 +224,9 @@ export default function ExplorePage() {
                         affiliationTags={['Intermural Basketball', 'UPE', 'ACM', 'TeachLA']}
                         bio="However, the gardener's life is turned upside down when she goes to an engagement party in Sleepford where there are peculiar giants that like to fire each other."
                     />
-                    {
-
-                    userList.map((currentUser, index) => (
-                            
-                            <UserCard key={index}
+                    {userList.map((currentUser, index) => (
+                        <UserCard
+                            key={index}
                             displayName={currentUser.username}
                             year={currentUser.year}
                             major={currentUser.major}
@@ -231,9 +235,8 @@ export default function ExplorePage() {
                             interestTags={currentUser.interests}
                             affiliationTags={currentUser.affiliations}
                             bio={currentUser.bio}
-                            />
-                        ))
-                    }
+                        />
+                    ))}
                 </Box>
             </Box>
         </Box>

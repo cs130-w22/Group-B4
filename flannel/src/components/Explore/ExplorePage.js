@@ -109,15 +109,25 @@ export default function ExplorePage() {
         const getUsers = await fetch(`http://localhost:3000/user?username=${user.username}`, requestObj);
         const labels = await response.json();
         const users = await getUsers.json();
-        setUserList((old) => users)
+        setUserList(() => users)
 
-        let labelsArr = labels.map(x => x.name);
-        // hack while we have duplicates in our labels database -> get rid of duplicates
-        labelsArr = [...new Set(labelsArr)];
-        // set options in classes list to be labels from db
-        setClassesTagOptions(labelsArr);
-        setInterestsTagOptions(['Biking', 'Skating', 'Dancing'])
-        setAffiliationsTagOptions(['Theta Chi', 'DevX', 'GlobeMed', 'Climbing Club'])
+        // filter type of labels
+        let classesArr = [];
+        let interestsArr = [];
+        let affiliationsArr = [];
+        labels.forEach((interest) => {    
+            if (interest.type === 'classes') {
+                classesArr.push(interest.name);
+            } else if (interest.type === 'interests') {
+                interestsArr.push(interest.name);
+            } else if (interest.type === 'affiliations') {
+                affiliationsArr.push(interest.name);
+            }
+        });
+        // set state for label options
+        setClassesTagOptions(classesArr);
+        setInterestsTagOptions(interestsArr)
+        setAffiliationsTagOptions(affiliationsArr);
     }, [])
     return (
         <Box sx={style.root}>

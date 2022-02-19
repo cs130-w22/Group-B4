@@ -9,6 +9,7 @@ directories:
  - flannel/node_modules
 before_script:
  - cd flannel
+ - npm install react-scripts
 script:
  - npm test
  - npm run build

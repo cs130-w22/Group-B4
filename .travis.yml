@@ -4,7 +4,8 @@ node_js:
 cache:
 directories:
    - flannel/node_modules
-script:
+before_script:
  - cd flannel
+script:
  - npm test
  - npm run build

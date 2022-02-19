@@ -8,6 +8,7 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import ChipFilter from '../components/ChipFilter'
 import { useCookies } from 'react-cookie';
 import logo from '../assets/bearLogo.png'
+import { useLabels } from '../utils/useLabelsHook'
 
 const styles = {
     root: {
@@ -65,12 +66,15 @@ function SignUp(){
     const [interestsTagOptions, setInterestsTagOptions] = useState([])
     const [affiliationsTagOptions, setAffiliationsTagOptions] = useState([])
 
+    // get labels from useLabels hook
+    const { classes: classesLabels, interests: interestsLabels, affiliations: affiliationLabels } = useLabels();
+
     const navigate = useNavigate();
     useEffect(() => {
-        setClassesTagOptions(['CS 31', 'MATH 32A', 'PHYSICS 1A', 'BIO 1'])
-        setInterestsTagOptions(['Biking', 'Skating', 'Dancing'])
-        setAffiliationsTagOptions(['Theta Chi', 'DevX', 'GlobeMed', 'Climbing Club'])
-    }, [])
+        setClassesTagOptions(classesLabels);
+        setInterestsTagOptions(interestsLabels);
+        setAffiliationsTagOptions(affiliationLabels);
+    }, [classesLabels, interestsLabels, affiliationLabels])
 
     const [cookies, setCookie] = useCookies(['jwt']);
 

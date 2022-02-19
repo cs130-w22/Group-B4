@@ -2,8 +2,8 @@ language: node_js
 node_js:
  - "stable"
 before_install:
- - rm -rf node_modules
- - rm package-lock.json
+ - rm -rf flannel/node_modules
+ - rm flannel/package-lock.json
 cache:
 directories:
  - flannel/node_modules

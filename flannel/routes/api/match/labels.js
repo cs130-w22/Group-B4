@@ -4,7 +4,7 @@ const client = require("../../../db");
 const authenticate = require('../auth/authenticate.js');
 
 labels.get('/', authenticate, getLabelMatches);
-labels.get('/getLabels', authenticate, getAllLabels);
+labels.get('/getLabels', getAllLabels);
 labels.post("/createLabel", authenticate, createLabel);
 
 

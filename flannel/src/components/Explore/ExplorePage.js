@@ -6,6 +6,7 @@ import UserCard from './UserCard'
 import ChipFilter from '../ChipFilter'
 import logo from '../../assets/bearLogo.png'
 import '../../styles/fonts.css'
+import { useLabels } from '../../utils/useLabelsHook'
 
 const useStyles = makeStyles({
     inputText: {
@@ -78,7 +79,7 @@ const style = {
 }
 
 export default function ExplorePage() {
-    const classes = useStyles()
+    const styles = useStyles()
     //selected tags
     const [selectedClassTags,setSelectedClassTags] = useState([]);
     const [selectedAffiliationTags,setSelectedAffiliationTags] = useState([]);
@@ -90,13 +91,14 @@ export default function ExplorePage() {
     const [affiliationsTagOptions, setAffiliationsTagOptions] = useState([])
     const [userList, setUserList] = useState([])
 
+    const { classes, interests, affiliations } = useLabels();
+
 
     useEffect(async () => {
 
         // get jwt cookie & stored user object
         const cookies = document.cookie;
         const user = JSON.parse(localStorage.getItem('user'));
-        console.log(user)
         const requestObj = {
             method: 'GET',
             headers: {
@@ -104,31 +106,15 @@ export default function ExplorePage() {
                 Authorization: cookies
             },
         };
-        // get all labels in our database
-        const response = (await fetch(`http://localhost:3000/label/getLabels?username=${user.username}`, requestObj));
         const getUsers = await fetch(`http://localhost:3000/user?username=${user.username}`, requestObj);
-        const labels = await response.json();
         const users = await getUsers.json();
         setUserList(() => users)
 
-        // filter type of labels
-        let classesArr = [];
-        let interestsArr = [];
-        let affiliationsArr = [];
-        labels.forEach((interest) => {    
-            if (interest.type === 'classes') {
-                classesArr.push(interest.name);
-            } else if (interest.type === 'interests') {
-                interestsArr.push(interest.name);
-            } else if (interest.type === 'affiliations') {
-                affiliationsArr.push(interest.name);
-            }
-        });
         // set state for label options
-        setClassesTagOptions(classesArr);
-        setInterestsTagOptions(interestsArr)
-        setAffiliationsTagOptions(affiliationsArr);
-    }, [])
+        setClassesTagOptions(classes);
+        setInterestsTagOptions(interests)
+        setAffiliationsTagOptions(affiliations);
+    }, [classes, interests, affiliations]);
     return (
         <Box sx={style.root}>
             <Box sx={style.rowContainer}>
@@ -144,7 +130,7 @@ export default function ExplorePage() {
                     InputProps={{
                         //disableUnderline: true,
                         classes: {
-                            input: classes.inputText,
+                            input: styles.inputText,
                         },
                         endAdornment: (
                             <ButtonBase type="submit">

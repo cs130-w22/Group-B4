@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@mui/styles'
-import { Typography, Box, ButtonBase, TextField } from '@mui/material'
+import { Typography, Box, ButtonBase, TextField, CircularProgress } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import UserCard from './UserCard'
 import ChipFilter from '../ChipFilter'
 import logo from '../../assets/bearLogo.png'
 import '../../styles/fonts.css'
 import { useLabels } from '../../utils/useLabelsHook'
+import { useNavigate } from 'react-router-dom'
 
 const useStyles = makeStyles({
     inputText: {
@@ -90,10 +91,13 @@ export default function ExplorePage() {
     const [interestsTagOptions, setInterestsTagOptions] = useState([])
     const [affiliationsTagOptions, setAffiliationsTagOptions] = useState([])
     const [userList, setUserList] = useState([])
+    const [dataLoaded, setDataLoaded] = useState(false);
 
     const { classes, interests, affiliations } = useLabels();
+    const navigate = useNavigate();
 
 
+    // effect to handle getting data from backend
     useEffect(async () => {
 
         // get jwt cookie & stored user object
@@ -106,8 +110,14 @@ export default function ExplorePage() {
                 Authorization: cookies
             },
         };
-        const getUsers = await fetch(`http://localhost:3000/user?username=${user.username}`, requestObj);
-        const users = await getUsers.json();
+        const usersResponse = await fetch(`http://localhost:3000/user?username=${user.username}`, requestObj);
+        if (usersResponse.status === 401) {
+            // not authorized, redirect to login
+            navigate('/');
+            return;
+        }
+        setDataLoaded(true);
+        const users = await usersResponse.json();
         setUserList(() => users)
 
         // set state for label options
@@ -115,123 +125,132 @@ export default function ExplorePage() {
         setInterestsTagOptions(interests)
         setAffiliationsTagOptions(affiliations);
     }, [classes, interests, affiliations]);
-    return (
-        <Box sx={style.root}>
-            <Box sx={style.rowContainer}>
-                <Box sx={style.logoContainer}>
-                    <img src={logo} alt="Logo" style={style.logo} />
-                    <Typography sx={style.title}>FLANNEL</Typography>
-                </Box>
-                <TextField
-                    sx={style.searchBarContainer}
-                    placeholder="Search for Users"
-                    fullWidth
-                    variant="outlined"
-                    InputProps={{
-                        //disableUnderline: true,
-                        classes: {
-                            input: styles.inputText,
-                        },
-                        endAdornment: (
-                            <ButtonBase type="submit">
-                                <SearchIcon />
-                            </ButtonBase>
-                        ),
-                    }}
-                    size="small"
-                />
-            </Box>
-            <Box sx={style.rowContainer}>
-                <Box sx={style.filterSidebar}>
-                    <Typography sx={style.filterTitle}>Filters</Typography>
-                    <ChipFilter
-                        setTagOptions={setClassesTagOptions}
-                        type="Classes"
-                        tagOptions={classesTagOptions}
-                        defaultShownTags={['CS 130', 'CS 118', 'CS 151B']}
-                        setSelectedTags = {setSelectedClassTags}
-                        selectedTags = {selectedClassTags}
-                    />
-                    <ChipFilter
-                        setTagOptions={setInterestsTagOptions}
-                        type="Interests"
-                        tagOptions={interestsTagOptions}
-                        defaultShownTags={['Bouldering', 'Netflix', 'Gym', 'Reading']}
-                        setSelectedTags = {setSelectedInterestTags}
-                        selectedTags = {selectedInterestTags}
-                    />
-                    <ChipFilter
-                        setTagOptions={setAffiliationsTagOptions}
-                        type="Affiliations"
-                        tagOptions={affiliationsTagOptions}
-                        defaultShownTags={['Blueprint', 'UPE', 'NSU']}
-                        setSelectedTags = {setSelectedAffiliationTags}
-                        selectedTags = {selectedAffiliationTags}
+    if (dataLoaded) {
+        return (
+            <Box sx={style.root}>
+                <Box sx={style.rowContainer}>
+                    <Box sx={style.logoContainer}>
+                        <img src={logo} alt="Logo" style={style.logo} />
+                        <Typography sx={style.title}>FLANNEL</Typography>
+                    </Box>
+                    <TextField
+                        sx={style.searchBarContainer}
+                        placeholder="Search for Users"
+                        fullWidth
+                        variant="outlined"
+                        InputProps={{
+                            //disableUnderline: true,
+                            classes: {
+                                input: styles.inputText,
+                            },
+                            endAdornment: (
+                                <ButtonBase type="submit">
+                                    <SearchIcon />
+                                </ButtonBase>
+                            ),
+                        }}
+                        size="small"
                     />
                 </Box>
-                <Box sx={style.exploreBox}>
-                    <UserCard
-                        displayName="Ryan Tran"
-                        year="4th"
-                        major="Com Sci"
-                        pronouns="he/him"
-                        classTags={['COMSCI 31', 'COMSCI 118', 'MATH 32A', 'LA 192', 'ENGR 97']}
-                        interestTags={[
-                            'Biking',
-                            'Skating',
-                            'Netflix',
-                            'Sports',
-                            'Exploring',
-                            'Thrifting',
-                            'Tunneling',
-                        ]}
-                        affiliationTags={[
-                            'DevX',
-                            'Intermural Soccor',
-                            'Blueprint',
-                            'MentorSEAS',
-                            'GlobeMed',
-                        ]}
-                        bio="The trail to the left had a Danger! Do Not Pass sign telling people to take the trail to the right. This wasn't the way Zeke approached his hiking. Rather than a warning, Zeke read the sign as an invitation to explore an area that would be adventurous and exciting. As the others in the group all shited to the right, Zeke slipped past the danger sign to begin an adventure he would later regret."
-                    />
-                    <UserCard
-                        displayName="Ishaan Shah"
-                        year="3rd"
-                        major="Anthro"
-                        pronouns="he/him"
-                        classTags={['DIGHUM 1', 'COGSCI 20', 'CHEM 28']}
-                        affiliationTags={['Unicamp', 'CEC', 'SAA', 'LA Hacks']}
-                        interestTags={['Concerts', 'Surfing', 'Reading', 'Community Service']}
-                        bio="Cake or pie? I can tell a lot about you by which one you pick. It may seem silly, but cake people and pie people are really different. I know which one I hope you are, but that's not for me to decide. So, what is it? Cake or pie?"
-                    />
-                    <UserCard
-                        displayName="Brandon Chi"
-                        year="4th"
-                        major="Math"
-                        pronouns="he/him"
-                        classTags={['Math 111', 'Math 31B', 'COMSCI M148']}
-                        interestTags={['Food', 'Gymming', 'Climbing', 'Swimming', 'Reading']}
-                        affiliationTags={['Intermural Basketball', 'UPE', 'ACM', 'TeachLA']}
-                        bio="However, the gardener's life is turned upside down when she goes to an engagement party in Sleepford where there are peculiar giants that like to fire each other."
-                    />
-                    {
+                <Box sx={style.rowContainer}>
+                    <Box sx={style.filterSidebar}>
+                        <Typography sx={style.filterTitle}>Filters</Typography>
+                        <ChipFilter
+                            setTagOptions={setClassesTagOptions}
+                            type="Classes"
+                            tagOptions={classesTagOptions}
+                            defaultShownTags={['CS 130', 'CS 118', 'CS 151B']}
+                            setSelectedTags = {setSelectedClassTags}
+                            selectedTags = {selectedClassTags}
+                        />
+                        <ChipFilter
+                            setTagOptions={setInterestsTagOptions}
+                            type="Interests"
+                            tagOptions={interestsTagOptions}
+                            defaultShownTags={['Bouldering', 'Netflix', 'Gym', 'Reading']}
+                            setSelectedTags = {setSelectedInterestTags}
+                            selectedTags = {selectedInterestTags}
+                        />
+                        <ChipFilter
+                            setTagOptions={setAffiliationsTagOptions}
+                            type="Affiliations"
+                            tagOptions={affiliationsTagOptions}
+                            defaultShownTags={['Blueprint', 'UPE', 'NSU']}
+                            setSelectedTags = {setSelectedAffiliationTags}
+                            selectedTags = {selectedAffiliationTags}
+                        />
+                    </Box>
+                    <Box sx={style.exploreBox}>
+                        <UserCard
+                            displayName="Ryan Tran"
+                            year="4th"
+                            major="Com Sci"
+                            pronouns="he/him"
+                            classTags={['COMSCI 31', 'COMSCI 118', 'MATH 32A', 'LA 192', 'ENGR 97']}
+                            interestTags={[
+                                'Biking',
+                                'Skating',
+                                'Netflix',
+                                'Sports',
+                                'Exploring',
+                                'Thrifting',
+                                'Tunneling',
+                            ]}
+                            affiliationTags={[
+                                'DevX',
+                                'Intermural Soccor',
+                                'Blueprint',
+                                'MentorSEAS',
+                                'GlobeMed',
+                            ]}
+                            bio="The trail to the left had a Danger! Do Not Pass sign telling people to take the trail to the right. This wasn't the way Zeke approached his hiking. Rather than a warning, Zeke read the sign as an invitation to explore an area that would be adventurous and exciting. As the others in the group all shited to the right, Zeke slipped past the danger sign to begin an adventure he would later regret."
+                        />
+                        <UserCard
+                            displayName="Ishaan Shah"
+                            year="3rd"
+                            major="Anthro"
+                            pronouns="he/him"
+                            classTags={['DIGHUM 1', 'COGSCI 20', 'CHEM 28']}
+                            affiliationTags={['Unicamp', 'CEC', 'SAA', 'LA Hacks']}
+                            interestTags={['Concerts', 'Surfing', 'Reading', 'Community Service']}
+                            bio="Cake or pie? I can tell a lot about you by which one you pick. It may seem silly, but cake people and pie people are really different. I know which one I hope you are, but that's not for me to decide. So, what is it? Cake or pie?"
+                        />
+                        <UserCard
+                            displayName="Brandon Chi"
+                            year="4th"
+                            major="Math"
+                            pronouns="he/him"
+                            classTags={['Math 111', 'Math 31B', 'COMSCI M148']}
+                            interestTags={['Food', 'Gymming', 'Climbing', 'Swimming', 'Reading']}
+                            affiliationTags={['Intermural Basketball', 'UPE', 'ACM', 'TeachLA']}
+                            bio="However, the gardener's life is turned upside down when she goes to an engagement party in Sleepford where there are peculiar giants that like to fire each other."
+                        />
+                        {
 
-                    userList.map((currentUser, index) => (
-                            
-                            <UserCard key={index}
-                            displayName={currentUser.username}
-                            year={currentUser.year}
-                            major={currentUser.major}
-                            pronouns={currentUser.pronouns}
-                            classTags={currentUser.classes}
-                            interestTags={currentUser.interests}
-                            affiliationTags={currentUser.affiliations}
-                            bio={currentUser.bio}
-                            />
-                        ))
-                    }
+                        userList.map((currentUser, index) => (
+                                
+                                <UserCard key={index}
+                                displayName={currentUser.username}
+                                year={currentUser.year}
+                                major={currentUser.major}
+                                pronouns={currentUser.pronouns}
+                                classTags={currentUser.classes}
+                                interestTags={currentUser.interests}
+                                affiliationTags={currentUser.affiliations}
+                                bio={currentUser.bio}
+                                />
+                            ))
+                        }
+                    </Box>
                 </Box>
             </Box>
-        </Box>
-    )
+        );
+    } else {
+        return (
+            <Box sx={style.root}>
+                <Box sx={style.rowContainer} style={{height: "45vh"}}></Box>
+                <CircularProgress color="primary"/>
+            </Box>
+        );
+    }
 }

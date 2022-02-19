@@ -90,6 +90,7 @@ export default function ExplorePage() {
     const [classesTagOptions, setClassesTagOptions] = useState([])
     const [interestsTagOptions, setInterestsTagOptions] = useState([])
     const [affiliationsTagOptions, setAffiliationsTagOptions] = useState([])
+
     const [userList, setUserList] = useState([])
     const [dataLoaded, setDataLoaded] = useState(false);
 
@@ -110,14 +111,23 @@ export default function ExplorePage() {
                 Authorization: cookies
             },
         };
-        const usersResponse = await fetch(`http://localhost:3000/user?username=${user.username}`, requestObj);
-        if (usersResponse.status === 401) {
+        // get users that match this user's labels to load initial page data
+        let requestLabelsArr = JSON.stringify([...user.classes, ...user.interests, ...user.affiliations]);
+        // console.log(JSON.stringify(requestLabelstArr));
+
+        // only get users that match the user's stored interests initially
+        const matchingUsersResponse = await fetch(`http://localhost:3000/label?username=${user.username}&labels=${requestLabelsArr}`, requestObj);
+        console.log(matchingUsersResponse);
+
+
+        // const usersResponse = await fetch(`http://localhost:3000/user?username=${user.username}`, requestObj);
+        if (matchingUsersResponse.status !== 200) {
             // not authorized, redirect to login
             navigate('/');
             return;
         }
         setDataLoaded(true);
-        const users = await usersResponse.json();
+        const users = (await matchingUsersResponse.json()).matches;
         setUserList(() => users)
 
         // set state for label options
@@ -125,6 +135,7 @@ export default function ExplorePage() {
         setInterestsTagOptions(interests)
         setAffiliationsTagOptions(affiliations);
     }, [classes, interests, affiliations]);
+    const user = JSON.parse(localStorage.getItem('user'));
     if (dataLoaded) {
         return (
             <Box sx={style.root}>
@@ -159,7 +170,7 @@ export default function ExplorePage() {
                             setTagOptions={setClassesTagOptions}
                             type="Classes"
                             tagOptions={classesTagOptions}
-                            defaultShownTags={['CS 130', 'CS 118', 'CS 151B']}
+                            defaultShownTags={user.classes}
                             setSelectedTags = {setSelectedClassTags}
                             selectedTags = {selectedClassTags}
                         />
@@ -167,7 +178,7 @@ export default function ExplorePage() {
                             setTagOptions={setInterestsTagOptions}
                             type="Interests"
                             tagOptions={interestsTagOptions}
-                            defaultShownTags={['Bouldering', 'Netflix', 'Gym', 'Reading']}
+                            defaultShownTags={user.interests}
                             setSelectedTags = {setSelectedInterestTags}
                             selectedTags = {selectedInterestTags}
                         />
@@ -175,13 +186,13 @@ export default function ExplorePage() {
                             setTagOptions={setAffiliationsTagOptions}
                             type="Affiliations"
                             tagOptions={affiliationsTagOptions}
-                            defaultShownTags={['Blueprint', 'UPE', 'NSU']}
+                            defaultShownTags={user.affiliations}
                             setSelectedTags = {setSelectedAffiliationTags}
                             selectedTags = {selectedAffiliationTags}
                         />
                     </Box>
                     <Box sx={style.exploreBox}>
-                        <UserCard
+                        {/* <UserCard
                             displayName="Ryan Tran"
                             year="4th"
                             major="Com Sci"
@@ -224,7 +235,7 @@ export default function ExplorePage() {
                             interestTags={['Food', 'Gymming', 'Climbing', 'Swimming', 'Reading']}
                             affiliationTags={['Intermural Basketball', 'UPE', 'ACM', 'TeachLA']}
                             bio="However, the gardener's life is turned upside down when she goes to an engagement party in Sleepford where there are peculiar giants that like to fire each other."
-                        />
+                        /> */}
                         {
 
                         userList.map((currentUser, index) => (

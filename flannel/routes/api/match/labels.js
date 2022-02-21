@@ -29,9 +29,23 @@ async function getLabelMatches(req, res) {
 
     // get matching interests from db
     await client.db('flannel').collection('users').find({
-        'interests': {            
-            $in: labels
-        }
+        $or: [
+            {
+                'interests': {            
+                    $in: labels
+                },
+            },
+            {
+                'classes': {
+                    $in: labels
+                },
+            },
+            {
+                'affiliations': {
+                    $in: labels
+                },
+            },
+        ],
     }).toArray( async (err, result) => { 
         if(err) {
             console.err('error getting matching users: ', err)

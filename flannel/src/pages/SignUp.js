@@ -121,7 +121,7 @@ function SignUp(){
                 },
                 body: JSON.stringify(data),
             }
-            const response = await fetch('http://localhost:3000/login/register', requestObj);
+            const response = await fetch('/api/login/register', requestObj);
             if(response.status === 201) { //successful login
                 let responseObj = await response.json();
                 setCookie('jwt', responseObj.jwt, { path: '/' });

@@ -67,9 +67,10 @@ function LogIn() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
+            mode: 'cors'
         };
 
-        const response = await fetch('http://localhost:3000/login', requestObj);
+        const response = await fetch('/api/login', requestObj);
         
         if (response.status === 200) {
             const responseObj = await response.json();
@@ -88,7 +89,7 @@ function LogIn() {
                 },
             };
             // console.log('here');
-            const labels = await fetch(`http://localhost:3000/label/getLabels?username=brandon@g.ucla.edu`, requestObj)
+            const labels = await fetch(`/api/label/getLabels?username=brandon@g.ucla.edu`, requestObj)
             // console.log(labels);
             //let users = await userList.json()
         } else { //have to try again -> bad login

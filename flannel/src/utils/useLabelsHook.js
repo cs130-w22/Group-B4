@@ -17,7 +17,7 @@ export function useLabels() {
         };
         let labels;
         try {
-            const response = (await fetch(`http://localhost:3000/label/getLabels`, requestObj));
+            const response = (await fetch(`/api/label/getLabels`, requestObj));
             labels = await response.json();
         } catch {
             navigate('/');

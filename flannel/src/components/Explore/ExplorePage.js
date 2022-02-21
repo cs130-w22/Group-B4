@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@mui/styles'
 import { Typography, Box, ButtonBase, TextField, CircularProgress } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
+import { useNavigate } from 'react-router-dom'
+
 import UserCard from './UserCard'
 import ChipFilter from '../ChipFilter'
 import logo from '../../assets/bearLogo.png'
 import '../../styles/fonts.css'
 import { useLabels } from '../../utils/useLabelsHook'
-import { useNavigate } from 'react-router-dom'
+import { fetchMatchingUsers } from '../../utils/fetchMatchingUsers'
 
 const useStyles = makeStyles({
     inputText: {
@@ -98,43 +100,59 @@ export default function ExplorePage() {
     const navigate = useNavigate();
 
 
-    // effect to handle getting data from backend
-    useEffect(async () => {
-
-        // get jwt cookie & stored user object
-        const cookies = document.cookie;
-        const user = JSON.parse(localStorage.getItem('user'));
-        const requestObj = {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: cookies
-            },
-        };
-        // get users that match this user's labels to load initial page data
-        let requestLabelsArr = JSON.stringify([...user.classes, ...user.interests, ...user.affiliations]);
-        // console.log(JSON.stringify(requestLabelstArr));
-
-        // only get users that match the user's stored interests initially
-        const matchingUsersResponse = await fetch(`http://localhost:3000/label?username=${user.username}&labels=${requestLabelsArr}`, requestObj);
-        console.log(matchingUsersResponse);
-
-
-        // const usersResponse = await fetch(`http://localhost:3000/user?username=${user.username}`, requestObj);
-        if (matchingUsersResponse.status !== 200) {
-            // not authorized, redirect to login
-            navigate('/');
-            return;
-        }
-        setDataLoaded(true);
-        const users = (await matchingUsersResponse.json()).matches;
-        setUserList(() => users)
-
-        // set state for label options
-        setClassesTagOptions(classes);
-        setInterestsTagOptions(interests)
-        setAffiliationsTagOptions(affiliations);
+    // effect to handle getting data from backend at start of application
+    useEffect(() => {                 
+        // filter out selected class tags from the options in the drop down
+        const classOptions = classes.filter(x => !selectedClassTags.includes(x));
+        const interestOptions = interests.filter(x => !selectedInterestTags.includes(x));
+        const affiliationOptions = affiliations.filter(x => !selectedAffiliationTags.includes(x));
+        // set drop down options
+        setClassesTagOptions(classOptions);
+        setInterestsTagOptions(interestOptions)
+        setAffiliationsTagOptions(affiliationOptions);
+        // set page as loaded        
+        setDataLoaded(true);            
+        
     }, [classes, interests, affiliations]);
+
+    // handle fetching matching users based on selected criteria
+    useEffect(() => {
+        async function matchingUsersFunc() {
+            let classesLabels, interestsLabels, affiliationsLabels;
+            
+            if (!dataLoaded) {
+                // if we are just starting up, fetch matching users based on user's saved interests
+                classesLabels = [...user.classes];
+                interestsLabels = [...user.interests]
+                affiliationsLabels = [...user.affiliations];
+            } else {
+                // otherwise fetch based on selected tags
+                classesLabels = selectedClassTags;
+                interestsLabels = selectedInterestTags;
+                affiliationsLabels = selectedAffiliationTags;
+            }
+            // only make a request if we have selected tags
+            if (classesLabels.length || interestsLabels.length || affiliationsLabels.length) {
+                const matchingUsers = await fetchMatchingUsers({ 
+                    classesLabels,
+                    interestsLabels,
+                    affiliationsLabels           
+                });
+
+                // if status is 0, there was some error fetching users, assume bad jwt and navigate to login
+                if (matchingUsers.status === 0) {
+                    navigate('/');
+                    return;
+                }
+                // else update user list with matches
+                const users = matchingUsers.matchingUsers;                
+                setUserList(() => users);
+            } else {
+                setUserList(() => []);
+            }
+        }
+        matchingUsersFunc();
+    }, [selectedClassTags, selectedInterestTags, selectedAffiliationTags, dataLoaded]);
     const user = JSON.parse(localStorage.getItem('user'));
     if (dataLoaded) {
         return (
@@ -192,53 +210,8 @@ export default function ExplorePage() {
                         />
                     </Box>
                     <Box sx={style.exploreBox}>
-                        {/* <UserCard
-                            displayName="Ryan Tran"
-                            year="4th"
-                            major="Com Sci"
-                            pronouns="he/him"
-                            classTags={['COMSCI 31', 'COMSCI 118', 'MATH 32A', 'LA 192', 'ENGR 97']}
-                            interestTags={[
-                                'Biking',
-                                'Skating',
-                                'Netflix',
-                                'Sports',
-                                'Exploring',
-                                'Thrifting',
-                                'Tunneling',
-                            ]}
-                            affiliationTags={[
-                                'DevX',
-                                'Intermural Soccor',
-                                'Blueprint',
-                                'MentorSEAS',
-                                'GlobeMed',
-                            ]}
-                            bio="The trail to the left had a Danger! Do Not Pass sign telling people to take the trail to the right. This wasn't the way Zeke approached his hiking. Rather than a warning, Zeke read the sign as an invitation to explore an area that would be adventurous and exciting. As the others in the group all shited to the right, Zeke slipped past the danger sign to begin an adventure he would later regret."
-                        />
-                        <UserCard
-                            displayName="Ishaan Shah"
-                            year="3rd"
-                            major="Anthro"
-                            pronouns="he/him"
-                            classTags={['DIGHUM 1', 'COGSCI 20', 'CHEM 28']}
-                            affiliationTags={['Unicamp', 'CEC', 'SAA', 'LA Hacks']}
-                            interestTags={['Concerts', 'Surfing', 'Reading', 'Community Service']}
-                            bio="Cake or pie? I can tell a lot about you by which one you pick. It may seem silly, but cake people and pie people are really different. I know which one I hope you are, but that's not for me to decide. So, what is it? Cake or pie?"
-                        />
-                        <UserCard
-                            displayName="Brandon Chi"
-                            year="4th"
-                            major="Math"
-                            pronouns="he/him"
-                            classTags={['Math 111', 'Math 31B', 'COMSCI M148']}
-                            interestTags={['Food', 'Gymming', 'Climbing', 'Swimming', 'Reading']}
-                            affiliationTags={['Intermural Basketball', 'UPE', 'ACM', 'TeachLA']}
-                            bio="However, the gardener's life is turned upside down when she goes to an engagement party in Sleepford where there are peculiar giants that like to fire each other."
-                        /> */}
                         {
-
-                        userList.map((currentUser, index) => (
+                        userList ? userList.map((currentUser, index) => (
                                 
                                 <UserCard key={index}
                                 displayName={currentUser.username}
@@ -251,6 +224,7 @@ export default function ExplorePage() {
                                 bio={currentUser.bio}
                                 />
                             ))
+                         : <></>
                         }
                     </Box>
                 </Box>

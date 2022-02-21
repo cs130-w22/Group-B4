@@ -3,7 +3,6 @@ import {useNavigate} from 'react-router-dom'
 import { makeStyles } from '@mui/styles'
 import { Typography, Box, ButtonBase, TextField, CircularProgress } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
-import { useNavigate } from 'react-router-dom'
 
 import UserCard from './UserCard'
 import ChipFilter from '../ChipFilter'

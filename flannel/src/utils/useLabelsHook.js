@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'
 
 // hook to handle getting labels from database
 export function useLabels() {
     const [classes, setClasses] = useState([]);
     const [interests, setInterests] = useState([]);
     const [affiliations, setAffiliations] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(async () => {
         const requestObj = {
@@ -13,8 +15,14 @@ export function useLabels() {
                 'Content-Type': 'application/json'
             },
         };
-        const response = (await fetch(`http://localhost:3000/label/getLabels`, requestObj));
-        const labels = await response.json();
+        let labels;
+        try {
+            const response = (await fetch(`http://localhost:3000/label/getLabels`, requestObj));
+            labels = await response.json();
+        } catch {
+            navigate('/');
+            return;
+        }
 
         // filter type of labels
         let classesArr = [];

@@ -77,12 +77,39 @@ async function getAllLabels(req, res) {
     });
 }
 
-// body: interest name
+// define type enum that will be used as one of three discrete types of labels
+const LABELTYPE = {
+    CLASSES: 'classes',
+    INTERESTS: 'interests',
+    AFFILS: 'affiliations'
+};
+
+
+
+/*
+body of request contains: {
+    interest: string representation of label's name
+    type: string representation of type of interest (defined by LABELTYPE above)
+}
+*/
 async function createLabel(req, res) {
     
+    // get interestName and type from post request
     const interestName = req.body.interest;
+    const type = req.body.type;
     if (interestName === undefined) {
         res.status(400).send('interest parameter required');
+        return;
+    }
+    if (type === undefined) {
+        res.status(400).send('type parameter required');
+        return;
+    }
+
+    // check that specified type is one of our valid types
+    if (!(type === LABELTYPE.CLASSES || type === LABELTYPE.INTERESTS || type === LABELTYPE.AFFILS)) {
+        res.status(400).send(`type parameter must be one of the following: 
+        ${LABELTYPE.CLASSES}, ${LABELTYPE.INTERESTS}, ${LABELTYPE.AFFILS}`);
         return;
     }
 
@@ -101,7 +128,8 @@ async function createLabel(req, res) {
             } else {
                 // insert interest if it doesn't exist
                 await client.db('flannel').collection('interests').insertOne({
-                    name: interestName
+                    name: interestName,
+                    type
                 });    
                 res.status(200).send('Interest created');
                 return;

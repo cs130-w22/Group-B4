@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+ - "stable"
+before_install:
+ - rm -rf flannel/node_modules
+ - rm flannel/package-lock.json
+cache:
+directories:
+ - flannel/node_modules
+before_script:
+ - cd flannel
+ - npm install react-scripts
+script:
+ - npm test
+ - npm run build

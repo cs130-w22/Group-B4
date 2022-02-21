@@ -73,5 +73,7 @@
     "eslint-plugin-react-hooks": "^4.3.0",
     "prettier": "^2.5.1",
     "typescript": "^4.5.5"
-  }
+  },
+  "homepage": "https://ryanmtran.github.io/flannel/"
+
 }

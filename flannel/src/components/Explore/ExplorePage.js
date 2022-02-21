@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import {useNavigate} from 'react-router-dom'
 import { makeStyles } from '@mui/styles'
 import { Typography, Box, ButtonBase, TextField, CircularProgress } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
@@ -7,6 +8,8 @@ import { useNavigate } from 'react-router-dom'
 import UserCard from './UserCard'
 import ChipFilter from '../ChipFilter'
 import logo from '../../assets/bearLogo.png'
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import { IconButton } from '@mui/material';
 import '../../styles/fonts.css'
 import { useLabels } from '../../utils/useLabelsHook'
 import { fetchMatchingUsers } from '../../utils/fetchMatchingUsers'
@@ -79,6 +82,13 @@ const style = {
         height: 50,
         paddingRight: 10,
     },
+    header:{
+        display:"flex",
+        flexDirection:"row",
+        width:'95%',
+        justifyContent:'space-around',
+        alignItems:'baseline'
+    }
 }
 
 export default function ExplorePage() {
@@ -154,6 +164,9 @@ export default function ExplorePage() {
         matchingUsersFunc();
     }, [selectedClassTags, selectedInterestTags, selectedAffiliationTags, dataLoaded]);
     const user = JSON.parse(localStorage.getItem('user'));
+    const NavigateProfile = () => {
+        navigate('/Profile')
+    }
     if (dataLoaded) {
         return (
             <Box sx={style.root}>
@@ -162,6 +175,9 @@ export default function ExplorePage() {
                         <img src={logo} alt="Logo" style={style.logo} />
                         <Typography sx={style.title}>FLANNEL</Typography>
                     </Box>
+    
+
+                <Box sx = {style.header}>
                     <TextField
                         sx={style.searchBarContainer}
                         placeholder="Search for Users"
@@ -180,7 +196,11 @@ export default function ExplorePage() {
                         }}
                         size="small"
                     />
+                    <IconButton onClick = {NavigateProfile}>
+                        <AccountCircleOutlinedIcon />
+                    </IconButton>
                 </Box>
+            </Box>
                 <Box sx={style.rowContainer}>
                     <Box sx={style.filterSidebar}>
                         <Typography sx={style.filterTitle}>Filters</Typography>

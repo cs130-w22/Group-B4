@@ -24,7 +24,8 @@ export async function fetchMatchingUsers({ classesLabels, interestsLabels, affil
         return { status: 0 };
     }
 
-    const matchingUsers = (await matchingUsersResponse.json()).matches;
+    const allMatchingUsers = (await matchingUsersResponse.json()).matches;
+    const matchingUsers = allMatchingUsers.filter(x => x.username !== user.username);    
     return { status: 1, matchingUsers };
 }
 

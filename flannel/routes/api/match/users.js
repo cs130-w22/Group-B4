@@ -92,7 +92,22 @@ function updateUserInfo(req, res) {
     let users = client.db('flannel').collection('users')
     users.findOneAndUpdate(
         { username: req.body.username },
-        { $set: { interests: interests } },
+        {
+            $set: {
+                name: name,
+                year: year,
+                major: major,
+                hometown: hometown,
+                pronouns: pronouns,
+                bio: bio,
+                insta: insta,
+                facebook: facebook,
+                twitter: twitter,
+                classes: classes,
+                interests: interests,
+                affiliations: affiliations,
+            },
+        },
         function (err, doc) {
             res.statusCode = 200
             res.setHeader('Content-Type', 'text/plain')

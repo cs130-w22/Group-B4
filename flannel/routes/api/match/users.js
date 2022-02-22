@@ -77,18 +77,18 @@ function createUserInfo(req, res) {
     )
 }
 function updateUserInfo(req, res) {
-    let name = req.body.name
-    let year = req.body.year
-    let major = req.body.major
-    let hometown = req.body.hometown
-    let pronouns = req.body.pronouns
-    let bio = req.body.bio
-    let insta = req.body.insta
-    let facebook = req.body.facebook
-    let twitter = req.body.twitter
-    let classes = req.body.classes
-    let interests = req.body.interests
-    let affiliations = req.body.affiliations
+    // let name = req.body.name
+    // let year = req.body.year
+    // let major = req.body.major
+    // let hometown = req.body.hometown
+    // let pronouns = req.body.pronouns
+    // let bio = req.body.bio
+    // let insta = req.body.insta
+    // let facebook = req.body.facebook
+    // let twitter = req.body.twitter
+    // let classes = req.body.classes
+    // let interests = req.body.interests
+    // let affiliations = req.body.affiliations
     let users = client.db('flannel').collection('users')
     users.findOneAndUpdate(
         { username: req.body.username },

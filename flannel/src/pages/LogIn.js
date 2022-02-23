@@ -1,30 +1,24 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import {
-    IconButton,
-    Button,
-    Typography,
-    TextField,
-    Box
-} from '@mui/material'
+import { IconButton, Button, Typography, TextField, Box } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import { useCookies } from 'react-cookie'
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom'
 import '../App.css'
 import logo from '../assets/bearLogo.png'
 
 const styles = {
     root: {
-        display:"flex",
-        flexDirection: "column",
-        alignItems:"center",
-        padding: 3
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: 3,
     },
-    rowContainer:{
-        display:"flex",
-        flexDirection:"row",
-        width:"95%"
+    rowContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        width: '95%',
     },
     title: {
         paddingRight: 2,
@@ -39,27 +33,27 @@ const styles = {
         flexDirection: 'row',
         width: 300,
     },
-    formContainer:{
-        padding:5,
-        display:"flex",
-        flexDirection:"column",
+    formContainer: {
+        padding: 5,
+        display: 'flex',
+        flexDirection: 'column',
         boxShadow: '0 0px 4px rgba(0, 0, 0, 0.3)',
         borderRadius: 4,
-    }
+    },
 }
 function LogIn() {
-    const navigate = useNavigate();
-    const [isExpanded, setIsExpanded] = useState(false);
-    const [loginError, setLoginError] = useState(false);
-    const [cookies, setCookie] = useCookies(['jwt']);
-    const handleSubmit = async (event) => {        
-        event.preventDefault();
-        const username = event.target.elements.username.value;
-        const password = event.target.elements.password.value;
+    const navigate = useNavigate()
+    const [isExpanded, setIsExpanded] = useState(false)
+    const [loginError, setLoginError] = useState(false)
+    const [cookies, setCookie] = useCookies(['jwt'])
+    const handleSubmit = async (event) => {
+        event.preventDefault()
+        const username = event.target.elements.username.value
+        const password = event.target.elements.password.value
         const data = {
             username,
             password,
-        };
+        }
 
         let requestObj = {
             method: 'Post',
@@ -67,33 +61,37 @@ function LogIn() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
-        };
+        }
 
-        const response = await fetch('http://localhost:3000/login', requestObj);
-        
+        const response = await fetch('http://localhost:3000/login', requestObj)
+
         if (response.status === 200) {
-            const responseObj = await response.json();
-            setCookie('jwt', responseObj.jwt, { path: '/' });
+            const responseObj = await response.json()
+            setCookie('jwt', responseObj.jwt, { path: '/' })
             // store user object in user's browser
-            localStorage.setItem('user', JSON.stringify(responseObj.user));
-            console.log(localStorage.getItem('user'));
-            const cookies = document.cookie;
+            localStorage.setItem('user', JSON.stringify(responseObj.user))
+            console.log(localStorage.getItem('user'))
+            const cookies = document.cookie
             // navigate to explore if successful
-            navigate('/Explore');
+            navigate('/Explore')
             requestObj = {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: cookies,
                 },
-            };
+            }
             // console.log('here');
-            const labels = await fetch(`http://localhost:3000/label/getLabels?username=brandon@g.ucla.edu`, requestObj)
+            const labels = await fetch(
+                `http://localhost:3000/label/getLabels?username=brandon@g.ucla.edu`,
+                requestObj
+            )
             // console.log(labels);
             //let users = await userList.json()
-        } else { //have to try again -> bad login
-            setLoginError(!loginError); 
-            console.log("bad login");
+        } else {
+            //have to try again -> bad login
+            setLoginError(!loginError)
+            console.log('bad login')
         }
     }
     const recoveryEmailMethod = (event) => {
@@ -102,18 +100,15 @@ function LogIn() {
         alert('Password recovery instructions have been sent to your email')
     }
     return (
-        <Box sx = {styles.root}>
-            <Box sx = {styles.rowContainer}>
-                <Box sx = {styles.logoContainer}>
+        <Box sx={styles.root}>
+            <Box sx={styles.rowContainer}>
+                <Box sx={styles.logoContainer}>
                     <img src={logo} alt="Logo" style={styles.logo} />
                     <Typography sx={styles.title}>FLANNEL</Typography>
                 </Box>
             </Box>
-            <Box sx = {styles.formContainer}>
-                <form
-                    onSubmit={handleSubmit}
-                    style={{ display: 'flex', flexDirection: 'column' }}
-                >
+            <Box sx={styles.formContainer}>
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
                     <h1
                         style={{
                             textAlign: 'center',

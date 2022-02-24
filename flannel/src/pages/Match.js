@@ -1,21 +1,20 @@
 import React from 'react'
-import { callbackify } from 'util';
-import './Match.css';
-import {Button} from '@mui/material'
+import './Match.css'
+import { Button } from '@mui/material'
 
-function App ({username, userId, callBack}) {
+function App({ username, userId, callBack }) {
     function chatWithUser(e) {
-        e.preventDefault();
-        callBack(username, userId);
+        e.preventDefault()
+        callBack(username, userId)
     }
     return (
-        <Button onClick = {chatWithUser} sx= {{padding:1}}>
+        <Button onClick={chatWithUser} sx={{ padding: 1 }}>
             {username}
         </Button>
-            // <div id = "current_match" onClick={chatWithUser}>
-            //     <div id = "user_name">{username}</div> 
-            // </div>
-    );
+        // <div id = "current_match" onClick={chatWithUser}>
+        //     <div id = "user_name">{username}</div>
+        // </div>
+    )
 }
 
-export default App;
+export default App

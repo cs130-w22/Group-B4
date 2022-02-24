@@ -45,6 +45,7 @@ function LogIn() {
     const navigate = useNavigate()
     const [isExpanded, setIsExpanded] = useState(false)
     const [loginError, setLoginError] = useState(false)
+    // eslint-disable-next-line
     const [cookies, setCookie] = useCookies(['jwt'])
     const handleSubmit = async (event) => {
         event.preventDefault()
@@ -61,11 +62,11 @@ function LogIn() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
-            mode: 'cors'
-        };
+            mode: 'cors',
+        }
 
-        const response = await fetch('/api/login', requestObj);
-        
+        const response = await fetch('/api/login', requestObj)
+
         if (response.status === 200) {
             const responseObj = await response.json()
             setCookie('jwt', responseObj.jwt, { path: '/' })
@@ -83,7 +84,7 @@ function LogIn() {
                 },
             }
             // console.log('here');
-            const labels = await fetch(`/api/label/getLabels?username=brandon@g.ucla.edu`, requestObj)
+            // const labels = await fetch(`/api/label/getLabels?username=brandon@g.ucla.edu`, requestObj)
             // console.log(labels);
             //let users = await userList.json()
         } else {
@@ -94,7 +95,7 @@ function LogIn() {
     }
     const recoveryEmailMethod = (event) => {
         event.preventDefault()
-        const email = event.target.elements.email.value
+        // const email = event.target.elements.email.value
         alert('Password recovery instructions have been sent to your email')
     }
     return (

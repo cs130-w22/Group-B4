@@ -36,8 +36,8 @@ function App() {
           Authorization: cookies,
       },
   };
-    //const response = await fetch(`http://localhost:3000/user?username=aadsfas`, requestObj);
-    const response = await fetch(`http://localhost:3000/user/getMatchesList?username=${userName}`, requestObj);
+    //const response = await fetch(`/apihttp://localhost:3000/user?username=aadsfas`, requestObj);
+    const response = await fetch(`/api/user/getMatchesList?username=${userName}`, requestObj);
 
     if(response.status === 401) {
       //render unauth page

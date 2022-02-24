@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react'
+import {useNavigate} from 'react-router-dom'
 import { makeStyles } from '@mui/styles'
-import { Typography, Box, ButtonBase, TextField } from '@mui/material'
+import { Typography, Box, ButtonBase, TextField, CircularProgress } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
+
 import UserCard from './UserCard'
 import ChipFilter from '../ChipFilter'
 import logo from '../../assets/bearLogo.png'
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import { IconButton } from '@mui/material';
+import ChatIcon from '@mui/icons-material/Chat';
 import '../../styles/fonts.css'
+import { useLabels } from '../../utils/useLabelsHook'
+import { fetchMatchingUsers } from '../../utils/fetchMatchingUsers'
 
 const useStyles = makeStyles({
     inputText: {
@@ -75,10 +82,17 @@ const style = {
         height: 50,
         paddingRight: 10,
     },
+    header:{
+        display:"flex",
+        flexDirection:"row",
+        width:'95%',
+        justifyContent:'space-around',
+        alignItems:'baseline'
+    }
 }
 
 export default function ExplorePage() {
-    const classes = useStyles()
+    const styles = useStyles()
     //selected tags
     const [selectedClassTags,setSelectedClassTags] = useState([]);
     const [selectedAffiliationTags,setSelectedAffiliationTags] = useState([]);
@@ -88,154 +102,166 @@ export default function ExplorePage() {
     const [classesTagOptions, setClassesTagOptions] = useState([])
     const [interestsTagOptions, setInterestsTagOptions] = useState([])
     const [affiliationsTagOptions, setAffiliationsTagOptions] = useState([])
+
     const [userList, setUserList] = useState([])
+    const [dataLoaded, setDataLoaded] = useState(false);
+
+    const { classes, interests, affiliations } = useLabels();
+    const navigate = useNavigate();
 
 
-    useEffect(async () => {
+    // effect to handle getting data from backend at start of application
+    useEffect(() => {                 
+        // filter out selected class tags from the options in the drop down
+        const classOptions = classes.filter(x => !selectedClassTags.includes(x));
+        const interestOptions = interests.filter(x => !selectedInterestTags.includes(x));
+        const affiliationOptions = affiliations.filter(x => !selectedAffiliationTags.includes(x));
+        // set drop down options
+        setClassesTagOptions(classOptions);
+        setInterestsTagOptions(interestOptions)
+        setAffiliationsTagOptions(affiliationOptions);
+        // set page as loaded        
+        setDataLoaded(true);            
+        
+    }, [classes, interests, affiliations]);
 
-        // get jwt cookie & stored user object
-        const cookies = document.cookie;
-        const user = JSON.parse(localStorage.getItem('user'));
-        console.log(user)
-        const requestObj = {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: cookies
-            },
-        };
-        // get all labels in our database
-        const response = (await fetch(`http://localhost:3000/label/getLabels?username=${user.username}`, requestObj));
-        const getUsers = await fetch(`http://localhost:3000/user?username=${user.username}`, requestObj);
-        const labels = await response.json();
-        const users = await getUsers.json();
-        setUserList((old) => users)
+    // handle fetching matching users based on selected criteria
+    useEffect(() => {
+        async function matchingUsersFunc() {
+            let classesLabels, interestsLabels, affiliationsLabels;
+            
+            if (!dataLoaded) {
+                // if we are just starting up, fetch matching users based on user's saved interests
+                classesLabels = [...user.classes];
+                interestsLabels = [...user.interests]
+                affiliationsLabels = [...user.affiliations];
+            } else {
+                // otherwise fetch based on selected tags
+                classesLabels = selectedClassTags;
+                interestsLabels = selectedInterestTags;
+                affiliationsLabels = selectedAffiliationTags;
+            }
+            // only make a request if we have selected tags
+            if (classesLabels.length || interestsLabels.length || affiliationsLabels.length) {
+                const matchingUsers = await fetchMatchingUsers({ 
+                    classesLabels,
+                    interestsLabels,
+                    affiliationsLabels           
+                });
 
-        let labelsArr = labels.map(x => x.name);
-        // hack while we have duplicates in our labels database -> get rid of duplicates
-        labelsArr = [...new Set(labelsArr)];
-        // set options in classes list to be labels from db
-        setClassesTagOptions(labelsArr);
-        setInterestsTagOptions(['Biking', 'Skating', 'Dancing'])
-        setAffiliationsTagOptions(['Theta Chi', 'DevX', 'GlobeMed', 'Climbing Club'])
-    }, [])
-    return (
-        <Box sx={style.root}>
-            <Box sx={style.rowContainer}>
-                <Box sx={style.logoContainer}>
-                    <img src={logo} alt="Logo" style={style.logo} />
-                    <Typography sx={style.title}>FLANNEL</Typography>
-                </Box>
-                <TextField
-                    sx={style.searchBarContainer}
-                    placeholder="Search for Users"
-                    fullWidth
-                    variant="outlined"
-                    InputProps={{
-                        //disableUnderline: true,
-                        classes: {
-                            input: classes.inputText,
-                        },
-                        endAdornment: (
-                            <ButtonBase type="submit">
-                                <SearchIcon />
-                            </ButtonBase>
-                        ),
-                    }}
-                    size="small"
-                />
-            </Box>
-            <Box sx={style.rowContainer}>
-                <Box sx={style.filterSidebar}>
-                    <Typography sx={style.filterTitle}>Filters</Typography>
-                    <ChipFilter
-                        setTagOptions={setClassesTagOptions}
-                        type="Classes"
-                        tagOptions={classesTagOptions}
-                        defaultShownTags={['CS 130', 'CS 118', 'CS 151B']}
-                        setSelectedTags = {setSelectedClassTags}
-                        selectedTags = {selectedClassTags}
-                    />
-                    <ChipFilter
-                        setTagOptions={setInterestsTagOptions}
-                        type="Interests"
-                        tagOptions={interestsTagOptions}
-                        defaultShownTags={['Bouldering', 'Netflix', 'Gym', 'Reading']}
-                        setSelectedTags = {setSelectedInterestTags}
-                        selectedTags = {selectedInterestTags}
-                    />
-                    <ChipFilter
-                        setTagOptions={setAffiliationsTagOptions}
-                        type="Affiliations"
-                        tagOptions={affiliationsTagOptions}
-                        defaultShownTags={['Blueprint', 'UPE', 'NSU']}
-                        setSelectedTags = {setSelectedAffiliationTags}
-                        selectedTags = {selectedAffiliationTags}
-                    />
-                </Box>
-                <Box sx={style.exploreBox}>
-                    <UserCard
-                        displayName="Ryan Tran"
-                        year="4th"
-                        major="Com Sci"
-                        pronouns="he/him"
-                        classTags={['COMSCI 31', 'COMSCI 118', 'MATH 32A', 'LA 192', 'ENGR 97']}
-                        interestTags={[
-                            'Biking',
-                            'Skating',
-                            'Netflix',
-                            'Sports',
-                            'Exploring',
-                            'Thrifting',
-                            'Tunneling',
-                        ]}
-                        affiliationTags={[
-                            'DevX',
-                            'Intermural Soccor',
-                            'Blueprint',
-                            'MentorSEAS',
-                            'GlobeMed',
-                        ]}
-                        bio="The trail to the left had a Danger! Do Not Pass sign telling people to take the trail to the right. This wasn't the way Zeke approached his hiking. Rather than a warning, Zeke read the sign as an invitation to explore an area that would be adventurous and exciting. As the others in the group all shited to the right, Zeke slipped past the danger sign to begin an adventure he would later regret."
-                    />
-                    <UserCard
-                        displayName="Ishaan Shah"
-                        year="3rd"
-                        major="Anthro"
-                        pronouns="he/him"
-                        classTags={['DIGHUM 1', 'COGSCI 20', 'CHEM 28']}
-                        affiliationTags={['Unicamp', 'CEC', 'SAA', 'LA Hacks']}
-                        interestTags={['Concerts', 'Surfing', 'Reading', 'Community Service']}
-                        bio="Cake or pie? I can tell a lot about you by which one you pick. It may seem silly, but cake people and pie people are really different. I know which one I hope you are, but that's not for me to decide. So, what is it? Cake or pie?"
-                    />
-                    <UserCard
-                        displayName="Brandon Chi"
-                        year="4th"
-                        major="Math"
-                        pronouns="he/him"
-                        classTags={['Math 111', 'Math 31B', 'COMSCI M148']}
-                        interestTags={['Food', 'Gymming', 'Climbing', 'Swimming', 'Reading']}
-                        affiliationTags={['Intermural Basketball', 'UPE', 'ACM', 'TeachLA']}
-                        bio="However, the gardener's life is turned upside down when she goes to an engagement party in Sleepford where there are peculiar giants that like to fire each other."
-                    />
-                    {
+                // if status is 0, there was some error fetching users, assume bad jwt and navigate to login
+                if (matchingUsers.status === 0) {
+                    navigate('/');
+                    return;
+                }
+                // else update user list with matches
+                const users = matchingUsers.matchingUsers;                
+                setUserList(() => users);
+            } else {
+                setUserList(() => []);
+            }
+        }
+        matchingUsersFunc();
+    }, [selectedClassTags, selectedInterestTags, selectedAffiliationTags, dataLoaded]);
+    const user = JSON.parse(localStorage.getItem('user'));
+    const NavigateProfile = () => {
+        navigate('/Profile');
+    }
+    const NavigateChat = () => {
+        navigate('/Chat');
+    }
+    if (dataLoaded) {
+        return (
+            <Box sx={style.root}>
+                <Box sx={style.rowContainer}>
+                    <Box sx={style.logoContainer}>
+                        <img src={logo} alt="Logo" style={style.logo} />
+                        <Typography sx={style.title}>FLANNEL</Typography>
+                    </Box>
+    
 
-                    userList.map((currentUser, index) => (
-                            
-                            <UserCard key={index}
-                            displayName={currentUser.username}
-                            year={currentUser.year}
-                            major={currentUser.major}
-                            pronouns={currentUser.pronouns}
-                            classTags={currentUser.classes}
-                            interestTags={currentUser.interests}
-                            affiliationTags={currentUser.affiliations}
-                            bio={currentUser.bio}
-                            />
-                        ))
-                    }
+                <Box sx = {style.header}>
+                    <TextField
+                        sx={style.searchBarContainer}
+                        placeholder="Search for Users"
+                        fullWidth
+                        variant="outlined"
+                        InputProps={{
+                            //disableUnderline: true,
+                            classes: {
+                                input: styles.inputText,
+                            },
+                            endAdornment: (
+                                <ButtonBase type="submit">
+                                    <SearchIcon />
+                                </ButtonBase>
+                            ),
+                        }}
+                        size="small"
+                    />
+                    <IconButton onClick = {NavigateProfile}>
+                        <AccountCircleOutlinedIcon />
+                    </IconButton>
+                    <IconButton onClick = {NavigateChat}>
+                        <ChatIcon />
+                    </IconButton>
                 </Box>
             </Box>
-        </Box>
-    )
+                <Box sx={style.rowContainer}>
+                    <Box sx={style.filterSidebar}>
+                        <Typography sx={style.filterTitle}>Filters</Typography>
+                        <ChipFilter
+                            setTagOptions={setClassesTagOptions}
+                            type="Classes"
+                            tagOptions={classesTagOptions}
+                            defaultShownTags={user.classes}
+                            setSelectedTags = {setSelectedClassTags}
+                            selectedTags = {selectedClassTags}
+                        />
+                        <ChipFilter
+                            setTagOptions={setInterestsTagOptions}
+                            type="Interests"
+                            tagOptions={interestsTagOptions}
+                            defaultShownTags={user.interests}
+                            setSelectedTags = {setSelectedInterestTags}
+                            selectedTags = {selectedInterestTags}
+                        />
+                        <ChipFilter
+                            setTagOptions={setAffiliationsTagOptions}
+                            type="Affiliations"
+                            tagOptions={affiliationsTagOptions}
+                            defaultShownTags={user.affiliations}
+                            setSelectedTags = {setSelectedAffiliationTags}
+                            selectedTags = {selectedAffiliationTags}
+                        />
+                    </Box>
+                    <Box sx={style.exploreBox}>
+                        {
+                        userList ? userList.map((currentUser, index) => (
+                                
+                                <UserCard key={index}
+                                displayName={currentUser.username}
+                                year={currentUser.year}
+                                major={currentUser.major}
+                                pronouns={currentUser.pronouns}
+                                classTags={currentUser.classes}
+                                interestTags={currentUser.interests}
+                                affiliationTags={currentUser.affiliations}
+                                bio={currentUser.bio}
+                                />
+                            ))
+                         : <></>
+                        }
+                    </Box>
+                </Box>
+            </Box>
+        );
+    } else {
+        return (
+            <Box sx={style.root}>
+                <Box sx={style.rowContainer} style={{height: "45vh"}}></Box>
+                <CircularProgress color="primary"/>
+            </Box>
+        );
+    }
 }

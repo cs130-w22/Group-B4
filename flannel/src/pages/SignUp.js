@@ -18,6 +18,7 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn'
 import ChipFilter from '../components/ChipFilter'
 import { useCookies } from 'react-cookie'
 import logo from '../assets/bearLogo.png'
+import { useLabels } from '../utils/useLabelsHook'
 
 const styles = {
     root: {
@@ -75,12 +76,15 @@ function SignUp() {
     const [interestsTagOptions, setInterestsTagOptions] = useState([])
     const [affiliationsTagOptions, setAffiliationsTagOptions] = useState([])
 
-    const navigate = useNavigate()
+    // get labels from useLabels hook
+    const { classes: classesLabels, interests: interestsLabels, affiliations: affiliationLabels } = useLabels();
+
+    const navigate = useNavigate();
     useEffect(() => {
-        setClassesTagOptions(['CS 31', 'MATH 32A', 'PHYSICS 1A', 'BIO 1'])
-        setInterestsTagOptions(['Biking', 'Skating', 'Dancing'])
-        setAffiliationsTagOptions(['Theta Chi', 'DevX', 'GlobeMed', 'Climbing Club'])
-    }, [])
+        setClassesTagOptions(classesLabels);
+        setInterestsTagOptions(interestsLabels);
+        setAffiliationsTagOptions(affiliationLabels);
+    }, [classesLabels, interestsLabels, affiliationLabels])
 
     const [cookies, setCookie] = useCookies(['jwt'])
 
@@ -126,14 +130,13 @@ function SignUp() {
                 },
                 body: JSON.stringify(data),
             }
-            const response = await fetch('http://localhost:3000/login/register', requestObj)
-            if (response.status === 201) {
-                //successful login
-                let responseObj = await response.json()
-                setCookie('jwt', responseObj.jwt, { path: '/' })
-                localStorage.setItem('user', JSON.stringify(responseObj.user))
-                const cookies = document.cookie
-                navigate('/Explore')
+            const response = await fetch('/api/login/register', requestObj);
+            if(response.status === 201) { //successful login
+                let responseObj = await response.json();
+                setCookie('jwt', responseObj.jwt, { path: '/' });
+                localStorage.setItem('user', JSON.stringify(responseObj.user));
+                const cookies = document.cookie;
+                navigate('/Explore');
             } else if (response.status === 400) {
                 console.log('bad response')
             }

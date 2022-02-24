@@ -4,11 +4,14 @@ const client = require('../../../db')
 let authenticate = require('../auth/authenticate.js')
 let ObjectID = require('mongodb').ObjectID
 
-users.post('/createUserInfo', authenticate, createUserInfo)
-users.post('/updateUserInfo', authenticate, updateUserInfo)
-users.post('/findUsersByTag', authenticate, findUsersByTag)
-users.get('/getUserProfile', authenticate, getUserProfile)
-users.get('/getMatchesList', authenticate, getMatchesList)
+
+users.post('/createUserInfo', authenticate, createUserInfo);
+users.post('/updateUserInfo', authenticate, updateUserInfo);
+users.post('/findUsersByTag', authenticate, findUsersByTag);
+users.get('/getUserProfile', authenticate, getUserProfile);
+users.get('/getMatchesList', authenticate, getMatchesList);
+users.post('/addUserToMatchList', authenticate, addUserToMatchList);
+
 
 users.get('/', authenticate, function (req, res, next) {
     let users = client.db('flannel').collection('users')
@@ -32,6 +35,19 @@ function getMatchesList(req, res) {
         if (err) res.status(500).send()
         let matches = document[0].matches
         res.status(200).send({ matches: matches })
+    })
+}
+
+function addUserToMatchList(req, res) {
+    let username = req.query.username;
+    let match = {
+        "username": req.body.username,
+        "id": req.body.id
+    }
+    let users = client.db('flannel').collection('users');
+    users.findOneAndUpdate({"username": username}, {$push: {matches:match}}, function(err, doc) {
+        if(err) res.status(500).send();
+        res.status(200).send(doc);
     })
 }
 

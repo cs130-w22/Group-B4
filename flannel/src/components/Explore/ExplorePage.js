@@ -9,6 +9,7 @@ import ChipFilter from '../ChipFilter'
 import logo from '../../assets/bearLogo.png'
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { IconButton } from '@mui/material';
+import ChatIcon from '@mui/icons-material/Chat';
 import '../../styles/fonts.css'
 import { useLabels } from '../../utils/useLabelsHook'
 import { fetchMatchingUsers } from '../../utils/fetchMatchingUsers'
@@ -164,7 +165,10 @@ export default function ExplorePage() {
     }, [selectedClassTags, selectedInterestTags, selectedAffiliationTags, dataLoaded]);
     const user = JSON.parse(localStorage.getItem('user'));
     const NavigateProfile = () => {
-        navigate('/Profile')
+        navigate('/Profile');
+    }
+    const NavigateChat = () => {
+        navigate('/Chat');
     }
     if (dataLoaded) {
         return (
@@ -197,6 +201,9 @@ export default function ExplorePage() {
                     />
                     <IconButton onClick = {NavigateProfile}>
                         <AccountCircleOutlinedIcon />
+                    </IconButton>
+                    <IconButton onClick = {NavigateChat}>
+                        <ChatIcon />
                     </IconButton>
                 </Box>
             </Box>

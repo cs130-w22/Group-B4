@@ -183,26 +183,6 @@ export default function Profile() {
                             defaultValue={user.major}
                             style={{ padding: '5px' }}
                         />
-                        <TextField
-                            required
-                            label="Email"
-                            id="email"
-                            defaultValue={user.username}
-                            style={{ padding: '5px' }}
-                        />
-                        {/* <TextField required label = "Password" id = "password"
-                            type = "password"
-                            style = {{padding:"5px"}}
-                        />
-                        {
-                            signupError && (
-                                <p style = {{color:"red"}}>Make sure passwords match</p>
-                            )
-                        }
-                        <TextField required label = "Confirm Password" id ="confirmPassword"
-                            type = "password"
-                            style = {{padding:"5px"}}
-                        /> */}
                     </Box>
                     <Box sx={styles.formColumn}>
                         <TextField

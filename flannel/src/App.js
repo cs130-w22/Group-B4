@@ -4,7 +4,8 @@ import SignUp from './pages/SignUp';
 import Chat from './pages/Chat';
 import Profile from './pages/Profile';
 import ExplorePage from './components/Explore/ExplorePage'
-import {Route,Routes} from 'react-router-dom';
+import { Route, Routes, BrowserRouter } from 'react-router-dom'
+
 import './App.css'
 
 function App() {
@@ -19,4 +20,4 @@ function App() {
   );
 }
 
-export default App;
+export default App

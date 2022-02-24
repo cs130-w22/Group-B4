@@ -8,6 +8,7 @@ import ChipFilter from '../ChipFilter'
 import logo from '../../assets/bearLogo.png'
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { IconButton } from '@mui/material';
+import ChatIcon from '@mui/icons-material/Chat';
 import '../../styles/fonts.css'
 
 const useStyles = makeStyles({
@@ -133,6 +134,9 @@ export default function ExplorePage() {
     const NavigateProfile = () => {
         navigate('/Profile')
     }
+    const NavigateChat = () => {
+        navigate('/Chat')
+    }
     return (
         <Box sx={style.root}>
             <Box sx={style.rowContainer}>
@@ -161,6 +165,9 @@ export default function ExplorePage() {
                     />
                     <IconButton onClick = {NavigateProfile}>
                         <AccountCircleOutlinedIcon />
+                    </IconButton>
+                    <IconButton onClick = {NavigateChat}>
+                        <ChatIcon />
                     </IconButton>
                 </Box>
             </Box>

@@ -70,134 +70,139 @@ it('Testing to see if Jest works', (done) => {
     done();
 })
 
-it('tests invalid username', function(done) {
-    request(app)
-      .post('/login')
-      .send({name: 'john'})
-      .expect(401)
-      .end(function(err, res) {
-        if (err) return done(err);
-        return done();
-      });
-});
-
-it('tests valid username', function(done) {
-    request(app)
-      .post('/login')
-      .send({username: 'henry@g.ucla.edu', password: '1234'})
-      .expect(200)
-      .end(function(err, res) {
-        if (err) return done(err);
-        return done();
-      });
-});
-
-it('tests valid username, invalid password', function(done) {
-    request(app)
-      .post('/login')
-      .send({username: 'henry@g.ucla.edu', password: '1234'})
-      .expect(200)
-      .end(function(err, res) {
-        if (err) return done(err);
-        return done();
-      });
-});
-
-it('tests trying to duplicate user', function(done) {
-    request(app)
-      .post('/login/register')
-      .send({username: userOne.username, password: userOne.password})
-      .expect(400)
-      .end(function(err, res) {
-        if (err) return done(err);
-        return done();
-      });
-});
-
-it('tests deleting user', function(done) {
-    request(app)
-      .post('/user/deleteUser?username=test3@g.ucla.edu')
-      .send()
-      .expect(200)
-      .end(function(err, res) {
-        if (err) return done(err);
-        return done();
-      });
-});
-
-it('tests creating a new user, then checks to make sure we cant create a user that exists', function(done) {
-    request(app)
-            .post('/login/register')
-            .send({username: userThree.username, password: userThree.password})
-            .expect(201)
+describe('test user login / signup', () => {
+    it('tests invalid username', function(done) {
+        request(app)
+          .post('/login')
+          .send({name: 'john'})
+          .expect(401)
+          .end(function(err, res) {
+            if (err) return done(err);
+            return done();
+          });
+    });
+    
+    it('tests valid username', function(done) {
+        request(app)
+          .post('/login')
+          .send({username: 'henry@g.ucla.edu', password: '1234'})
+          .expect(200)
+          .end(function(err, res) {
+            if (err) return done(err);
+            return done();
+          });
+    });
+    
+    it('tests valid username, invalid password', function(done) {
+        request(app)
+          .post('/login')
+          .send({username: 'henry@g.ucla.edu', password: '1234'})
+          .expect(200)
+          .end(function(err, res) {
+            if (err) return done(err);
+            return done();
+          });
+    });
+    
+    it('tests trying to duplicate user', function(done) {
+        request(app)
+          .post('/login/register')
+          .send({username: userOne.username, password: userOne.password})
+          .expect(400)
+          .end(function(err, res) {
+            if (err) return done(err);
+            return done();
+          });
+    });
+    
+    it('tests deleting user', function(done) {
+        request(app)
+          .post('/user/deleteUser?username=test3@g.ucla.edu')
+          .send()
+          .expect(200)
+          .end(function(err, res) {
+            if (err) return done(err);
+            return done();
+          });
+    });
+    
+    it('tests creating a new user, then checks to make sure we cant create a user that exists', function(done) {
+        request(app)
+                .post('/login/register')
+                .send({username: userThree.username, password: userThree.password})
+                .expect(201)
+                .end(function(err, res) {
+                    if (err) return done(err);
+                    return request(app)
+                            .post('/login/register')
+                            .send({username: userThree.username, password: userThree.password})
+                            .expect(400)
+                            .end(function(err, res) {
+                                if(err) return done(err);
+                                return done();
+                            })
+                })
+    })
+    
+    it('tests getting full user list', function(done) {
+        request(app)
+            .get(`/user?username=${userOne.username}`)
+            .set('Authorization', `jwt=${userOne.token}`)
+            .send()
+            .expect(200)
             .end(function(err, res) {
-                if (err) return done(err);
-                return request(app)
-                        .post('/login/register')
-                        .send({username: userThree.username, password: userThree.password})
-                        .expect(400)
-                        .end(function(err, res) {
-                            if(err) return done(err);
-                            return done();
-                        })
+                if(err) return done(err);
+    
+                expect(res.body).not.toBe({});
+                return done();
             })
+    })
+    
+    it('tests getting a user profile given ID', function(done) {
+        request(app)
+            .get(`/user/getUserProfile?ID=${userOne.id}&username=${userOne.username}`)
+            .set('Authorization', `jwt=${userOne.token}`)
+            .send()
+            .expect(200)
+            .end(function(err, res) {
+                if(err) return done(err);
+                expect(res.body._id).toBe('6218001ccdb32898af64d0bd');
+                return done();
+            })
+    })
 })
 
-it('tests getting full user list', function(done) {
-    request(app)
-        .get(`/user?username=${userOne.username}`)
-        .set('Authorization', `jwt=${userOne.token}`)
-        .send()
-        .expect(200)
-        .end(function(err, res) {
-            if(err) return done(err);
-
-            expect(res.body).not.toBe({});
-            return done();
-        })
+describe('test matching endpoints', () => {
+    it('tests getting a users match list', function(done) {
+        request(app)
+            .get(`/user/getMatchesList?username=henry@g.ucla.edu`)
+            .set('Authorization', `jwt=${userFour.token}`)
+            .send()
+            .expect(200)
+            .end(function(err, res) {
+                if(err) return done(err)
+                expect(res.body.matches).toStrictEqual([
+                    { username: 'chi@g.ucla.edu', id: '62081da1f5ec62b03a34eca0' },
+                    { username: 'ishaan@g.ucla.edu', id: '6205904f308e7d7d8d84075f' }
+                  ])
+                return done();
+            })
+    })
+    
+    
+    it('tests setting a users match list', function(done) {
+        request(app)
+            .post(`/user/addUserToMatchList?username=test3@g.ucla.edu`)
+            .set('Authorization', `jwt=${userThree.token}`)
+            .send({"username": userFour.username, "id": userFour.id})
+            .expect(200)
+            .end(function(err, res) {
+                if(err) return done(err)
+                console.log(res.body.lastErrorObject.updatedExisting)
+                expect(res.body.lastErrorObject.updatedExisting).toBe(true);
+                return done();
+            })
+    })
 })
 
-it('tests getting a user profile given ID', function(done) {
-    request(app)
-        .get(`/user/getUserProfile?ID=${userOne.id}&username=${userOne.username}`)
-        .set('Authorization', `jwt=${userOne.token}`)
-        .send()
-        .expect(200)
-        .end(function(err, res) {
-            if(err) return done(err);
-            expect(res.body._id).toBe('6218001ccdb32898af64d0bd');
-            return done();
-        })
-})
-
-it('tests getting a users match list', function(done) {
-    request(app)
-        .get(`/user/getMatchesList?username=henry@g.ucla.edu`)
-        .set('Authorization', `jwt=${userFour.token}`)
-        .send()
-        .expect(200)
-        .end(function(err, res) {
-            if(err) return done(err)
-            expect(res.body.matches).toStrictEqual([
-                { username: 'chi@g.ucla.edu', id: '62081da1f5ec62b03a34eca0' },
-                { username: 'ishaan@g.ucla.edu', id: '6205904f308e7d7d8d84075f' }
-              ])
-            return done();
-        })
-})
-
-
-it('tests setting a users match list', function(done) {
-    request(app)
-        .post(`/user/addUserToMatchList?username=test3@g.ucla.edu`)
-        .set('Authorization', `jwt=${userThree.token}`)
-        .send({"username": userFour.username, "id": userFour.id})
-        .expect(200)
-        .end(function(err, res) {
-            if(err) return done(err)
-            console.log(res.body.lastErrorObject.updatedExisting)
-            expect(res.body.lastErrorObject.updatedExisting).toBe(true);
-            return done();
-        })
-})
 

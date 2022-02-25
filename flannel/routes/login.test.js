@@ -85,7 +85,7 @@ describe('test user login / signup', () => {
     it('tests valid username', function(done) {
         request(app)
           .post('/login')
-          .send({username: 'henry@g.ucla.edu', password: '1234'})
+          .send({username: 'test1@g.ucla.edu', password: '1234'})
           .expect(200)
           .end(function(err, res) {
             if (err) return done(err);

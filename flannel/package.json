@@ -87,7 +87,7 @@
   "scripts": {
     "start": "PORT=4000 node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "jest --forceExit --detectOpenHandles",
+    "test": "jest --forceExit --detectOpenHandles --watch",
     "eject": "react-scripts eject",
     "test:ci": "npm run test -- --coverage --ci --testResultsProcessor=\"jest-junit\""
   },
@@ -114,7 +114,49 @@
         "testMatch": [
           "<rootDir>/routes/**/*.test.js"
         ]
+      },
+      {
+        "displayName": "frontend",
+        "testEnvironment": "jsdom",
+        "testMatch": ["<rootDir>/src/**/*.test.js"],
+        "moduleFileExtensions": ["js", "json"],
+        "moduleNameMapper": {
+          "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+          "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
+        },
+        "transform": {
+          "^.+\\.(js|jsx|mjs|cjs|ts|tsx)$": "<rootDir>/config/jest/babelTransform.js",
+          "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
+          "^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+        },
+        "transformIgnorePatterns": [
+          "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$",
+          "^.+\\.module\\.(css|sass|scss)$"
+        ],
+        "modulePaths": [],
+        "moduleNameMapper": {
+          "^react-native$": "react-native-web",
+          "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+        },
+        "moduleFileExtensions": [
+          "web.js",
+          "js",
+          "web.ts",
+          "ts",
+          "web.tsx",
+          "tsx",
+          "json",
+          "web.jsx",
+          "jsx",
+          "node"
+        ],
+        "watchPlugins": [
+          "jest-watch-typeahead/filename",
+          "jest-watch-typeahead/testname"
+        ],
+        "resetMocks": true
       }
+
     ]
   },
   "browserslist": {

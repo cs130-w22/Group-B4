@@ -11,6 +11,16 @@ users.post('/findUsersByTag', authenticate, findUsersByTag);
 users.get('/getUserProfile', authenticate, getUserProfile);
 users.get('/getMatchesList', authenticate, getMatchesList);
 users.post('/addUserToMatchList', authenticate, addUserToMatchList);
+users.post('/deleteUser', deleteUser);
+
+function deleteUser(req, res) {
+    let username = req.query.username;
+    let users = client.db('flannel').collection('users');
+    users.findOneAndDelete({"username": username}, function(err, doc) {
+        res.status(200).send(doc);
+    })
+
+}
 
 
 users.get('/', authenticate, function (req, res, next) {

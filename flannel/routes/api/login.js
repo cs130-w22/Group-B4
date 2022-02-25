@@ -27,7 +27,6 @@ router.post('/', function(request, response, next) {
         response.status(401).send("unauthorized!");
         return;
     }
-
     let users = client.db('flannel').collection('users');
     let query_string = {"username": request.body.username}
     users.find(query_string).toArray((err, res) => {
@@ -35,7 +34,6 @@ router.post('/', function(request, response, next) {
             response.status(401).send("User does not exist!")
             return 
         }
-
         var temp_array = []
         res.forEach((item) => {
             var compare = bcrypt.compareSync(request.body.password, item.password)

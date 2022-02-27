@@ -124,6 +124,7 @@ export default function Profile() {
             method: 'Post',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: document.cookie,
             },
             body: JSON.stringify(data),
         }

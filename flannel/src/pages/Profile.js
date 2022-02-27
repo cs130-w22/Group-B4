@@ -91,8 +91,8 @@ export default function Profile() {
         const schoolYear = event.target[2].value
         const major = event.target.elements.major.value
         const email = event.target.elements.email.value
-        const password = event.target.elements.password.value
-        const confirmPassword = event.target.elements.confirmPassword.value
+        // const password = event.target.elements.password.value
+        // const confirmPassword = event.target.elements.confirmPassword.value
         const hometown = event.target.elements.hometown.value
         const pronouns = event.target[14].value
         const bio = event.target.bio.value
@@ -100,45 +100,49 @@ export default function Profile() {
         const facebook = event.target.facebook.value
         const twitter = event.target.twitter.value
 
-        if (password !== confirmPassword) {
-            setSignupError(true)
-        } else {
-            setSignupError(false)
-            const data = {
-                name: name,
-                username: email.toLowerCase(),
-                password: password,
-                year: schoolYear,
-                major,
-                hometown,
-                pronouns,
-                bio,
-                insta,
-                facebook,
-                twitter,
-                classes: selectedClassTags,
-                interests: selectedInterestTags,
-                affiliations: selectedAffiliationTags,
-            }
-            let requestObj = {
-                method: 'Post',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            }
-            const response = await fetch('http://localhost:3000/login/register', requestObj)
-            if (response.status === 201) {
-                //successful login
-                let responseObj = await response.json()
-                setCookie('jwt', responseObj.jwt, { path: '/' })
-                localStorage.setItem('user', JSON.stringify(responseObj.user))
-                // eslint-disable-next-line
-                const cookies = document.cookie
-                navigate('/Explore')
-            } else if (response.status === 400) {
-                console.log('bad response')
-            }
+        // if (password !== confirmPassword) {
+        //     setSignupError(true)
+        // } else {
+        //     setSignupError(false)
+        const data = {
+            name: name,
+            username: email.toLowerCase(),
+            // password: password,
+            year: schoolYear,
+            major,
+            hometown,
+            pronouns,
+            bio,
+            insta,
+            facebook,
+            twitter,
+            classes: selectedClassTags,
+            interests: selectedInterestTags,
+            affiliations: selectedAffiliationTags,
+        }
+        let requestObj = {
+            method: 'Post',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        }
+        // setCookie('jwt', requestObj.jwt, { path: '/' })
+        console.log('HEREERE')
+
+        const response = await fetch('/api/user/updateUserInfo', requestObj)
+        if (response.status === 200) {
+            //successful login
+            //let responseObj = await response.json()
+            //setCookie('jwt', responseObj.jwt, { path: '/' })
+            //localStorage.setItem('user', JSON.stringify(responseObj.user))
+            // eslint-disable-next-line
+            //const cookies = document.cookie
+            navigate('/Explore')
+        } else if (response.status === 400) {
+            console.log('bad response')
+        } else if (response.status === 500) {
+            console.log('interanl server error')
         }
     }
 
@@ -181,6 +185,13 @@ export default function Profile() {
                             label="Major"
                             id="major"
                             defaultValue={user.major}
+                            style={{ padding: '5px' }}
+                        />
+                        <TextField
+                            required
+                            label="Email"
+                            id="email"
+                            defaultValue={user.username}
                             style={{ padding: '5px' }}
                         />
                     </Box>

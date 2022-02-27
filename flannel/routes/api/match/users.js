@@ -4,14 +4,12 @@ const client = require('../../../db')
 let authenticate = require('../auth/authenticate.js')
 let ObjectID = require('mongodb').ObjectID
 
-
-users.post('/createUserInfo', authenticate, createUserInfo);
-users.post('/updateUserInfo', authenticate, updateUserInfo);
-users.post('/findUsersByTag', authenticate, findUsersByTag);
-users.get('/getUserProfile', authenticate, getUserProfile);
-users.get('/getMatchesList', authenticate, getMatchesList);
-users.post('/addUserToMatchList', authenticate, addUserToMatchList);
-
+users.post('/createUserInfo', authenticate, createUserInfo)
+users.post('/updateUserInfo', authenticate, updateUserInfo)
+users.post('/findUsersByTag', authenticate, findUsersByTag)
+users.get('/getUserProfile', authenticate, getUserProfile)
+users.get('/getMatchesList', authenticate, getMatchesList)
+users.post('/addUserToMatchList', authenticate, addUserToMatchList)
 
 users.get('/', authenticate, function (req, res, next) {
     let users = client.db('flannel').collection('users')
@@ -39,16 +37,20 @@ function getMatchesList(req, res) {
 }
 
 function addUserToMatchList(req, res) {
-    let username = req.query.username;
+    let username = req.query.username
     let match = {
-        "username": req.body.username,
-        "id": req.body.id
+        username: req.body.username,
+        id: req.body.id,
     }
-    let users = client.db('flannel').collection('users');
-    users.findOneAndUpdate({"username": username}, {$push: {matches:match}}, function(err, doc) {
-        if(err) res.status(500).send();
-        res.status(200).send(doc);
-    })
+    let users = client.db('flannel').collection('users')
+    users.findOneAndUpdate(
+        { username: username },
+        { $push: { matches: match } },
+        function (err, doc) {
+            if (err) res.status(500).send()
+            res.status(200).send(doc)
+        }
+    )
 }
 
 function getUserProfile(req, res) {
@@ -93,6 +95,7 @@ function createUserInfo(req, res) {
     )
 }
 function updateUserInfo(req, res) {
+    console.log('calling route')
     let name = req.body.name
     let year = req.body.year
     let major = req.body.major

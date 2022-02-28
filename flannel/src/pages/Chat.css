@@ -3,6 +3,9 @@
     margin: auto;
 }
 
+#chats {
+
+}
 #chat_page {
     display: flex; 
     flex-direction: row;

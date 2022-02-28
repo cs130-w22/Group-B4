@@ -184,8 +184,8 @@ function App() {
                     <Typography sx={styles.title}>Chat</Typography>
                 </Box>
             </Box>
-            <Box sx={styles.chatPage}>
-                <Box sx={styles.currentChats}>
+            <Box sx={styles.chatPage} id="chat_page">
+                <Box sx={styles.currentChats} id="current_chats">
                     <Typography sx={styles.title}>People Available to Chat</Typography>
                     {users.map((item, index) => (
                         <Match
@@ -196,10 +196,10 @@ function App() {
                         ></Match>
                     ))}
                 </Box>
-                <Box sx={styles.messageWindow}>
+                <Box sx={styles.messageWindow} id="window">
                     <Box sx={styles.messageList}>
                         {messages.map((message, index) => (
-                            <Box key={index} sx={styles.message}>
+                            <Box key={index} sx={styles.message} id="chats">
                                 <Typography sx={styles.senderName}>
                                     {message.sender_name + ':'}
                                 </Typography>

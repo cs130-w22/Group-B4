@@ -10,7 +10,6 @@ var cors = require('cors')
 
 dotenv.config();
 
-const port = 3000;
 const app = express();
 const server = http.createServer(app);
 const io = require('socket.io')(server, {
@@ -55,13 +54,7 @@ app.use('/label', labelRouter);
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-
-server.listen(port, () => {
-    console.log("server is running!");
-})
-
-
-client.connect(`mongodb+srv://flannel:${process.env.DATABASE_PWD}@cluster0.elmnm.mongodb.net/flannel?retryWrites=true&w=majority`, (err) => {
+client.connect(`mongodb+srv://flannel:${process.env.DATABASE_PWD}@cluster0.elmnm.mongodb.net/flannel?retryWrites=true&w=majority`, (err, db) => {
   if(err)
   {
     console.log("error connecting to db");
@@ -74,8 +67,8 @@ client.connect(`mongodb+srv://flannel:${process.env.DATABASE_PWD}@cluster0.elmnm
 })
 
 //on client connection 
-io.on('connection', socket => {
-  let messages = client.db('flannel').collection('messages');
+io.on('connection', async (socket) => {
+  let messages = await client.db('flannel').collection('messages');
 
   socket.on('leaveRoom', ({room}) => {
     if (room !== "") {
@@ -124,4 +117,6 @@ io.on('connection', socket => {
     })
   })
 
-})
+});
+
+module.exports = {server, app};

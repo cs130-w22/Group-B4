@@ -4,6 +4,7 @@ const client = require('../../../db')
 let authenticate = require('../auth/authenticate.js')
 let ObjectID = require('mongodb').ObjectID
 
+
 users.post('/createUserInfo', authenticate, createUserInfo)
 users.post('/updateUserInfo', updateUserInfo)
 users.post('/findUsersByTag', authenticate, findUsersByTag)

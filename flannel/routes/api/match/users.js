@@ -5,7 +5,7 @@ let authenticate = require('../auth/authenticate.js')
 let ObjectID = require('mongodb').ObjectID
 
 users.post('/createUserInfo', authenticate, createUserInfo)
-users.post('/updateUserInfo', authenticate, updateUserInfo)
+users.post('/updateUserInfo', updateUserInfo)
 users.post('/findUsersByTag', authenticate, findUsersByTag)
 users.get('/getUserProfile', authenticate, getUserProfile)
 users.get('/getMatchesList', authenticate, getMatchesList)

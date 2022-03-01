@@ -107,7 +107,6 @@ export default function Profile() {
         const data = {
             name: name,
             username: email.toLowerCase(),
-            // password: password,
             year: schoolYear,
             major,
             hometown,
@@ -130,7 +129,7 @@ export default function Profile() {
         }
         // setCookie('jwt', requestObj.jwt, { path: '/' })
         console.log('HEREERE')
-
+        console.log(requestObj)
         const response = await fetch('/api/user/updateUserInfo', requestObj)
         if (response.status === 200) {
             //successful login
@@ -142,8 +141,6 @@ export default function Profile() {
             navigate('/Explore')
         } else if (response.status === 400) {
             console.log('bad response')
-        } else if (response.status === 500) {
-            console.log('interanl server error')
         }
     }
 

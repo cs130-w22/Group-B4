@@ -61,8 +61,6 @@ const styles = {
 
 function SignUp() {
     const [schoolYear, setSchoolYear] = useState('')
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
     const [pronouns, setPronouns] = useState('')
     const [signupError, setSignupError] = useState(false)
 
@@ -77,15 +75,20 @@ function SignUp() {
     const [affiliationsTagOptions, setAffiliationsTagOptions] = useState([])
 
     // get labels from useLabels hook
-    const { classes: classesLabels, interests: interestsLabels, affiliations: affiliationLabels } = useLabels();
+    const {
+        classes: classesLabels,
+        interests: interestsLabels,
+        affiliations: affiliationLabels,
+    } = useLabels()
 
-    const navigate = useNavigate();
+    const navigate = useNavigate()
     useEffect(() => {
-        setClassesTagOptions(classesLabels);
-        setInterestsTagOptions(interestsLabels);
-        setAffiliationsTagOptions(affiliationLabels);
+        setClassesTagOptions(classesLabels)
+        setInterestsTagOptions(interestsLabels)
+        setAffiliationsTagOptions(affiliationLabels)
     }, [classesLabels, interestsLabels, affiliationLabels])
 
+    // eslint-disable-next-line
     const [cookies, setCookie] = useCookies(['jwt'])
 
     const handleFormSubmit = async (event) => {
@@ -130,13 +133,15 @@ function SignUp() {
                 },
                 body: JSON.stringify(data),
             }
-            const response = await fetch('/api/login/register', requestObj);
-            if(response.status === 201) { //successful login
-                let responseObj = await response.json();
-                setCookie('jwt', responseObj.jwt, { path: '/' });
-                localStorage.setItem('user', JSON.stringify(responseObj.user));
-                const cookies = document.cookie;
-                navigate('/Explore');
+            const response = await fetch('/api/login/register', requestObj)
+            if (response.status === 201) {
+                //successful login
+                let responseObj = await response.json()
+                setCookie('jwt', responseObj.jwt, { path: '/' })
+                localStorage.setItem('user', JSON.stringify(responseObj.user))
+                // eslint-disable-next-line
+                const cookies = document.cookie
+                navigate('/Explore')
             } else if (response.status === 400) {
                 console.log('bad response')
             }

@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Box, Chip, Autocomplete, TextField } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import PropTypes from 'prop-types'
@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 const style = {
     root: {
         paddingBottom: 4,
-        padding:"20px"
+        padding: '20px',
     },
     classChip: {
         margin: 0.25,
@@ -44,8 +44,8 @@ const style = {
 }
 
 export default function ChipFilter(props) {
-    //const [shownTags, setShownTags] = useState([])
-    const { defaultShownTags, setTagOptions, tagOptions, type, setSelectedTags,selectedTags } = props
+    const { defaultShownTags, setTagOptions, tagOptions, type, setSelectedTags, selectedTags } =
+        props
     let chipStyle
     switch (type) {
         case 'Classes':
@@ -76,7 +76,9 @@ export default function ChipFilter(props) {
                 disablePortal
                 id="combo-box-demo"
                 options={tagOptions}
-                renderInput={(params) => <TextField style= {{width:250}} {...params} label={type} />}
+                renderInput={(params) => (
+                    <TextField style={{ width: 250 }} {...params} label={type} />
+                )}
                 onChange={(_event, selectedItem) => {
                     if (selectedItem !== null && selectedItem !== '') {
                         const newShownTags = selectedTags.concat(selectedItem)
@@ -99,17 +101,15 @@ export default function ChipFilter(props) {
         </Box>
     )
 }
-    // defaultShownTags: PropTypes.arrayOf({
-    //     label: PropTypes.string.isRequired,
-    // }).isRequired,
+// defaultShownTags: PropTypes.arrayOf({
+//     label: PropTypes.string.isRequired,
+// }).isRequired,
 
 ChipFilter.propTypes = {
     setTagOptions: PropTypes.func.isRequired,
-    tagOptions: PropTypes.arrayOf(
-        PropTypes.string.isRequired,
-    ).isRequired,
+    tagOptions: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
     defaultShownTags: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
     type: PropTypes.string.isRequired,
     setSelectedTags: PropTypes.func.isRequired,
-    selectedTags: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
+    selectedTags: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
 }

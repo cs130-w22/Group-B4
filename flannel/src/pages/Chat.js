@@ -174,6 +174,7 @@ function App() {
             socket.emit('chat', msgString)
             setDummyMessage('')
         }
+        return event
     }
 
     return (
@@ -208,7 +209,7 @@ function App() {
                             </Box>
                         ))}
                     </Box>
-                    <form onSubmit={sendMsg} style={{ width: '100%' }}>
+                    <form onSubmit={sendMsg} style={{ width: '100%' }} id="chatform">
                         <Box sx={styles.form}>
                             <TextField
                                 label="Insert Message"

@@ -34,11 +34,12 @@ jest.mock("socket.io-client", () => {
     
   });
 
+
 describe('chat history', () => {
     beforeAll(() => {
-        io.mockClear();
-        io().on.mockClear();
-        io().emit.mockClear();
+      // socketio.mockClear();
+      // socketio().on.mockClear();
+      // socketio().emit.mockClear();
         configure({ adapter: new Adapter() });
         Object.defineProperty(window, 'localStorage', {
             value: fakeLocalStorage,
@@ -78,4 +79,20 @@ describe('chat history', () => {
         expect(chat.find("#current_chats")).toHaveLength(1);
         expect(chat.find("#chat_page")).toHaveLength(1);
     })
+
+    it('tests socket.io', async () => {
+      const tmp = io("http://localhost:3000")
+
+      const chat = shallow(<Chat/>);
+      expect(tmp.emit).toHaveBeenCalledTimes(0);
+      expect(tmp.on).toHaveBeenCalledTimes(0);
+        which: 13,
+        preventDefault: () => {},
+        target: {
+          value: ""
+        }
+      }))
+      expect(tmp.emit).toHaveBeenCalledTimes(1);
+      expect(tmp.emit).toHaveBeenCalledWith('chat', "{\"room\":\"\",\"sender\":\"62058ecec54374bc9112fc2d\",\"data\":\"\",\"sender_name\":\"henry@g.ucla.edu\"}");
+  })
 })

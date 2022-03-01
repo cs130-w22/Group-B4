@@ -10,7 +10,7 @@ const mockData = {
     selectedTags: ['e'],
 }
 
-it('User card renders without crashing', () => {
+it('Chip Filter renders without crashing', () => {
     const div = document.createElement('div')
     render(
         <ChipFilter
@@ -47,26 +47,6 @@ it('User is able to remove a tag option when they press the Close Icon', () => {
     const deleteIcon = screen.getByTestId('CloseIcon')
     fireEvent.click(deleteIcon)
     expect(afterDelete).toEqual([])
-})
-
-it('When a user presses on the Arrow Drop Down Icon, tagOptions are rendered', () => {
-    const div = document.createElement('div')
-    render(
-        <ChipFilter
-            key={mockData.key}
-            defaultShownTags={mockData.defaultShownTags}
-            setTagOptions={() => {}}
-            tagOptions={mockData.tagOptions}
-            type={mockData.type}
-            setSelectedTags={() => {}}
-            selectedTags={mockData.selectedTags}
-        />,
-        div
-    )
-    const dropDownIcon = screen.getByTestId('ArrowDropDownIcon')
-    fireEvent.click(dropDownIcon)
-    expect(screen.getByText('c')).toBeInTheDocument()
-    expect(screen.getByText('d')).toBeInTheDocument()
 })
 
 it('When a user presses on the Arrow Drop Down Icon, tagOptions are rendered', () => {

@@ -10,6 +10,7 @@ import './App.css'
 
 function App() {
   return (
+    <BrowserRouter>
       <Routes>
         <Route exact path = "/" element = {<LogIn/>} />
         <Route exact path = "/SignUp" element = {<SignUp/>} />
@@ -17,6 +18,7 @@ function App() {
         <Route exact path = "/Chat" element = {<Chat/>} />
         <Route exact path = "/Profile" element = {<Profile />} />
       </Routes>
+    </BrowserRouter>
   );
 }
 

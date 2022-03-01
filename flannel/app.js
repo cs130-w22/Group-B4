@@ -8,6 +8,7 @@ const bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser');
 var cors = require('cors')
 
+
 dotenv.config();
 
 const port = 3000;
@@ -22,7 +23,6 @@ const io = require('socket.io')(server, {
   }
 })
 
-const indexRouter = require('./routes/index');
 let loginRouter = require('./routes/api/login');
 const userRouter = require('./routes/api/match/users');
 const labelRouter = require('./routes/api/match/labels');
@@ -48,13 +48,20 @@ app.use(cookieParser());
 app.use(bodyParser.json())
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }))
-app.use('/', indexRouter);
-app.use('/login', loginRouter);
-app.use('/user', userRouter);
-app.use('/label', labelRouter);
-app.use(express.static(path.join(__dirname, 'public')));
-
-
+// app.use('/', indexRouter);
+let loginRoute = '/login';
+let userRoute = '/user';
+let labelRoute = '/label';
+// update routes if we are serving files from express server
+if (process.env.PROD === '1') {
+  [loginRoute, userRoute, labelRoute] = ['/api' + loginRoute, '/api' + userRoute, '/api' + labelRoute];
+  console.log(loginRoute);
+}
+app.use(loginRoute, loginRouter);
+app.use(userRoute, userRouter);
+app.use(labelRoute, labelRouter);
+// serve static files from build folder
+app.use(express.static(path.join(__dirname, 'build')));
 
 server.listen(port, () => {
     console.log("server is running!");

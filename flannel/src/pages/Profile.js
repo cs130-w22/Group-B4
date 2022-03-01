@@ -110,6 +110,7 @@ export default function Profile() {
         const insta = event.target.insta.value
         const facebook = event.target.facebook.value
         const twitter = event.target.twitter.value
+        const linkedIn = event.target.linkedIn.value
 
         // if (password !== confirmPassword) {
         //     setSignupError(true)
@@ -126,6 +127,7 @@ export default function Profile() {
             insta,
             facebook,
             twitter,
+            linkedIn,
             classes: selectedClassTags,
             interests: selectedInterestTags,
             affiliations: selectedAffiliationTags,
@@ -158,6 +160,7 @@ export default function Profile() {
             user.insta = data.insta
             user.facebook = data.facebook
             user.twitter = data.twitter
+            user.linkedIn = data.linkedIn
             user.classes = data.classes
             user.interests = data.interests
             user.affiliations = data.affiliations
@@ -301,7 +304,11 @@ export default function Profile() {
                                 }}
                             >
                                 <LinkedInIcon></LinkedInIcon>
-                                <Input style={{ padding: '10px' }} id="LinkedIn" />
+                                <Input
+                                    style={{ padding: '10px' }}
+                                    id="linkedIn"
+                                    defaultValue={user.linkedIn}
+                                />
                             </div>
                         </div>
                     </Box>

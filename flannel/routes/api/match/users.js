@@ -105,6 +105,7 @@ function updateUserInfo(req, res) {
     let insta = req.body.insta
     let facebook = req.body.facebook
     let twitter = req.body.twitter
+    let linkedIn = req.body.linkedIn
     let classes = req.body.classes
     let interests = req.body.interests
     let affiliations = req.body.affiliations
@@ -122,6 +123,7 @@ function updateUserInfo(req, res) {
                 insta: insta,
                 facebook: facebook,
                 twitter: twitter,
+                linkedIn: linkedIn,
                 classes: classes,
                 interests: interests,
                 affiliations: affiliations,

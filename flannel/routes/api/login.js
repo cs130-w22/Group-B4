@@ -28,6 +28,10 @@ router.post('/', function (request, response, next) {
     }
     let users = client.db('flannel').collection('users')
     let query_string = { username: request.body.username }
+<<<<<<< HEAD
+
+=======
+>>>>>>> main
     users.find(query_string).toArray((err, res) => {
         if (res.length == 0) {
             //no user exists so exit

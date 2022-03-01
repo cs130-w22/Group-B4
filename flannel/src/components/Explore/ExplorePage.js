@@ -155,7 +155,7 @@ export default function ExplorePage() {
                     return;
                 }
                 // else update user list with matches
-                const users = matchingUsers.matchingUsers;                
+                const users = matchingUsers.matchingUsers;             
                 setUserList(() => users);
             } else {
                 setUserList(() => []);
@@ -248,6 +248,7 @@ export default function ExplorePage() {
                                 interestTags={currentUser.interests}
                                 affiliationTags={currentUser.affiliations}
                                 bio={currentUser.bio}
+                                id={currentUser._id}
                                 />
                             ))
                          : <></>

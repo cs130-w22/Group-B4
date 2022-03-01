@@ -7,8 +7,10 @@ import InstagramIcon from '@mui/icons-material/Instagram'
 import FacebookIcon from '@mui/icons-material/Facebook'
 import TwitterIcon from '@mui/icons-material/Twitter'
 import LinkedInIcon from '@mui/icons-material/LinkedIn'
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import PropTypes from 'prop-types'
 import '../../styles/fonts.css'
+import { display } from '@mui/system'
 
 // eslint-disable-next-line no-undef
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -110,11 +112,34 @@ const style = {
     },
 }
 
+
 export default function UserCard(props) {
     const [isExpanded, setIsExpanded] = useState(false)
+    
     /* TODO: add props for redirecting to social media */
-    const { displayName, pronouns, year, major, classTags, interestTags, affiliationTags, bio } =
+    const { displayName, pronouns, year, major, classTags, interestTags, affiliationTags, bio, id} =
         props
+    async function addMatchedUser() {
+        //we have display name of the user we want to match with, need to get their ID from DB 
+        const cookies = document.cookie
+        const body = {
+            username: displayName,
+            id: id
+        }
+        let requestObj = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: cookies,
+            },
+            body: JSON.stringify(body)
+        }
+        let username = JSON.parse(localStorage.getItem('user')).username;
+        let data = await fetch(`/api/user/addUserToMatchList?username=${username}`, requestObj)
+        console.log(data)
+        //make api call to match the user
+
+    }
     return (
         <Card sx={style.cardStyle}>
             <Box sx={style.centeredRowContainer}>
@@ -167,20 +192,8 @@ export default function UserCard(props) {
                 <Box sx={style.spaceBetweenContainer}>
                     <Typography data-testid = "bio_test" sx={style.bioBlurb}>{bio}</Typography>
                     <Box sx={{ display: 'flex', alignSelf: 'flex-end' }}>
-                        <IconButton sx={style.iconColor} size="medium">
-                            <EmailIcon />
-                        </IconButton>
-                        <IconButton sx={style.iconColor} size="medium">
-                            <InstagramIcon />
-                        </IconButton>
-                        <IconButton sx={style.iconColor} size="medium">
-                            <FacebookIcon />
-                        </IconButton>
-                        <IconButton sx={style.iconColor} size="medium">
-                            <TwitterIcon />
-                        </IconButton>
-                        <IconButton sx={style.iconColor} size="medium">
-                            <LinkedInIcon />
+                        <IconButton sx={style.iconColor} size="medium" onClick={addMatchedUser}>
+                            <AddCircleIcon />
                         </IconButton>
                     </Box>
                 </Box>

@@ -4,13 +4,23 @@ const client = require('../../../db')
 let authenticate = require('../auth/authenticate.js')
 let ObjectID = require('mongodb').ObjectID
 
+users.post('/createUserInfo', authenticate, createUserInfo);
+users.post('/updateUserInfo', authenticate, updateUserInfo);
+users.post('/findUsersByTag', authenticate, findUsersByTag);
+users.get('/getUserProfile', authenticate, getUserProfile);
+users.get('/getMatchesList', authenticate, getMatchesList);
+users.post('/addUserToMatchList', authenticate, addUserToMatchList);
+users.post('/deleteUser', deleteUser);
 
-users.post('/createUserInfo', authenticate, createUserInfo)
-users.post('/updateUserInfo', updateUserInfo)
-users.post('/findUsersByTag', authenticate, findUsersByTag)
-users.get('/getUserProfile', authenticate, getUserProfile)
-users.get('/getMatchesList', authenticate, getMatchesList)
-users.post('/addUserToMatchList', authenticate, addUserToMatchList)
+function deleteUser(req, res) {
+    let username = req.query.username;
+    let users = client.db('flannel').collection('users');
+    users.findOneAndDelete({"username": username}, function(err, doc) {
+        res.status(200).send(doc);
+    })
+
+}
+
 
 users.get('/', authenticate, function (req, res, next) {
     let users = client.db('flannel').collection('users')

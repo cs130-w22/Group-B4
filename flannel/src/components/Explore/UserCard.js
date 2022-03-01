@@ -151,12 +151,12 @@ export default function UserCard(props) {
                         alt="Profile Picture"
                     />
                     <Box sx={style.profileTextContainer}>
-                        <Typography sx={style.bigText}>{displayName}</Typography>
-                        <Typography sx={style.smallText}>&nbsp;&nbsp;{pronouns}</Typography>
+                        <Typography data-testid = "username_test" sx={style.bigText}>{displayName}</Typography>
+                        <Typography data-testid = "pronoun_test" sx={style.smallText}>&nbsp;&nbsp;{pronouns}</Typography>
                     </Box>
                     <Box sx={style.centeredRowContainer}>
-                        <Typography sx={style.midText}>{year}&nbsp;Year</Typography>
-                        <Typography sx={style.midText}>&nbsp;{major}</Typography>
+                        <Typography data-testid = "year_test" sx={style.midText}>{year}&nbsp;Year</Typography>
+                        <Typography data-testid = "major_test" sx={style.midText}>&nbsp;{major}</Typography>
                     </Box>
                 </Box>
                 <Box sx={style.uncenteredRowContainer}>
@@ -190,7 +190,7 @@ export default function UserCard(props) {
             </Box>
             {!isExpanded && (
                 <Box sx={style.spaceBetweenContainer}>
-                    <Typography sx={style.bioBlurb}>{bio}</Typography>
+                    <Typography data-testid = "bio_test" sx={style.bioBlurb}>{bio}</Typography>
                     <Box sx={{ display: 'flex', alignSelf: 'flex-end' }}>
                         <IconButton sx={style.iconColor} size="medium" onClick={addMatchedUser}>
                             <AddCircleIcon />

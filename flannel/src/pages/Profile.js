@@ -138,6 +138,7 @@ export default function Profile() {
             //localStorage.setItem('user', JSON.stringify(responseObj.user))
             // eslint-disable-next-line
             //const cookies = document.cookie
+            console.log('Worked')
             navigate('/Explore')
         } else if (response.status === 400) {
             console.log('bad response')

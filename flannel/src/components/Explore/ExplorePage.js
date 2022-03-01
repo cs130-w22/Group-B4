@@ -88,6 +88,15 @@ const style = {
         width:'95%',
         justifyContent:'space-around',
         alignItems:'baseline'
+    },
+    headerFill:{
+        width:'70%'
+    },
+    headerNav:{
+        display:'flex',
+        alignItems:'baseline',
+        flexDirection:'row',
+        justifyContent:'space-between'
     }
 }
 
@@ -178,33 +187,16 @@ export default function ExplorePage() {
                         <img src={logo} alt="Logo" style={style.logo} />
                         <Typography sx={style.title}>FLANNEL</Typography>
                     </Box>
-    
-
                 <Box sx = {style.header}>
-                    <TextField
-                        sx={style.searchBarContainer}
-                        placeholder="Search for Users"
-                        fullWidth
-                        variant="outlined"
-                        InputProps={{
-                            //disableUnderline: true,
-                            classes: {
-                                input: styles.inputText,
-                            },
-                            endAdornment: (
-                                <ButtonBase type="submit">
-                                    <SearchIcon />
-                                </ButtonBase>
-                            ),
-                        }}
-                        size="small"
-                    />
-                    <IconButton onClick = {NavigateProfile}>
-                        <AccountCircleOutlinedIcon />
-                    </IconButton>
-                    <IconButton onClick = {NavigateChat}>
-                        <ChatIcon />
-                    </IconButton>
+                    <Box sx= {style.headerFill} />
+                    <Box sx= {style.headerNav}>
+                        <IconButton onClick = {NavigateProfile}>
+                            <AccountCircleOutlinedIcon />
+                        </IconButton>
+                        <IconButton onClick = {NavigateChat}>
+                            <ChatIcon />
+                        </IconButton>
+                    </Box>
                 </Box>
             </Box>
                 <Box sx={style.rowContainer}>

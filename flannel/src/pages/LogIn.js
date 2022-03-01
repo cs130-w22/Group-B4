@@ -89,14 +89,8 @@ function LogIn() {
             //let users = await userList.json()
         } else {
             //have to try again -> bad login
-            setLoginError(!loginError)
-            console.log('bad login')
+            setLoginError(true);
         }
-    }
-    const recoveryEmailMethod = (event) => {
-        event.preventDefault()
-        // const email = event.target.elements.email.value
-        alert('Password recovery instructions have been sent to your email')
     }
     return (
         <Box sx={styles.root}>
@@ -143,17 +137,6 @@ function LogIn() {
                         <Link to="/SignUp">Create an Account</Link>
                     </Typography>
                 </form>
-                {isExpanded && (
-                    <form
-                        onSubmit={recoveryEmailMethod}
-                        style={{ display: 'flex', flexDirection: 'column' }}
-                    >
-                        <TextField type="text" id="email" label="Email" />
-                        <Button variant="outlined" type="submit">
-                            Recover
-                        </Button>
-                    </form>
-                )}
             </Box>
         </Box>
     )

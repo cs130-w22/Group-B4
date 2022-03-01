@@ -102,10 +102,6 @@ function SignUp() {
         const hometown = event.target.elements.hometown.value
         const pronouns = event.target[14].value
         const bio = event.target.bio.value
-        const insta = event.target.insta.value
-        const facebook = event.target.facebook.value
-        const twitter = event.target.twitter.value
-        const linkedIn = event.target.linkedIn.value
 
         if (password !== confirmPassword) {
             setSignupError(true)
@@ -120,10 +116,6 @@ function SignUp() {
                 hometown,
                 pronouns,
                 bio,
-                insta,
-                facebook,
-                twitter,
-                linkedIn,
                 classes: selectedClassTags,
                 interests: selectedInterestTags,
                 affiliations: selectedAffiliationTags,
@@ -223,51 +215,6 @@ function SignUp() {
                             rows={5}
                             maxRows={5}
                         />
-                        <div style={{ display: 'flex', flexDirection: 'column', padding: '10px' }}>
-                            <div>
-                                <p>Social Media Urls</p>
-                            </div>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <InstagramIcon></InstagramIcon>
-                                <Input style={{ padding: '10px' }} id="insta" />
-                            </div>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <FacebookIcon></FacebookIcon>
-                                <Input style={{ padding: '10px' }} id="facebook" />
-                            </div>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <TwitterIcon></TwitterIcon>
-                                <Input style={{ padding: '10px' }} id="twitter" />
-                            </div>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <LinkedInIcon></LinkedInIcon>
-                                <Input style={{ padding: '10px' }} id="linkedIn" />
-                            </div>
-                        </div>
                     </Box>
                     <Box sx={styles.formColumn}>
                         <ChipFilter

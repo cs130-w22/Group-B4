@@ -4,17 +4,12 @@ import {
     Button,
     FormControl,
     InputLabel,
-    Input,
     Select,
     MenuItem,
     TextField,
     Box,
     Typography,
 } from '@mui/material'
-import InstagramIcon from '@mui/icons-material/Instagram'
-import FacebookIcon from '@mui/icons-material/Facebook'
-import TwitterIcon from '@mui/icons-material/Twitter'
-import LinkedInIcon from '@mui/icons-material/LinkedIn'
 import ChipFilter from '../components/ChipFilter'
 import { useCookies } from 'react-cookie'
 import logo from '../assets/bearLogo.png'
@@ -60,7 +55,6 @@ const styles = {
 
 export default function Profile() {
     let user = JSON.parse(localStorage.getItem('user'))
-    console.log(user)
     const [schoolYear, setSchoolYear] = useState(user.year)
     const [pronouns, setPronouns] = useState(user.pronouns)
     // eslint-disable-next-line
@@ -83,16 +77,6 @@ export default function Profile() {
         setAffiliationsTagOptions(['Theta Chi', 'DevX', 'GlobeMed', 'Climbing Club'])
     }, [])
 
-    // useEffect(async () => {
-    //     let requestObj = {
-    //         method: 'Get',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             Authorization: document.cookie,
-    //         },
-    //     }
-    //     await fetch(``)
-    // }, [])
     // eslint-disable-next-line
     const [cookies, setCookie] = useCookies(['jwt'])
 
@@ -102,20 +86,9 @@ export default function Profile() {
         const schoolYear = event.target[2].value
         const major = event.target.elements.major.value
         const email = user.username
-        // const password = event.target.elements.password.value
-        // const confirmPassword = event.target.elements.confirmPassword.value
         const hometown = event.target.elements.hometown.value
         const pronouns = event.target[14].value
         const bio = event.target.bio.value
-        const insta = event.target.insta.value
-        const facebook = event.target.facebook.value
-        const twitter = event.target.twitter.value
-        const linkedIn = event.target.linkedIn.value
-
-        // if (password !== confirmPassword) {
-        //     setSignupError(true)
-        // } else {
-        //     setSignupError(false)
         const data = {
             name: name,
             username: email.toLowerCase(),
@@ -124,10 +97,6 @@ export default function Profile() {
             hometown,
             pronouns,
             bio,
-            insta,
-            facebook,
-            twitter,
-            linkedIn,
             classes: selectedClassTags,
             interests: selectedInterestTags,
             affiliations: selectedAffiliationTags,
@@ -141,8 +110,6 @@ export default function Profile() {
             body: JSON.stringify(data),
         }
         // setCookie('jwt', requestObj.jwt, { path: '/' })
-        console.log('HEREERE')
-        console.log(requestObj)
         const response = await fetch('/api/user/updateUserInfo', requestObj)
         if (response.status === 200) {
             //successful login
@@ -165,8 +132,6 @@ export default function Profile() {
             user.interests = data.interests
             user.affiliations = data.affiliations
             localStorage.setItem('user', JSON.stringify(user))
-
-            console.log('Worked')
             navigate('/Explore')
         } else if (response.status === 400) {
             console.log('bad response')
@@ -250,67 +215,6 @@ export default function Profile() {
                             maxRows={5}
                             defaultValue={user.bio}
                         />
-                        <div style={{ display: 'flex', flexDirection: 'column', padding: '10px' }}>
-                            <div>
-                                <p>Social Media Urls</p>
-                            </div>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <InstagramIcon></InstagramIcon>
-                                <Input
-                                    style={{ padding: '10px' }}
-                                    id="insta"
-                                    defaultValue={user.insta}
-                                />
-                            </div>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <FacebookIcon></FacebookIcon>
-                                <Input
-                                    style={{ padding: '10px' }}
-                                    id="facebook"
-                                    defaultValue={user.facebook}
-                                />
-                            </div>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <TwitterIcon></TwitterIcon>
-                                <Input
-                                    style={{ padding: '10px' }}
-                                    id="twitter"
-                                    defaultValue={user.twitter}
-                                />
-                            </div>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <LinkedInIcon></LinkedInIcon>
-                                <Input
-                                    style={{ padding: '10px' }}
-                                    id="linkedIn"
-                                    defaultValue={user.linkedIn}
-                                />
-                            </div>
-                        </div>
                     </Box>
                     <Box sx={styles.formColumn}>
                         <ChipFilter

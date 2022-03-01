@@ -38,7 +38,7 @@
   },
   "scripts": {
     "start": "node app.js",
-    "heroku-postbuild": "cd flannel && npm install && npm run build",
+    "heroku-postbuild": "npm install && npm run build",
     "frontend-start": "PORT=4000 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

@@ -174,7 +174,6 @@ function App() {
             socket.emit('chat', msgString)
             setDummyMessage('')
         }
-        return event
     }
 
     return (

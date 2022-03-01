@@ -105,6 +105,7 @@ function SignUp() {
         const insta = event.target.insta.value
         const facebook = event.target.facebook.value
         const twitter = event.target.twitter.value
+        const linkedIn = event.target.linkedIn.value
 
         if (password !== confirmPassword) {
             setSignupError(true)
@@ -122,6 +123,7 @@ function SignUp() {
                 insta,
                 facebook,
                 twitter,
+                linkedIn,
                 classes: selectedClassTags,
                 interests: selectedInterestTags,
                 affiliations: selectedAffiliationTags,
@@ -263,7 +265,7 @@ function SignUp() {
                                 }}
                             >
                                 <LinkedInIcon></LinkedInIcon>
-                                <Input style={{ padding: '10px' }} id="LinkedIn" />
+                                <Input style={{ padding: '10px' }} id="linkedIn" />
                             </div>
                         </div>
                     </Box>

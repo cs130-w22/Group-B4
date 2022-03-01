@@ -142,13 +142,6 @@ function LogIn() {
                     <Typography>
                         <Link to="/SignUp">Create an Account</Link>
                     </Typography>
-                    <Typography>
-                        Forgot Your Password?
-                        <IconButton size="medium" onClick={() => setIsExpanded(!isExpanded)}>
-                            {!isExpanded && <ExpandMoreIcon />}
-                            {isExpanded && <ExpandLessIcon />}
-                        </IconButton>
-                    </Typography>
                 </form>
                 {isExpanded && (
                     <form

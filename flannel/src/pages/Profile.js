@@ -59,7 +59,7 @@ const styles = {
 }
 
 export default function Profile() {
-    const user = JSON.parse(localStorage.getItem('user'))
+    let user = JSON.parse(localStorage.getItem('user'))
     console.log(user)
     const [schoolYear, setSchoolYear] = useState(user.year)
     const [pronouns, setPronouns] = useState(user.pronouns)
@@ -82,6 +82,17 @@ export default function Profile() {
         setInterestsTagOptions(['Biking', 'Skating', 'Dancing'])
         setAffiliationsTagOptions(['Theta Chi', 'DevX', 'GlobeMed', 'Climbing Club'])
     }, [])
+
+    // useEffect(async () => {
+    //     let requestObj = {
+    //         method: 'Get',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             Authorization: document.cookie,
+    //         },
+    //     }
+    //     await fetch(``)
+    // }, [])
     // eslint-disable-next-line
     const [cookies, setCookie] = useCookies(['jwt'])
 
@@ -90,7 +101,7 @@ export default function Profile() {
         const name = event.target.elements.name.value
         const schoolYear = event.target[2].value
         const major = event.target.elements.major.value
-        const email = event.target.elements.email.value
+        const email = user.username
         // const password = event.target.elements.password.value
         // const confirmPassword = event.target.elements.confirmPassword.value
         const hometown = event.target.elements.hometown.value
@@ -138,6 +149,20 @@ export default function Profile() {
             //localStorage.setItem('user', JSON.stringify(responseObj.user))
             // eslint-disable-next-line
             //const cookies = document.cookie
+            user.name = data.name
+            user.year = data.year
+            user.major = data.major
+            user.hometown = data.hometown
+            user.pronouns = data.pronouns
+            user.bio = data.bio
+            user.insta = data.insta
+            user.facebook = data.facebook
+            user.twitter = data.twitter
+            user.classes = data.classes
+            user.interests = data.interests
+            user.affiliations = data.affiliations
+            localStorage.setItem('user', JSON.stringify(user))
+
             console.log('Worked')
             navigate('/Explore')
         } else if (response.status === 400) {
@@ -187,7 +212,7 @@ export default function Profile() {
                             style={{ padding: '5px' }}
                         />
                         <TextField
-                            required
+                            disabled
                             label="Email"
                             id="email"
                             defaultValue={user.username}

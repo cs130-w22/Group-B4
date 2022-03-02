@@ -1,7 +1,8 @@
 import socketio from "socket.io-client"
 import React from 'react'
 
-export const socket = socketio("http://localhost:3000", {
+
+export const socket = socketio({
     withCredentials: true,
     extraHeaders: {
       "my-custom-header": "socket"

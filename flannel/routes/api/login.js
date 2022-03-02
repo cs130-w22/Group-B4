@@ -22,7 +22,6 @@ function generateJWT(username, response) {
 
 router.post('/', function (request, response, next) {
     if (!request.body.username || !request.body.password) {
-        console.log('Login.js line 24')
         response.status(401).send('unauthorized!')
         return
     }
@@ -31,7 +30,6 @@ router.post('/', function (request, response, next) {
     users.find(query_string).toArray((err, res) => {
         if (res.length == 0) {
             //no user exists so exit
-            console.log('Login.js line 34')
             response.status(401).send('User does not exist!')
             return
         }
@@ -54,7 +52,7 @@ router.post('/', function (request, response, next) {
         }
         let private_key = process.env.SALT_HASH
         jwt.sign(payload, private_key, {}, function (err, token) {
-            user_data = delete temp_array[0].password
+            temp_array[0] = delete temp_array[0].password
             response.cookie('jwt', token)
             response.status(200).send({ jwt: token, user: temp_array[0] })
             return
@@ -65,7 +63,6 @@ router.post('/', function (request, response, next) {
 router.post('/register', function (request, response, next) {
     //create a new user profile
     if (!request.body.username || !request.body.password) {
-        console.log('Login.js line 70')
         response.status(401).send('unauthorized!')
         return
     }

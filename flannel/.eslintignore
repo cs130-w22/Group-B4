@@ -1,4 +1,7 @@
 /routes
 /app.js
+/start.js
+/scripts
 /db.js
+/src/socket.js
 /src/setupProxy.js

@@ -136,7 +136,6 @@ export default function UserCard(props) {
         }
         let username = JSON.parse(localStorage.getItem('user')).username;
         let data = await fetch(`/api/user/addUserToMatchList?username=${username}`, requestObj)
-        console.log(data)
         //make api call to match the user
 
     }

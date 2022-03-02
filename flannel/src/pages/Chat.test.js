@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom'
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Match from './Match.js'
 import io from "socket.io-client";
-import toJson from 'enzyme-to-json';
+
 
 const fakeLocalStorage = (function () {
     let store = {};
@@ -86,12 +86,14 @@ describe('chat history', () => {
       const chat = shallow(<Chat/>);
       expect(tmp.emit).toHaveBeenCalledTimes(0);
       expect(tmp.on).toHaveBeenCalledTimes(0);
+      chat.find("#name").prop('onKeyDown')({
         which: 13,
         preventDefault: () => {},
         target: {
           value: ""
         }
-      }))
+      })
+
       expect(tmp.emit).toHaveBeenCalledTimes(1);
       expect(tmp.emit).toHaveBeenCalledWith('chat', "{\"room\":\"\",\"sender\":\"62058ecec54374bc9112fc2d\",\"data\":\"\",\"sender_name\":\"henry@g.ucla.edu\"}");
   })

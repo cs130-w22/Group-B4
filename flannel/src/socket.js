@@ -8,7 +8,7 @@ if (PROD === 1) {
   host = "https://flannel-ucla.herokuapp.com/";
 }
 
-export const socket = socketio(host, {
+export const socket = socketio({
     withCredentials: true,
     extraHeaders: {
       "my-custom-header": "socket"

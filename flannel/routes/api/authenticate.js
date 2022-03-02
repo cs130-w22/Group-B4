@@ -13,6 +13,7 @@ const auth = (req, res, next) => {
 
     jwt.verify(token, process.env.SALT_HASH, function (err, decoded) {
         if (err) {
+
             res.status(401).send()
             return
         }

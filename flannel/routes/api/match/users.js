@@ -4,23 +4,21 @@ const client = require('../../../db')
 let authenticate = require('../auth/authenticate.js')
 let ObjectID = require('mongodb').ObjectID
 
-users.post('/createUserInfo', authenticate, createUserInfo);
-users.post('/updateUserInfo', authenticate, updateUserInfo);
-users.post('/findUsersByTag', authenticate, findUsersByTag);
-users.get('/getUserProfile', authenticate, getUserProfile);
-users.get('/getMatchesList', authenticate, getMatchesList);
-users.post('/addUserToMatchList', authenticate, addUserToMatchList);
-users.post('/deleteUser', deleteUser);
+users.post('/createUserInfo', authenticate, createUserInfo)
+users.post('/updateUserInfo', authenticate, updateUserInfo)
+users.post('/findUsersByTag', authenticate, findUsersByTag)
+users.get('/getUserProfile', authenticate, getUserProfile)
+users.get('/getMatchesList', authenticate, getMatchesList)
+users.post('/addUserToMatchList', authenticate, addUserToMatchList)
+users.post('/deleteUser', deleteUser)
 
 function deleteUser(req, res) {
-    let username = req.query.username;
-    let users = client.db('flannel').collection('users');
-    users.findOneAndDelete({"username": username}, function(err, doc) {
-        res.status(200).send(doc);
+    let username = req.query.username
+    let users = client.db('flannel').collection('users')
+    users.findOneAndDelete({ username: username }, function (err, doc) {
+        res.status(200).send(doc)
     })
-
 }
-
 
 users.get('/', authenticate, function (req, res, next) {
     let users = client.db('flannel').collection('users')
@@ -113,10 +111,6 @@ function updateUserInfo(req, res) {
     let hometown = req.body.hometown
     let pronouns = req.body.pronouns
     let bio = req.body.bio
-    let insta = req.body.insta
-    let facebook = req.body.facebook
-    let twitter = req.body.twitter
-    let linkedIn = req.body.linkedIn
     let classes = req.body.classes
     let interests = req.body.interests
     let affiliations = req.body.affiliations
@@ -131,10 +125,6 @@ function updateUserInfo(req, res) {
                 hometown: hometown,
                 pronouns: pronouns,
                 bio: bio,
-                insta: insta,
-                facebook: facebook,
-                twitter: twitter,
-                linkedIn: linkedIn,
                 classes: classes,
                 interests: interests,
                 affiliations: affiliations,

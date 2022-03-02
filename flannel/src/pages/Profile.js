@@ -124,10 +124,6 @@ export default function Profile() {
             user.hometown = data.hometown
             user.pronouns = data.pronouns
             user.bio = data.bio
-            user.insta = data.insta
-            user.facebook = data.facebook
-            user.twitter = data.twitter
-            user.linkedIn = data.linkedIn
             user.classes = data.classes
             user.interests = data.interests
             user.affiliations = data.affiliations

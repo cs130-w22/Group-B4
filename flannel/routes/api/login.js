@@ -30,7 +30,6 @@ router.post('/', function (request, response, next) {
     users.find(query_string).toArray((err, res) => {
         if (res.length == 0) {
             //no user exists so exit
-            console.log('Login.js line 34')
             response.status(401).send('User does not exist!')
             return
         }

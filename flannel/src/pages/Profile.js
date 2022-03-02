@@ -87,7 +87,7 @@ export default function Profile() {
         const major = event.target.elements.major.value
         const email = user.username
         const hometown = event.target.elements.hometown.value
-        const pronouns = event.target[14].value
+        // const pronouns = event.target[14].value
         const bio = event.target.bio.value
         const data = {
             name: name,

@@ -10,7 +10,6 @@ const auth = (req, res, next) => {
 
     let broken = auth.split('=')
     let token = broken[1]
-    // console.log(token)
 
     jwt.verify(token, process.env.SALT_HASH, function (err, decoded) {
         if (err) {

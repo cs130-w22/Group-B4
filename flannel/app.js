@@ -10,17 +10,16 @@ var cors = require('cors')
 
 
 dotenv.config();
-// const originPort = process.env.PORT || 4000;
-const host = "http://localhost:3000";
-if (process.env.PROD === '1') {
-  host = location.origin;
-}
+// // const originPort = process.env.PORT || 4000;
+// let host = "http://localhost:3000";
+// if (process.env.PROD === '1') {
+//   host = location.origin;
+// }
 
 const app = express();
 const server = http.createServer(app);
 const io = require('socket.io')(server, {
   cors: {
-    origin: host,
     methods: ["GET", "POST"],
     allowedHeaders: ["my-custom-header"],
     credentials: true

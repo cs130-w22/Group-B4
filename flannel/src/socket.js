@@ -2,10 +2,11 @@ import socketio from "socket.io-client"
 import React from 'react'
 
 // const port = process.env.PORT || 3000;
-const host = "http://localhost:3000"
+let host = "http://localhost:3000/"
 if (process.env.PROD === '1') {
-  host = location.origin;
+  host = "https://flannel-ucla.herokuapp.com/";
 }
+
 export const socket = socketio(host, {
     withCredentials: true,
     extraHeaders: {

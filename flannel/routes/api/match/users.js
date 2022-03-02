@@ -26,7 +26,6 @@ users.get('/', authenticate, function (req, res, next) {
         //get a list of all the users
         let tmp_data = []
         data.forEach((item) => {
-            console.log(item.username, req.query.username)
             if (item.username !== req.query.username) {
                 tmp_data.push(item)
             }
@@ -82,7 +81,6 @@ function findUsersByTag(req, res) {
             { $match: { $expr: { $in: ['$interests', interests] } } },
         ])
         .toArray(function (err, docs) {
-            console.log(docs)
             res.status(200).send(docs)
         })
 }
@@ -104,7 +102,6 @@ function createUserInfo(req, res) {
     )
 }
 function updateUserInfo(req, res) {
-    console.log('calling route')
     let name = req.body.name
     let year = req.body.year
     let major = req.body.major

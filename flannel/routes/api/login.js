@@ -22,7 +22,6 @@ function generateJWT(username, response) {
 
 router.post('/', function (request, response, next) {
     if (!request.body.username || !request.body.password) {
-        console.log('Login.js line 24')
         response.status(401).send('unauthorized!')
         return
     }
@@ -31,7 +30,6 @@ router.post('/', function (request, response, next) {
     users.find(query_string).toArray((err, res) => {
         if (res.length == 0) {
             //no user exists so exit
-            console.log('Login.js line 34')
             response.status(401).send('User does not exist!')
             return
         }
@@ -65,7 +63,6 @@ router.post('/', function (request, response, next) {
 router.post('/register', function (request, response, next) {
     //create a new user profile
     if (!request.body.username || !request.body.password) {
-        console.log('Login.js line 70')
         response.status(401).send('unauthorized!')
         return
     }

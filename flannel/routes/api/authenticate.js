@@ -14,7 +14,7 @@ const auth = (req, res, next) => {
 
     jwt.verify(token, process.env.SALT_HASH, function (err, decoded) {
         if (err) {
-            console.log('Authenticate.js line 17')
+
             res.status(401).send()
             return
         }
@@ -24,13 +24,11 @@ const auth = (req, res, next) => {
             const seconds = Math.round(now.getTime() / 1000)
 
             if (seconds > decoded.exp) {
-                console.log('Authenticate.js line 27')
                 res.status(401).send('unauthorized!')
                 return
             }
             next()
         } else {
-            console.log('Autenticate.js line 33')
             res.status(401).send('unauthorized!')
             return
         }

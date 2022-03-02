@@ -3,12 +3,10 @@
     margin: auto;
 }
 
-#chat_page {
-    display: flex; 
-    flex-direction: row;
-    height: 750px;
-    margin-top: 20px;
+#chats {
+
 }
+
 
 #message {
     margin: auto;
@@ -49,15 +47,6 @@ body, html {
     flex-direction: column;
 }
 
-#current_chats { 
-    width: 150px; 
-    height: 100%; 
-    border: solid 1px rgb(201, 214, 176);
-    background-color: #fefbe9;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-}
 
 #current_chats > * {
     margin: 2px 0;

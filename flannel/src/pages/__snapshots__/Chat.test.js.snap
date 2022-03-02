@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`chat history perform snapshot testing of chat 1`] = `ShallowWrapper {}`;
+
+exports[`chat history tests 1`] = `ShallowWrapper {}`;

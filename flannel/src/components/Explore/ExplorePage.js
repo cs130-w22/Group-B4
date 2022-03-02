@@ -88,6 +88,15 @@ const style = {
         width:'95%',
         justifyContent:'space-around',
         alignItems:'baseline'
+    },
+    headerFill:{
+        width:'70%'
+    },
+    headerNav:{
+        display:'flex',
+        alignItems:'baseline',
+        flexDirection:'row',
+        justifyContent:'space-between'
     }
 }
 
@@ -155,7 +164,7 @@ export default function ExplorePage() {
                     return;
                 }
                 // else update user list with matches
-                const users = matchingUsers.matchingUsers;                
+                const users = matchingUsers.matchingUsers;             
                 setUserList(() => users);
             } else {
                 setUserList(() => []);
@@ -178,33 +187,16 @@ export default function ExplorePage() {
                         <img src={logo} alt="Logo" style={style.logo} />
                         <Typography sx={style.title}>FLANNEL</Typography>
                     </Box>
-    
-
                 <Box sx = {style.header}>
-                    <TextField
-                        sx={style.searchBarContainer}
-                        placeholder="Search for Users"
-                        fullWidth
-                        variant="outlined"
-                        InputProps={{
-                            //disableUnderline: true,
-                            classes: {
-                                input: styles.inputText,
-                            },
-                            endAdornment: (
-                                <ButtonBase type="submit">
-                                    <SearchIcon />
-                                </ButtonBase>
-                            ),
-                        }}
-                        size="small"
-                    />
-                    <IconButton onClick = {NavigateProfile}>
-                        <AccountCircleOutlinedIcon />
-                    </IconButton>
-                    <IconButton onClick = {NavigateChat}>
-                        <ChatIcon />
-                    </IconButton>
+                    <Box sx= {style.headerFill} />
+                    <Box sx= {style.headerNav}>
+                        <IconButton onClick = {NavigateProfile}>
+                            <AccountCircleOutlinedIcon />
+                        </IconButton>
+                        <IconButton onClick = {NavigateChat}>
+                            <ChatIcon />
+                        </IconButton>
+                    </Box>
                 </Box>
             </Box>
                 <Box sx={style.rowContainer}>
@@ -248,6 +240,7 @@ export default function ExplorePage() {
                                 interestTags={currentUser.interests}
                                 affiliationTags={currentUser.affiliations}
                                 bio={currentUser.bio}
+                                id={currentUser._id}
                                 />
                             ))
                          : <></>

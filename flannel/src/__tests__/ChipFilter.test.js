@@ -1,6 +1,7 @@
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
 import ChipFilter from '../components/ChipFilter'
+import '@testing-library/jest-dom'
 
 const mockData = {
     key: 'a',

@@ -1,7 +1,7 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import UserCard from '../components/Explore/UserCard'
 import { render, screen } from '@testing-library/react'
+import '@testing-library/jest-dom'
 
 // Smoke test to mount User card and ensure it doesn't throw during rendering
 it('User card renders without crashing', () => {

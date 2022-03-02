@@ -77,7 +77,12 @@ export default function ChipFilter(props) {
                 id="combo-box-demo"
                 options={tagOptions}
                 renderInput={(params) => (
-                    <TextField style={{ width: 250 }} {...params} label={type} />
+                    <TextField
+                        style={{ width: 250 }}
+                        {...params}
+                        inputProps={{ ...params.inputProps }}
+                        label={type}
+                    />
                 )}
                 onChange={(_event, selectedItem) => {
                     if (selectedItem !== null && selectedItem !== '') {

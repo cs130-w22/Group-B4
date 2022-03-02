@@ -9,6 +9,7 @@ const auth = (req, res, next) => {
     let auth = req.headers.authorization
     console.log('IN AUTH')
     console.log(req)
+    console.log('AUTH LINE 12')
     let jwt_index = auth.indexOf('jwt=')
     if (jwt_index === -1) {
         console.log('authenticate.js line 14')
@@ -34,7 +35,7 @@ const auth = (req, res, next) => {
             res.status(401).send()
             return
         }
-        if (decoded.usr === req.query.username) {
+        if (decoded.usr === req.query.username || decoded.usr === req.body.username) {
             const now = new Date()
             const seconds = Math.round(now.getTime() / 1000)
 
@@ -46,6 +47,7 @@ const auth = (req, res, next) => {
             next()
         } else {
             console.log(decoded.usr)
+            console.log(req.query.username)
             console.log('authenticate.js line 48')
             res.status(401).send('unauthorized - not matching!')
             return

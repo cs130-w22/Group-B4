@@ -11,7 +11,6 @@ var cors = require('cors')
 
 dotenv.config();
 
-const port = process.env.PORT || 3000;
 const app = express();
 const server = http.createServer(app);
 const io = require('socket.io')(server, {
@@ -49,26 +48,20 @@ app.use(bodyParser.json())
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }))
 // app.use('/', indexRouter);
+
 let loginRoute = '/login';
 let userRoute = '/user';
 let labelRoute = '/label';
-// update routes if we are serving files from express server
 if (process.env.PROD === '1') {
   [loginRoute, userRoute, labelRoute] = ['/api' + loginRoute, '/api' + userRoute, '/api' + labelRoute];
-  console.log(loginRoute);
 }
 app.use(loginRoute, loginRouter);
 app.use(userRoute, userRouter);
 app.use(labelRoute, labelRouter);
-// serve static files from build folder
 app.use(express.static(path.join(__dirname, 'build')));
 
-server.listen(port, () => {
-    console.log("server is running!");
-})
 
-
-client.connect(`mongodb+srv://flannel:${process.env.DATABASE_PWD}@cluster0.elmnm.mongodb.net/flannel?retryWrites=true&w=majority`, (err) => {
+client.connect(`mongodb+srv://flannel:${process.env.DATABASE_PWD}@cluster0.elmnm.mongodb.net/flannel?retryWrites=true&w=majority`, (err, db) => {
   if(err)
   {
     console.log("error connecting to db");
@@ -81,8 +74,8 @@ client.connect(`mongodb+srv://flannel:${process.env.DATABASE_PWD}@cluster0.elmnm
 })
 
 //on client connection 
-io.on('connection', socket => {
-  let messages = client.db('flannel').collection('messages');
+io.on('connection', async (socket) => {
+  let messages = await client.db('flannel').collection('messages');
 
   socket.on('leaveRoom', ({room}) => {
     if (room !== "") {
@@ -131,4 +124,6 @@ io.on('connection', socket => {
     })
   })
 
-})
+});
+
+module.exports = {server, app};

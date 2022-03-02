@@ -4,17 +4,12 @@ import {
     Button,
     FormControl,
     InputLabel,
-    Input,
     Select,
     MenuItem,
     TextField,
     Box,
     Typography,
 } from '@mui/material'
-import InstagramIcon from '@mui/icons-material/Instagram'
-import FacebookIcon from '@mui/icons-material/Facebook'
-import TwitterIcon from '@mui/icons-material/Twitter'
-import LinkedInIcon from '@mui/icons-material/LinkedIn'
 import ChipFilter from '../components/ChipFilter'
 import { useCookies } from 'react-cookie'
 import logo from '../assets/bearLogo.png'
@@ -59,8 +54,7 @@ const styles = {
 }
 
 export default function Profile() {
-    const user = JSON.parse(localStorage.getItem('user'))
-    console.log(user)
+    let user = JSON.parse(localStorage.getItem('user'))
     const [schoolYear, setSchoolYear] = useState(user.year)
     const [pronouns, setPronouns] = useState(user.pronouns)
     // eslint-disable-next-line
@@ -82,6 +76,7 @@ export default function Profile() {
         setInterestsTagOptions(['Biking', 'Skating', 'Dancing'])
         setAffiliationsTagOptions(['Theta Chi', 'DevX', 'GlobeMed', 'Climbing Club'])
     }, [])
+
     // eslint-disable-next-line
     const [cookies, setCookie] = useCookies(['jwt'])
 
@@ -90,55 +85,52 @@ export default function Profile() {
         const name = event.target.elements.name.value
         const schoolYear = event.target[2].value
         const major = event.target.elements.major.value
-        const email = event.target.elements.email.value
-        const password = event.target.elements.password.value
-        const confirmPassword = event.target.elements.confirmPassword.value
+        const email = user.username
         const hometown = event.target.elements.hometown.value
-        const pronouns = event.target[14].value
+        // const pronouns = event.target[14].value
         const bio = event.target.bio.value
-        const insta = event.target.insta.value
-        const facebook = event.target.facebook.value
-        const twitter = event.target.twitter.value
-
-        if (password !== confirmPassword) {
-            setSignupError(true)
-        } else {
-            setSignupError(false)
-            const data = {
-                name: name,
-                username: email.toLowerCase(),
-                password: password,
-                year: schoolYear,
-                major,
-                hometown,
-                pronouns,
-                bio,
-                insta,
-                facebook,
-                twitter,
-                classes: selectedClassTags,
-                interests: selectedInterestTags,
-                affiliations: selectedAffiliationTags,
-            }
-            let requestObj = {
-                method: 'Post',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            }
-            const response = await fetch('http://localhost:3000/login/register', requestObj)
-            if (response.status === 201) {
-                //successful login
-                let responseObj = await response.json()
-                setCookie('jwt', responseObj.jwt, { path: '/' })
-                localStorage.setItem('user', JSON.stringify(responseObj.user))
-                // eslint-disable-next-line
-                const cookies = document.cookie
-                navigate('/Explore')
-            } else if (response.status === 400) {
-                console.log('bad response')
-            }
+        const data = {
+            name: name,
+            username: email.toLowerCase(),
+            year: schoolYear,
+            major,
+            hometown,
+            pronouns,
+            bio,
+            classes: selectedClassTags,
+            interests: selectedInterestTags,
+            affiliations: selectedAffiliationTags,
+        }
+        let requestObj = {
+            method: 'Post',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: document.cookie,
+            },
+            body: JSON.stringify(data),
+        }
+        // setCookie('jwt', requestObj.jwt, { path: '/' })
+        const response = await fetch('/api/user/updateUserInfo', requestObj)
+        if (response.status === 200) {
+            //successful login
+            //let responseObj = await response.json()
+            //setCookie('jwt', responseObj.jwt, { path: '/' })
+            //localStorage.setItem('user', JSON.stringify(responseObj.user))
+            // eslint-disable-next-line
+            //const cookies = document.cookie
+            user.name = data.name
+            user.year = data.year
+            user.major = data.major
+            user.hometown = data.hometown
+            user.pronouns = data.pronouns
+            user.bio = data.bio
+            user.classes = data.classes
+            user.interests = data.interests
+            user.affiliations = data.affiliations
+            localStorage.setItem('user', JSON.stringify(user))
+            navigate('/Explore')
+        } else if (response.status === 400) {
+            console.log('bad response')
         }
     }
 
@@ -184,25 +176,12 @@ export default function Profile() {
                             style={{ padding: '5px' }}
                         />
                         <TextField
-                            required
+                            disabled
                             label="Email"
                             id="email"
                             defaultValue={user.username}
                             style={{ padding: '5px' }}
                         />
-                        {/* <TextField required label = "Password" id = "password"
-                            type = "password"
-                            style = {{padding:"5px"}}
-                        />
-                        {
-                            signupError && (
-                                <p style = {{color:"red"}}>Make sure passwords match</p>
-                            )
-                        }
-                        <TextField required label = "Confirm Password" id ="confirmPassword"
-                            type = "password"
-                            style = {{padding:"5px"}}
-                        /> */}
                     </Box>
                     <Box sx={styles.formColumn}>
                         <TextField
@@ -232,63 +211,6 @@ export default function Profile() {
                             maxRows={5}
                             defaultValue={user.bio}
                         />
-                        <div style={{ display: 'flex', flexDirection: 'column', padding: '10px' }}>
-                            <div>
-                                <p>Social Media Urls</p>
-                            </div>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <InstagramIcon></InstagramIcon>
-                                <Input
-                                    style={{ padding: '10px' }}
-                                    id="insta"
-                                    defaultValue={user.insta}
-                                />
-                            </div>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <FacebookIcon></FacebookIcon>
-                                <Input
-                                    style={{ padding: '10px' }}
-                                    id="facebook"
-                                    defaultValue={user.facebook}
-                                />
-                            </div>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <TwitterIcon></TwitterIcon>
-                                <Input
-                                    style={{ padding: '10px' }}
-                                    id="twitter"
-                                    defaultValue={user.twitter}
-                                />
-                            </div>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <LinkedInIcon></LinkedInIcon>
-                                <Input style={{ padding: '10px' }} id="LinkedIn" />
-                            </div>
-                        </div>
                     </Box>
                     <Box sx={styles.formColumn}>
                         <ChipFilter

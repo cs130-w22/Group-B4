@@ -7,7 +7,6 @@ let host = "http://localhost:3000/"
 if (PROD === 1) {
   host = "https://flannel-ucla.herokuapp.com/";
 }
-console.log('host is: ', host);
 
 export const socket = socketio(host, {
     withCredentials: true,

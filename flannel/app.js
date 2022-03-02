@@ -10,12 +10,13 @@ var cors = require('cors')
 
 
 dotenv.config();
+const originPort = process.env.PORT || 4000;
 
 const app = express();
 const server = http.createServer(app);
 const io = require('socket.io')(server, {
   cors: {
-    origin: "http://localhost:4000",
+    origin: "http://localhost:" + port,
     methods: ["GET", "POST"],
     allowedHeaders: ["my-custom-header"],
     credentials: true

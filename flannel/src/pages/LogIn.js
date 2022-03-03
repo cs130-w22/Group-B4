@@ -53,7 +53,7 @@ function LogIn() {
         const password = event.target.elements.password.value
         const data = {
             username,
-            password,
+            password
         }
 
         let requestObj = {
@@ -66,7 +66,6 @@ function LogIn() {
         }
 
         const response = await fetch('/api/login', requestObj)
-
         if (response.status === 200) {
             const responseObj = await response.json()
             setCookie('jwt', responseObj.jwt, { path: '/' })

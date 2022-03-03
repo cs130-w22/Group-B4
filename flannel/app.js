@@ -5,8 +5,10 @@ const socketio = require('socket.io')
 const http = require('http')
 const dotenv = require('dotenv')
 const bodyParser = require('body-parser')
-var cookieParser = require('cookie-parser')
-var cors = require('cors')
+var cookieParser = require('cookie-parser');
+var cors = require('cors');
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 
 dotenv.config()
 // // const originPort = process.env.PORT || 4000;
@@ -30,23 +32,37 @@ const userRouter = require('./routes/api/match/users')
 const labelRouter = require('./routes/api/match/labels')
 const { isObject } = require('util')
 
+
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: "Flannel API",
+    },
+  },
+  apis: ['./routes/**/*.js'],
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 app.use(
-    bodyParser.urlencoded({
-        extended: true,
-    })
+  bodyParser.urlencoded({
+      extended: true,
+  })
 )
 
-app.use((req, res, next) => {
-    // req["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept, Cookie, Authorization";
-    // req["Access-Control-Allow-Methods"] = "GET, POST, PATCH, DELETE, OPTIONS"
-    res.setHeader('Access-Control-Allow-Origin', '*')
-    res.setHeader(
-        'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-Type, Accept, Cookie, Authorization'
-    )
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS')
-    next()
-})
+app.use((req, res, next)=>{  
+  // req["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept, Cookie, Authorization";
+  // req["Access-Control-Allow-Methods"] = "GET, POST, PATCH, DELETE, OPTIONS"
+  res.setHeader("Access-Control-Allow-Origin", "*");  
+  res.setHeader(  
+    "Access-Control-Allow-Headers",  
+    "Origin, X-Requested-With, Content-Type, Accept, Cookie, Authorization");  
+  res.setHeader("Access-Control-Allow-Methods",  
+    "GET, POST, PATCH, DELETE, OPTIONS");  
+  next();  
+});  
 
 app.use(cookieParser())
 app.use(bodyParser.json())

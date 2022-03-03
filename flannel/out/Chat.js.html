@@ -1,4 +1,32 @@
-import './Chat.css'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Chat.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Chat.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import './Chat.css'
 import './Match.css'
 import Match from './Match.js'
 import React, { useState, useEffect, useRef } from 'react'
@@ -204,7 +232,7 @@ function Chat() {
     */
     const handleKeyDown = (event) => {
         if (event.which === 13) {
-            //<------use enter key to submit form
+            //&lt;------use enter key to submit form
             event.preventDefault()
             let msgObj = {
                 room: room,
@@ -219,40 +247,40 @@ function Chat() {
     }
 
     return (
-        <Box sx={styles.root}>
-            <Box sx={styles.rowContainer}>
-                <Box sx={styles.logoContainer}>
-                    <img src={logo} alt="Logo" style={styles.logo} />
-                    <Typography sx={styles.title}>Chat</Typography>
-                </Box>
-            </Box>
-            <Box sx={styles.chatPage} id="chat_page">
-                <Box sx={styles.currentChats} id="current_chats">
-                    <Typography sx={styles.title}>People Available to Chat</Typography>
+        &lt;Box sx={styles.root}>
+            &lt;Box sx={styles.rowContainer}>
+                &lt;Box sx={styles.logoContainer}>
+                    &lt;img src={logo} alt="Logo" style={styles.logo} />
+                    &lt;Typography sx={styles.title}>Chat&lt;/Typography>
+                &lt;/Box>
+            &lt;/Box>
+            &lt;Box sx={styles.chatPage} id="chat_page">
+                &lt;Box sx={styles.currentChats} id="current_chats">
+                    &lt;Typography sx={styles.title}>People Available to Chat&lt;/Typography>
                     {users.map((item, index) => (
-                        <Match
+                        &lt;Match
                             username={item.username}
                             userId={item.id}
                             key={index}
                             callBack={updateChat}
-                        ></Match>
+                        >&lt;/Match>
                     ))}
-                </Box>
-                <Box sx={styles.messageWindow} id="window">
-                    <Box sx={styles.messageList}>
+                &lt;/Box>
+                &lt;Box sx={styles.messageWindow} id="window">
+                    &lt;Box sx={styles.messageList}>
                         {messages.map((message, index) => (
-                            <Box key={index} sx={styles.message} id="chats">
-                                <Typography sx={styles.senderName}>
+                            &lt;Box key={index} sx={styles.message} id="chats">
+                                &lt;Typography sx={styles.senderName}>
                                     {message.sender_name + ':'}
-                                </Typography>
-                                <Typography sx={styles.messageContent}>{message.msg}</Typography>
-                                <div ref={messagesEndRef} />
-                            </Box>
+                                &lt;/Typography>
+                                &lt;Typography sx={styles.messageContent}>{message.msg}&lt;/Typography>
+                                &lt;div ref={messagesEndRef} />
+                            &lt;/Box>
                         ))}
-                    </Box>
-                    <form onSubmit={sendMsg} style={{ width: '100%' }} id="chatform">
-                        <Box sx={styles.form}>
-                            <TextField
+                    &lt;/Box>
+                    &lt;form onSubmit={sendMsg} style={{ width: '100%' }} id="chatform">
+                        &lt;Box sx={styles.form}>
+                            &lt;TextField
                                 label="Insert Message"
                                 id="name"
                                 multiline
@@ -261,21 +289,44 @@ function Chat() {
                                 style={{ padding: '5px' }}
                                 onKeyDown={handleKeyDown}
                                 InputProps={{
-                                    endAdornment: <SendOutlinedIcon />,
+                                    endAdornment: &lt;SendOutlinedIcon />,
                                 }}
                                 value={dummyInputMessage}
                                 onChange={(e) => setDummyMessage(e.target.value)}
                             />
-                            <Button type="submit" className="sendmsg">
+                            &lt;Button type="submit" className="sendmsg">
                                 {' '}
                                 Send Msg{' '}
-                            </Button>
-                        </Box>
-                    </form>
-                </Box>
-            </Box>
-        </Box>
+                            &lt;/Button>
+                        &lt;/Box>
+                    &lt;/form>
+                &lt;/Box>
+            &lt;/Box>
+        &lt;/Box>
     )
 }
 
 export default Chat
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Chat">Chat</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Wed Mar 02 2022 17:14:16 GMT-0800 (Pacific Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

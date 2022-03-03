@@ -6,7 +6,6 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 const auth = (req, res, next) => {
-    
     let auth = req.headers.authorization
     let jwt_index = auth.indexOf('jwt=')
     if (jwt_index === -1) {
@@ -16,13 +15,12 @@ const auth = (req, res, next) => {
     auth = auth.substring(jwt_index)
     let auth_arr = auth.split(';')
     for (let cookie in auth_arr) {
-        
         if (cookie.indexOf('jwt=') !== -1) {
             auth = cookie
             break
         }
     }
-    
+
     let broken = auth.split('=')
     let token = broken[1]
     jwt.verify(token, process.env.SALT_HASH, function (err, decoded) {

@@ -52,10 +52,12 @@ router.post('/', function (request, response, next) {
         }
         let private_key = process.env.SALT_HASH
         jwt.sign(payload, private_key, {}, function (err, token) {
-            temp_array[0] = delete temp_array[0].password
+            //temp_array[0] =
+            delete temp_array[0].password
             response.cookie('jwt', token)
             response.status(200).send({ jwt: token, user: temp_array[0] })
             return
+            
         })
     })
 })

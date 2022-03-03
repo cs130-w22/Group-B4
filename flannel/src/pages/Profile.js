@@ -55,6 +55,7 @@ const styles = {
 }
 
 /**
+ *
  * @component
  *      Profile Component
  *          This component allows the user to update their information such as their name, classes, affiliations, etc.

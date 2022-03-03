@@ -41,7 +41,15 @@ const styles = {
         borderRadius: 4,
     },
 }
-function LogIn() {
+/**
+ * @component
+ * LogIn Component
+ *      This Log In component is what you will see upon initial render. It takes in a username and password in which 
+ *      the /api/login route is called that verifies that these are valid and existing credentials. If the user does
+ *      not have an account, there is a link that when clicked on, will redirect the user to the sign up page. 
+ * 
+ */
+export default function LogIn() {
     const navigate = useNavigate()
     const [isExpanded, setIsExpanded] = useState(false)
     const [loginError, setLoginError] = useState(false)
@@ -53,7 +61,7 @@ function LogIn() {
         const password = event.target.elements.password.value
         const data = {
             username,
-            password,
+            password
         }
 
         let requestObj = {
@@ -66,29 +74,21 @@ function LogIn() {
         }
 
         const response = await fetch('/api/login', requestObj)
-
         if (response.status === 200) {
             const responseObj = await response.json()
             setCookie('jwt', responseObj.jwt, { path: '/' })
             // store user object in user's browser
             localStorage.setItem('user', JSON.stringify(responseObj.user))
-            console.log(localStorage.getItem('user'))
             const cookies = document.cookie
             // navigate to explore if successful
             navigate('/Explore')
-            requestObj = {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: cookies,
-                },
-            }
         } else {
             //have to try again -> bad login
             setLoginError(true);
         }
     }
     return (
+        //all the styles are defined above as a constant variable
         <Box sx={styles.root}>
             <Box sx={styles.rowContainer}>
                 <Box sx={styles.logoContainer}>
@@ -126,6 +126,7 @@ function LogIn() {
                     {loginError && (
                         <p style={{ color: 'red' }}>Username or Password is incorrect</p>
                     )}
+                    {/* see handleSubmit() function at line 58, button press triggers an event */}
                     <Button variant="outlined" type="submit" style={{ padding: '10px' }}>
                         Sign In!
                     </Button>
@@ -137,4 +138,3 @@ function LogIn() {
         </Box>
     )
 }
-export default LogIn

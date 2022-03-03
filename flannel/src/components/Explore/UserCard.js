@@ -112,11 +112,16 @@ const style = {
     },
 }
 
-
+/**
+ * @component
+ * UserCard Component
+ *      This component is utilized in the Explore page to display the various users. These cards will display
+ *      various information about the users displayed including their username, associated tags, bio, school year etc.
+ *      
+ */
 export default function UserCard(props) {
     const [isExpanded, setIsExpanded] = useState(false)
     
-    /* TODO: add props for redirecting to social media */
     const { displayName, pronouns, year, major, classTags, interestTags, affiliationTags, bio, id} =
         props
     async function addMatchedUser() {
@@ -160,8 +165,7 @@ export default function UserCard(props) {
                 </Box>
                 <Box sx={style.uncenteredRowContainer}>
                     {/* All these tags in the classTags, interestTags, and affilationTags
-                    array must be unique or we run into an error 
-                    TODO: Use some set object instead of an array */}
+                    array must be unique or we run into an error */}
                     <Box sx={style.tagCategoryContainer}>
                         {classTags.map((tag) => (
                             <Chip sx={style.classChip} label={tag} key={tag} />

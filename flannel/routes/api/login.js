@@ -82,6 +82,7 @@ function login (request, response, next) {
             response.cookie('jwt', token)
             response.status(200).send({ jwt: token, user: temp_array[0] })
             return
+            
         })
     })
 }

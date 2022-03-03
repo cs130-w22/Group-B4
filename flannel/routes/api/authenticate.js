@@ -13,12 +13,11 @@ const auth = (req, res, next) => {
 
     jwt.verify(token, process.env.SALT_HASH, function (err, decoded) {
         if (err) {
-
             res.status(401).send()
             return
         }
 
-        if (decoded.usr === req.query.username) {
+        if (decoded.usr === req.query.username || decoded.usr === req.body.username) {
             const now = new Date()
             const seconds = Math.round(now.getTime() / 1000)
 
@@ -28,6 +27,7 @@ const auth = (req, res, next) => {
             }
             next()
         } else {
+            console.log('HERE AGAIN')
             res.status(401).send('unauthorized!')
             return
         }

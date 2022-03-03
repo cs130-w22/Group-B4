@@ -14,6 +14,7 @@ import ChipFilter from '../components/ChipFilter'
 import { useCookies } from 'react-cookie'
 import logo from '../assets/bearLogo.png'
 
+//code for styling that will be used
 const styles = {
     root: {
         display: 'flex',
@@ -53,8 +54,17 @@ const styles = {
     },
 }
 
+/**
+ *
+ * @component
+ *      Profile Component
+ *          This component allows the user to update their information such as their name, classes, affiliations, etc.
+ */
+
 export default function Profile() {
+    //set user to the value from local storage
     let user = JSON.parse(localStorage.getItem('user'))
+    //set all state variable and functions to change them
     const [schoolYear, setSchoolYear] = useState(user.year)
     const [pronouns, setPronouns] = useState(user.pronouns)
     // eslint-disable-next-line
@@ -70,6 +80,7 @@ export default function Profile() {
     const [interestsTagOptions, setInterestsTagOptions] = useState([])
     const [affiliationsTagOptions, setAffiliationsTagOptions] = useState([])
 
+    //allows us to navigate back to explore page on update form submission
     const navigate = useNavigate()
     useEffect(() => {
         setClassesTagOptions(['CS 31', 'MATH 32A', 'PHYSICS 1A', 'BIO 1'])
@@ -80,14 +91,15 @@ export default function Profile() {
     // eslint-disable-next-line
     const [cookies, setCookie] = useCookies(['jwt'])
 
+    //called once the user updates their info
     const handleFormSubmit = async (event) => {
         event.preventDefault()
+        //grab all the values from the form
         const name = event.target.elements.name.value
         const schoolYear = event.target[2].value
         const major = event.target.elements.major.value
         const email = user.username
         const hometown = event.target.elements.hometown.value
-        // const pronouns = event.target[14].value
         const bio = event.target.bio.value
         const data = {
             name: name,
@@ -101,6 +113,7 @@ export default function Profile() {
             interests: selectedInterestTags,
             affiliations: selectedAffiliationTags,
         }
+        //create the request object, with headers
         let requestObj = {
             method: 'Post',
             headers: {
@@ -109,15 +122,10 @@ export default function Profile() {
             },
             body: JSON.stringify(data),
         }
-        // setCookie('jwt', requestObj.jwt, { path: '/' })
+        //make the api call to update the user with the request object just made
         const response = await fetch('/api/user/updateUserInfo', requestObj)
         if (response.status === 200) {
-            //successful login
-            //let responseObj = await response.json()
-            //setCookie('jwt', responseObj.jwt, { path: '/' })
-            //localStorage.setItem('user', JSON.stringify(responseObj.user))
-            // eslint-disable-next-line
-            //const cookies = document.cookie
+            //set the local storage user to have the updated values on successful API call
             user.name = data.name
             user.year = data.year
             user.major = data.major
@@ -130,10 +138,12 @@ export default function Profile() {
             localStorage.setItem('user', JSON.stringify(user))
             navigate('/Explore')
         } else if (response.status === 400) {
+            //error with the API call
             console.log('bad response')
         }
     }
 
+    //Below is the form that is made, which allows the user to update their info
     return (
         <Box sx={styles.root}>
             <Box sx={styles.rowContainer}>

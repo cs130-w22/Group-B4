@@ -4,17 +4,12 @@ import {
     Button,
     FormControl,
     InputLabel,
-    Input,
     Select,
     MenuItem,
     TextField,
     Box,
     Typography,
 } from '@mui/material'
-import InstagramIcon from '@mui/icons-material/Instagram'
-import FacebookIcon from '@mui/icons-material/Facebook'
-import TwitterIcon from '@mui/icons-material/Twitter'
-import LinkedInIcon from '@mui/icons-material/LinkedIn'
 import ChipFilter from '../components/ChipFilter'
 import { useCookies } from 'react-cookie'
 import logo from '../assets/bearLogo.png'
@@ -58,8 +53,18 @@ const styles = {
         justifyContent: 'space-around',
     },
 }
+/**
+ * @component
+ * SignUp Component
+ *      This sign up component will allow the user to create an account if they do not have one already.
+ *      This component is reached from clicking the link in the log in page. The leftmost column contains
+ *      information that is required to be entered by the user. The rightmost column contains the Chip Filter
+ *      components that allow the user to input their classes, interests, and affiliations that will be used
+ *      as criteria for matching with other users.
+ */
 
-function SignUp() {
+export default function SignUp() {
+    //hooks to manage state of these variables as they change
     const [schoolYear, setSchoolYear] = useState('')
     const [pronouns, setPronouns] = useState('')
     const [signupError, setSignupError] = useState(false)
@@ -81,7 +86,7 @@ function SignUp() {
         affiliations: affiliationLabels,
     } = useLabels()
 
-    const navigate = useNavigate()
+    const navigate = useNavigate() //used to navigate to the explore page upon successful form submit
     useEffect(() => {
         setClassesTagOptions(classesLabels)
         setInterestsTagOptions(interestsLabels)
@@ -143,6 +148,7 @@ function SignUp() {
     }
 
     return (
+        //all styling is defined as a constant variable above
         <Box sx={styles.root}>
             <Box sx={styles.rowContainer}>
                 <Box sx={styles.logoContainer}>
@@ -184,6 +190,8 @@ function SignUp() {
                             type="password"
                             style={{ padding: '5px' }}
                         />
+                        {/* signupError will be set in the handleFormSubmit function in which the api call has not returned
+                        a successfull status code */}
                         {signupError && <p style={{ color: 'red' }}>Make sure passwords match</p>}
                         <TextField
                             required
@@ -217,6 +225,8 @@ function SignUp() {
                         />
                     </Box>
                     <Box sx={styles.formColumn}>
+                        {/* each chipfilter takes in various lists including default tags, selected tags, tag options, as well
+                        as a hook to update the selected tag list in this class (the parent component to the chip filter) */}
                         <ChipFilter
                             setTagOptions={setClassesTagOptions}
                             type="Classes"
@@ -243,6 +253,7 @@ function SignUp() {
                         />
                     </Box>
                 </Box>
+                {/* see handleFormSubmit() line 99 */}
                 <Button fullWidth variant="contained" color="success" type="submit">
                     Register
                 </Button>
@@ -250,5 +261,3 @@ function SignUp() {
         </Box>
     )
 }
-
-export default SignUp

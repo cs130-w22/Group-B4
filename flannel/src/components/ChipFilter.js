@@ -42,6 +42,13 @@ const style = {
         maxWidth: 300,
     },
 }
+/**
+ * @component
+ * ChipFilter component
+ *      Takes in props from the various parent components (Sign Up, Explore, Profile).
+ *      Renders the given tags and allows user to change the tags based on the hooks that were
+ *      passed in by the parent.
+ */
 
 export default function ChipFilter(props) {
     const { defaultShownTags, setTagOptions, tagOptions, type, setSelectedTags, selectedTags } =
@@ -60,6 +67,8 @@ export default function ChipFilter(props) {
         default:
             break
     }
+    //associated with the delete option on each individual chip. Functionality and trigger
+    //is linked to the delete 'x' icon at the right of each chip.
     const handleDelete = (selectedTag) => () => {
         if (selectedTag !== '') {
             setSelectedTags(selectedTags.filter((tagString) => tagString !== selectedTag))

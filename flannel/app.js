@@ -6,7 +6,9 @@ const http = require('http')
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser');
-var cors = require('cors')
+var cors = require('cors');
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 
 
 dotenv.config();
@@ -34,6 +36,21 @@ const { isObject } = require('util');
 app.use(bodyParser.urlencoded({
   extended: true
 }))
+
+
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: "Flannel API",
+    },
+  },
+  apis: ['./routes/**/*.js'],
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 
 app.use((req, res, next)=>{  
   // req["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept, Cookie, Authorization";

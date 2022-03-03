@@ -19,6 +19,7 @@ export async function fetchMatchingUsers({ classesLabels, interestsLabels, affil
     let requestLabelsArr = JSON.stringify([...classesLabels, ...interestsLabels, ...affiliationsLabels]);
     // fetch matching users from backend
     const matchingUsersResponse = await fetch(`/api/label?username=${user.username}&labels=${requestLabelsArr}`, requestObj);
+    console.log(matchingUsersResponse)
     if (matchingUsersResponse.status !== 200) {
         // not authorized, redirect to login
         return { status: 0 };

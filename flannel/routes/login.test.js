@@ -96,8 +96,8 @@ describe('test user login / signup', () => {
     it('tests valid username, invalid password', function(done) {
         request(app)
           .post('/login')
-          .send({username: 'henry@g.ucla.edu', password: '1234'})
-          .expect(200)
+          .send({username: 'henry@g.ucla.edu', password: '1234aa'})
+          .expect(400)
           .end(function(err, res) {
             if (err) return done(err);
             return done();
@@ -144,19 +144,6 @@ describe('test user login / signup', () => {
                 })
     })
     
-    it('tests getting full user list', function(done) {
-        request(app)
-            .get(`/user?username=${userOne.username}`)
-            .set('Authorization', `jwt=${userOne.token}`)
-            .send()
-            .expect(200)
-            .end(function(err, res) {
-                if(err) return done(err);
-    
-                expect(res.body).not.toBe({});
-                return done();
-            })
-    })
     
     it('tests getting a user profile given ID', function(done) {
         request(app)

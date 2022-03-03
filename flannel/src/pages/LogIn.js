@@ -83,10 +83,6 @@ function LogIn() {
                     Authorization: cookies,
                 },
             }
-            // console.log('here');
-            // const labels = await fetch(`/api/label/getLabels?username=brandon@g.ucla.edu`, requestObj)
-            // console.log(labels);
-            //let users = await userList.json()
         } else {
             //have to try again -> bad login
             setLoginError(true);

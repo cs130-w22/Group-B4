@@ -6,6 +6,9 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { createLogicalNot } = require('typescript')
 
+router.post('/', login)
+
+
 function generateJWT(username, response) {
     const now = new Date()
     const seconds = Math.round(now.getTime() / 1000) + 7200
@@ -20,7 +23,30 @@ function generateJWT(username, response) {
     })
 }
 
-router.post('/', function (request, response, next) {
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     summary: allows an existing user to login to our site
+ *     requestBody: 
+ *       content: 
+ *         application/json:
+ *           schema: 
+ *             type: object
+ *             properties: 
+ *               usernamme: 
+ *                 type: string
+ *               password:
+ *                 type: string
+ *         
+ *     description: searches for user in db and returns JWT if they exist
+ *     responses:
+ *       401:
+ *         description: unauthorized!
+ *       200: 
+ *         description: user exists and is now logged in 
+ */
+function login (request, response, next) {
     if (!request.body.username || !request.body.password) {
         response.status(401).send('unauthorized!')
         return
@@ -52,14 +78,54 @@ router.post('/', function (request, response, next) {
         }
         let private_key = process.env.SALT_HASH
         jwt.sign(payload, private_key, {}, function (err, token) {
-            temp_array[0] = delete temp_array[0].password
+            delete temp_array[0].password
             response.cookie('jwt', token)
             response.status(200).send({ jwt: token, user: temp_array[0] })
             return
         })
     })
-})
+}
 
+/**
+ * @swagger
+ * /register:
+ *   post:
+ *     summary: allows a new user to create a profile and login
+ *     requestBody: 
+ *       content: 
+ *         application/json:
+ *           schema: 
+ *             type: object
+ *             properties: 
+ *               password:
+ *                 type: string
+ *               name: 
+ *                 type: string
+ *               major:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               Hometown:
+ *                 type: string
+ *               Pronouns:
+ *                 type: string
+ *               Bio:
+ *                 type: string
+ *               Classes:
+ *                 type: object
+ *               Interests:
+ *                 type: object
+ *               Affiliations:
+ *                 type: object
+ *               
+ *         
+ *     description: creates a new entry correlated to request body in our database, and returns a JWT
+ *     responses:
+ *       401:
+ *         description: unauthorized!
+ *       201: 
+ *         description: user profile created and JWT returned
+ */
 router.post('/register', function (request, response, next) {
     //create a new user profile
     if (!request.body.username || !request.body.password) {

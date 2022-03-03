@@ -120,7 +120,7 @@ export default function ExplorePage() {
 
 
     // effect to handle getting data from backend at start of application
-    useEffect(() => {                 
+    useEffect(() => {           
         // filter out selected class tags from the options in the drop down
         const classOptions = classes.filter(x => !selectedClassTags.includes(x));
         const interestOptions = interests.filter(x => !selectedInterestTags.includes(x));
@@ -138,7 +138,6 @@ export default function ExplorePage() {
     useEffect(() => {
         async function matchingUsersFunc() {
             let classesLabels, interestsLabels, affiliationsLabels;
-            
             if (!dataLoaded) {
                 // if we are just starting up, fetch matching users based on user's saved interests
                 classesLabels = [...user.classes];

@@ -4,6 +4,7 @@ const client = require('../../../db')
 let authenticate = require('../auth/authenticate.js')
 let ObjectID = require('mongodb').ObjectID
 
+
 users.post('/createUserInfo', authenticate, createUserInfo)
 users.post('/updateUserInfo', authenticate, updateUserInfo)
 users.post('/findUsersByTag', authenticate, findUsersByTag)
@@ -12,6 +13,16 @@ users.get('/getMatchesList', authenticate, getMatchesList)
 users.post('/addUserToMatchList', authenticate, addUserToMatchList)
 users.post('/deleteUser', deleteUser)
 
+/**
+ * @swagger
+ * /user/deleteUser?username=String:
+ *   post:
+ *     summary: delete user from database
+ *     description: searches for username in database and deletes matching profile
+ *     responses:
+ *       200: 
+ *         description: user profile deleted
+ */
 function deleteUser(req, res) {
     let username = req.query.username
     let users = client.db('flannel').collection('users')
@@ -19,6 +30,20 @@ function deleteUser(req, res) {
         res.status(200).send(doc)
     })
 }
+
+/**
+ * @swagger
+ * /user?username=String:
+ *   get:
+ *     summary: return all users in the users collection
+ *     description: searches for username in database and deletes matching profile
+ *     parameters: 
+ *       -  in: header
+ *          name: authorization
+ *          schema:
+ *            type: string
+
+ */
 
 users.get('/', authenticate, function (req, res, next) {
     let users = client.db('flannel').collection('users')
@@ -34,6 +59,31 @@ users.get('/', authenticate, function (req, res, next) {
     })
 })
 
+/**
+ * @swagger
+ * /user/getMatchesList?username=String:
+ *   get:
+ *     summary: return a users matches list
+ *     description: searches for user in database and returns json object of all their matches
+ *     parameters: 
+ *       -  in: header
+ *          name: authorization
+ *          schema:
+ *            type: string
+ *     responses:
+ *       '200':  
+ *         content: 
+ *           application/json:
+ *             schema: 
+ *              type: object
+ *              properties: 
+ *                usernamme: 
+ *                  type: string
+ *                id:
+ *                  type: string
+
+ */
+
 function getMatchesList(req, res) {
     let username = req.query.username
     let users = client.db('flannel').collection('users')
@@ -44,6 +94,29 @@ function getMatchesList(req, res) {
     })
 }
 
+/**
+ * @swagger
+ * /user/addUserToMatchList?username=String:
+ *   post:
+ *     summary: adds a user to match list
+ *     description: adds user specified by request body to request query user's match list
+ *     parameters: 
+ *       -  in: header
+ *          name: authorization
+ *          schema:
+ *            type: string
+ *     requestBody:
+ *       content: 
+ *         application/json:
+ *           schema: 
+ *            type: object
+ *            properties: 
+ *              usernamme: 
+ *                type: string
+ *              id:
+ *                type: string
+
+ */
 function addUserToMatchList(req, res) {
     let username = req.query.username
     let match = {
@@ -61,6 +134,7 @@ function addUserToMatchList(req, res) {
     )
 }
 
+
 function getUserProfile(req, res) {
     let userId = req.query.ID //get the userID
     let users = client.db('flannel').collection('users')
@@ -71,7 +145,6 @@ function getUserProfile(req, res) {
     })
 }
 
-//return a list of all users who have some sort of similar interest
 function findUsersByTag(req, res) {
     let interests = req.body.interests
     let users = client.db('flannel').collection('users')

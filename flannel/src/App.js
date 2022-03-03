@@ -7,8 +7,17 @@ import ExplorePage from './components/Explore/ExplorePage'
 import { Route, Routes, BrowserRouter } from 'react-router-dom'
 
 import './App.css'
+/**
+ * @component
+ * App Component
+ *      This component is the overarching navigation handler for our application.
+ *      Wrapped inside a BrowserRouter from the React router library, we include
+ *      different routes distinguished by their respective path URLs. The root '/'
+ *      starts at the login page. Within each page, navigation is handeled by chaning
+ *      the url and respectively rendering the proper component.
+ */
 
-function App() {
+export default function App() {
     return (
         <BrowserRouter>
             <Routes>
@@ -21,5 +30,3 @@ function App() {
         </BrowserRouter>
     )
 }
-
-export default App

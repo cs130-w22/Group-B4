@@ -91,7 +91,7 @@
     "start": "node start.js",
     "local-start": "PORT=4000 node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "jest --forceExit --detectOpenHandles --watch",
+    "test": "jest --forceExit --detectOpenHandles",
     "eject": "react-scripts eject",
     "test:ci": "npm run test -- --coverage --ci --testResultsProcessor=\"jest-junit\"",
     "jsdoc": "jsdoc -c jsdoc.json"

@@ -13,6 +13,59 @@ labels.post("/createLabel", authenticate, createLabel);
 // currently it just attempts to match a user that has cs130 || cs180, tbd
 // whether we want to keep it this way or match cs130 && cs180
 // just doing OR for simplicity of mongo query at the moment
+/**
+ * @swagger
+ * /label?username=String:
+ *   get:
+ *     summary: get matching users from database based on labels param
+ *     description: searches for users with classes/interests/affiliations that match the labels param
+ *     parameters:
+ *     - in: header
+ *       name: authorization
+ *       schema: 
+ *         type: string
+ *     - in: query
+ *       name: labels
+ *       schema:
+ *         type: array
+ *         items:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties: 
+ *                   username: 
+ *                     type: string
+ *                   name:
+ *                     type: string
+ *                   year:
+ *                     type: string
+ *                   major:
+ *                     type: string
+ *                   hometown:
+ *                     type: string
+ *                   pronouns:
+ *                     type: string
+ *                   bio:
+ *                     type: string
+ *                   classes:
+ *                     type: List
+ *                   interests:
+ *                     type: List
+ *                   affiliations:
+ *                     type: List      
+ *       '500':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *            
+ */
 async function getLabelMatches(req, res) {    
     let labels = [];
     if (req.query.labels !== undefined) {
@@ -61,7 +114,55 @@ async function getLabelMatches(req, res) {
     });        
 }
 
-// get all interests from interests table
+/**
+ * @swagger
+ * /label/getLabels:
+ *   get:
+ *     summary: get all labels from the database
+ *     description: returns all possible labels from database table
+ *     parameters:
+ *     - in: header
+ *       name: authorization
+ *       schema: 
+ *         type: string
+ *     responses:
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties: 
+ *                   username: 
+ *                     type: string
+ *                   name:
+ *                     type: string
+ *                   year:
+ *                     type: string
+ *                   major:
+ *                     type: string
+ *                   hometown:
+ *                     type: string
+ *                   pronouns:
+ *                     type: string
+ *                   bio:
+ *                     type: string
+ *                   classes:
+ *                     type: List
+ *                   interests:
+ *                     type: List
+ *                   affiliations:
+ *                     type: List      
+ *       '500':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *            
+ */
 async function getAllLabels(req, res) {
     await client.db('flannel').collection('interests')
     .find({}).toArray( async (err, result) => {
@@ -92,6 +193,50 @@ body of request contains: {
     type: string representation of type of interest (defined by LABELTYPE above)
 }
 */
+
+/**
+ * @swagger
+ * /label/createLabel?username=String:
+ *   get:
+ *     summary: create new label in database
+ *     description: creates new label with the name and type that are specified in request body, or simply returns 200 if label name already exists
+ *     parameters:
+ *     - in: header
+ *       name: authorization
+ *       schema: 
+ *         type: string
+ *     requestBody:
+ *       content: 
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               interest:
+ *                 type: string
+ *               type:
+ *                 type: string
+ *                 enum: [classes, interests, affiliations]
+ *     responses:
+ *       '200':
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: 'Interest created'
+ *       '400': 
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: 'interest parameter required'
+ *       '500':
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: 'Error querying database'
+ *            
+ */
 async function createLabel(req, res) {
     
     // get interestName and type from post request

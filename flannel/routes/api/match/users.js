@@ -174,6 +174,46 @@ function createUserInfo(req, res) {
         }
     )
 }
+
+/**
+ * @swagger
+ * /user/updateUserInfo:
+ *   post:
+ *     summary: updates a user's information
+ *     description: updates the user's info in the database to match the request body
+ *     parameters: 
+ *       -  in: header
+ *          name: authorization
+ *          schema:
+ *            type: string
+ *     requestBody:
+ *       content: 
+ *         application/json:
+ *           schema: 
+ *            type: object
+ *            properties: 
+ *              usernamme: 
+ *                type: string
+ *              name:
+ *                type: string
+ *              year:
+ *                type: string
+ *              major:
+ *                type: string
+ *              hometown:
+ *                type: string
+ *              pronouns:
+ *                type: string
+ *              bio:
+ *                type: string
+ *              classes:
+ *                type: List
+ *              interests:
+ *                type: List
+ *              affiliations:
+ *                type: List
+ 
+ */
 function updateUserInfo(req, res) {
     let name = req.body.name
     let year = req.body.year

@@ -1,8 +1,3 @@
-# Installations that were giving me resolution problems
-- npm install @mui/material @emotion/react @emotion/styled
-- npm install @mui/icons-material
-- npm i react-router-dom
-
 # Repository Template
 
 [![Build Status](https://travis-ci.org/cs130-w21/template.svg?branch=master)](https://travis-ci.org/cs130-w21/template)

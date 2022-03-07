@@ -2,6 +2,18 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## CI Pipeline
+
+CI Pipeline Script
+https://github.com/cs130-w22/Group-B4/blob/main/.travis.yml
+
+Travis CI triggers every time a user commits and pushes to GitHub.
+Once Travis CI is triggered, the following scripts are run:
+
+before_install is first evoked to remove the node_modules and package_lock.json file.
+before_script changes into the flannel directory due to the unconventional hierarchy of our project being within the Group-B4 folder, and installs the react-scripts node module.
+script runs npm test to execute our Jest driven test suite. Morever, we run npm run build in order to compile the app for production to the `build` folder and ensure that our build does not fail.
+
 ## Available Scripts
 
 In the project directory, you can run:

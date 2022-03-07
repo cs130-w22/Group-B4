@@ -90,10 +90,12 @@ It is recommended to [create periodic releases](https://docs.github.com/en/free-
 
 ### Using a CI/CD pipeline
 
-Every repository needs to have a way to build its artifacts headlessly. It is a good idea to run tests as part of such build. Instructions on how to build the components in a repository needs to be documented in the repository's README.md.
+CI Pipeline Script
+https://github.com/cs130-w22/Group-B4/blob/main/.travis.yml
 
-A repository can also be setup to build continuously whenever a commit is pushed to the `master` branch by setting up a CI/CD script (e.g., [Travis CI](https://www.travis-ci.com/)) in its root folder. Such script will configure the build environment (as a virtual machine) and invoke the build script on the branch. If the script fails for some reason, the committer will be notified to fix it. It is a good practice to add a build [badge](https://shields.io/category/version) to the README.md file to visibly indicate the status of the last CI/CD build (Travis CI provides such badges). 
 
-The CI/CD script will also be run when a new pull request is created or when more commits are pushed to its linked `issue` branch. Such build assures peer reviewers that the new commits when accepted will not break the build. In fact, a successful CI/CD build can be a prerequisute for peer reviewers to look at the changes.
+Travis CI triggers every time a user commits and pushes to GitHub. Once Travis CI is triggered, the following scripts are run:
 
-When a tag is pushed to the `master` branch, the CI/CD script will additionally deliver and/or deploy the built artifact(s). The script can also be configured to create a Github release based on the tag.
+before_install is first evoked to remove the node_modules and package_lock.json file.
+before_script changes into the flannel directory due to the unconventional hierarchy of our project being within the Group-B4 folder, and installs the react-scripts node module.
+script runs npm test to execute our Jest driven test suite. Morever, we run npm run build in order to compile the app for production to the `build` folder and ensure that our build does not fail.

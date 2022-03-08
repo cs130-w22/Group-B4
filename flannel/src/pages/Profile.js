@@ -13,6 +13,7 @@ import {
 import ChipFilter from '../components/ChipFilter'
 import { useCookies } from 'react-cookie'
 import logo from '../assets/bearLogo.png'
+import { useLabels } from '../utils/useLabelsHook'
 
 //code for styling that will be used
 const styles = {
@@ -82,11 +83,19 @@ export default function Profile() {
 
     //allows us to navigate back to explore page on update form submission
     const navigate = useNavigate()
+
+    // get labels from useLabels hook
+    const {
+        classes: classesLabels,
+        interests: interestsLabels,
+        affiliations: affiliationLabels,
+    } = useLabels()
+
     useEffect(() => {
-        setClassesTagOptions(['CS 31', 'MATH 32A', 'PHYSICS 1A', 'BIO 1'])
-        setInterestsTagOptions(['Biking', 'Skating', 'Dancing'])
-        setAffiliationsTagOptions(['Theta Chi', 'DevX', 'GlobeMed', 'Climbing Club'])
-    }, [])
+        setClassesTagOptions(classesLabels)
+        setInterestsTagOptions(interestsLabels)
+        setAffiliationsTagOptions(affiliationLabels)
+    }, [classesLabels, interestsLabels, affiliationLabels])
 
     // eslint-disable-next-line
     const [cookies, setCookie] = useCookies(['jwt'])

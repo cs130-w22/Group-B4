@@ -1,6 +1,21 @@
+# Flannel
+Flannel is a web application created using the MERN stack. We wanted to give UCLA students a way to connect with each other based on common interests and this is the main motivation behind Flannel. Whether you want to find people to study for a class final with or go to the gym with, Flannel presents an easy way to search and reach out to people who share these interests! It's as simple as creating an account in which you be shown UCLA students who are in the same classses or have the same interests and affiliations as you. Futhermore, you can search for students based on this criteria with the hope that you will able to connect with the UCLA community in an easy way.  
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## CI Pipeline
+
+CI Pipeline Script
+https://github.com/cs130-w22/Group-B4/blob/main/.travis.yml
+
+Travis CI triggers every time a user commits and pushes to GitHub.
+Once Travis CI is triggered, the following scripts are run:
+
+before_install is first evoked to remove the node_modules and package_lock.json file.
+before_script changes into the flannel directory due to the unconventional hierarchy of our project being within the Group-B4 folder, and installs the react-scripts node module.
+script runs npm test to execute our Jest driven test suite. Morever, we run npm run build in order to compile the app for production to the `build` folder and ensure that our build does not fail.
 
 ## Available Scripts
 

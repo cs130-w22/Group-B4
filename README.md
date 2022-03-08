@@ -1,7 +1,5 @@
-# Installations that were giving me resolution problems
-- npm install @mui/material @emotion/react @emotion/styled
-- npm install @mui/icons-material
-- npm i react-router-dom
+# Flannel
+Flannel is a web application created using the MERN stack. We wanted to give UCLA students a way to connect with each other based on common interests and this is the main motivation behind Flannel. Whether you want to find people to study for a class final with or go to the gym with, Flannel presents an easy way to search and reach out to people who share these interests! It's as simple as creating an account in which you be shown UCLA students who are in the same classses or have the same interests and affiliations as you. Futhermore, you can search for students based on this criteria with the hope that you will able to connect with the UCLA community in an easy way.  
 
 # Repository Template
 

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/Explore/ExplorePage.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/Explore/ExplorePage.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { makeStyles } from '@mui/styles'
+import { Typography, Box, ButtonBase, TextField, CircularProgress } from '@mui/material'
+import SearchIcon from '@mui/icons-material/Search'
+
+import UserCard from './UserCard'
+import ChipFilter from '../ChipFilter'
+import logo from '../../assets/bearLogo.png'
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'
+import { IconButton } from '@mui/material'
+import ChatIcon from '@mui/icons-material/Chat'
+import '../../styles/fonts.css'
+import { useLabels } from '../../utils/useLabelsHook'
+import { fetchMatchingUsers } from '../../utils/fetchMatchingUsers'
+
+//These are styles that will be used for the explore page
+const useStyles = makeStyles({
+    inputText: {
+        fontFamily: 'Work Sans',
+        fontSize: '15.5px',
+        color: '#373737',
+        '&amp;::placeholder': {
+            fontFamily: 'Work Sans',
+            fontSize: '15.5px',
+        },
+    },
+})
+
+//These are styles that will be used for the formatting of the user cards and the page as a whole
+const style = {
+    root: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: 3,
+    },
+    rowContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        width: '95%',
+    },
+    logoContainer: {
+        padding: 2,
+        display: 'flex',
+        flexDirection: 'row',
+        width: 300,
+    },
+    exploreBox: {
+        width: '100%',
+        flexDirection: 'column',
+        display: 'flex',
+        alignItems: 'center',
+    },
+    filterSidebar: {
+        boxShadow: '0 0px 4px rgba(0, 0, 0, 0.3)',
+        borderRadius: 4,
+        padding: 2,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    title: {
+        paddingRight: 2,
+        fontFamily: 'Work Sans',
+        fontSize: 40,
+        marginBottom: 3,
+        fontWeight: 'bold',
+    },
+    filterTitle: {
+        fontFamily: 'Work Sans',
+        fontSize: 20,
+        color: '#373737',
+        fontWeight: 400,
+        paddingBottom: 2.5,
+    },
+    searchBarContainer: {
+        width: '80%',
+        paddingRight: 3.5,
+        paddingTop: 2.5,
+    },
+    logo: {
+        width: 50,
+        height: 50,
+        paddingRight: 10,
+    },
+    header: {
+        display: 'flex',
+        flexDirection: 'row',
+        width: '95%',
+        justifyContent: 'space-around',
+        alignItems: 'baseline',
+    },
+    headerFill: {
+        width: '70%',
+    },
+    headerNav: {
+        display: 'flex',
+        alignItems: 'baseline',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+}
+/**
+ *
+ * @component
+ *      ExplorePage
+ *          This component shows the users that have matching tags with the current user. If a user has a matching class,
+ *          interest, or affiliation tag as the current user, then their user card will show up. With this, the user can
+ *          choose who they want to chat and interact with
+ */
+export default function ExplorePage() {
+    const styles = useStyles()
+    //selected tags
+    const [selectedClassTags, setSelectedClassTags] = useState([])
+    const [selectedAffiliationTags, setSelectedAffiliationTags] = useState([])
+    const [selectedInterestTags, setSelectedInterestTags] = useState([])
+
+    //available tag options
+    const [classesTagOptions, setClassesTagOptions] = useState([])
+    const [interestsTagOptions, setInterestsTagOptions] = useState([])
+    const [affiliationsTagOptions, setAffiliationsTagOptions] = useState([])
+
+    const [userList, setUserList] = useState([])
+    const [dataLoaded, setDataLoaded] = useState(false)
+
+    const { classes, interests, affiliations } = useLabels()
+    const navigate = useNavigate()
+
+    // effect to handle getting data from backend at start of application
+    useEffect(() => {           
+        // filter out selected class tags from the options in the drop down
+        const classOptions = classes.filter((x) => !selectedClassTags.includes(x))
+        const interestOptions = interests.filter((x) => !selectedInterestTags.includes(x))
+        const affiliationOptions = affiliations.filter((x) => !selectedAffiliationTags.includes(x))
+        // set drop down options
+        setClassesTagOptions(classOptions)
+        setInterestsTagOptions(interestOptions)
+        setAffiliationsTagOptions(affiliationOptions)
+        // set page as loaded
+        setDataLoaded(true)
+    }, [classes, interests, affiliations])
+
+    // handle fetching matching users based on selected criteria
+    useEffect(() => {
+        async function matchingUsersFunc() {
+            let classesLabels, interestsLabels, affiliationsLabels;
+            if (!dataLoaded) {
+                // if we are just starting up, fetch matching users based on user's saved interests
+                classesLabels = [...user.classes]
+                interestsLabels = [...user.interests]
+                affiliationsLabels = [...user.affiliations]
+            } else {
+                // otherwise fetch based on selected tags
+                classesLabels = selectedClassTags
+                interestsLabels = selectedInterestTags
+                affiliationsLabels = selectedAffiliationTags
+            }
+            // only make a request if we have selected tags
+            if (classesLabels.length || interestsLabels.length || affiliationsLabels.length) {
+                const matchingUsers = await fetchMatchingUsers({
+                    classesLabels,
+                    interestsLabels,
+                    affiliationsLabels,
+                })
+
+                // if status is 0, there was some error fetching users, assume bad jwt and navigate to login
+                if (matchingUsers.status === 0) {
+                    navigate('/')
+                    return
+                }
+                // else update user list with matches
+                const users = matchingUsers.matchingUsers
+                setUserList(() => users)
+            } else {
+                setUserList(() => [])
+            }
+        }
+        matchingUsersFunc()
+    }, [selectedClassTags, selectedInterestTags, selectedAffiliationTags, dataLoaded])
+    const user = JSON.parse(localStorage.getItem('user'))
+    //if the user desires, they can navigate to their profile page to change data
+    const NavigateProfile = () => {
+        navigate('/Profile')
+    }
+    //if the user desires, they can chat with another user that they are matched with
+    const NavigateChat = () => {
+        navigate('/Chat')
+    }
+    //if the user has matches, they are shown
+    if (dataLoaded) {
+        return (
+            &lt;Box sx={style.root}>
+                &lt;Box sx={style.rowContainer}>
+                    &lt;Box sx={style.logoContainer}>
+                        &lt;img src={logo} alt="Logo" style={style.logo} />
+                        &lt;Typography sx={style.title}>FLANNEL&lt;/Typography>
+                    &lt;/Box>
+                    &lt;Box sx={style.header}>
+                        &lt;Box sx={style.headerFill} />
+                        &lt;Box sx={style.headerNav}>
+                            &lt;IconButton onClick={NavigateProfile}>
+                                &lt;AccountCircleOutlinedIcon />
+                            &lt;/IconButton>
+                            &lt;IconButton onClick={NavigateChat}>
+                                &lt;ChatIcon />
+                            &lt;/IconButton>
+                        &lt;/Box>
+                    &lt;/Box>
+                &lt;/Box>
+                &lt;Box sx={style.rowContainer}>
+                    &lt;Box sx={style.filterSidebar}>
+                        &lt;Typography sx={style.filterTitle}>Filters&lt;/Typography>
+                        &lt;ChipFilter
+                            setTagOptions={setClassesTagOptions}
+                            type="Classes"
+                            tagOptions={classesTagOptions}
+                            defaultShownTags={user.classes}
+                            setSelectedTags={setSelectedClassTags}
+                            selectedTags={selectedClassTags}
+                        />
+                        &lt;ChipFilter
+                            setTagOptions={setInterestsTagOptions}
+                            type="Interests"
+                            tagOptions={interestsTagOptions}
+                            defaultShownTags={user.interests}
+                            setSelectedTags={setSelectedInterestTags}
+                            selectedTags={selectedInterestTags}
+                        />
+                        &lt;ChipFilter
+                            setTagOptions={setAffiliationsTagOptions}
+                            type="Affiliations"
+                            tagOptions={affiliationsTagOptions}
+                            defaultShownTags={user.affiliations}
+                            setSelectedTags={setSelectedAffiliationTags}
+                            selectedTags={selectedAffiliationTags}
+                        />
+                    &lt;/Box>
+                    &lt;Box sx={style.exploreBox}>
+                        {userList ? (
+                            userList.map((currentUser, index) => (
+                                &lt;UserCard
+                                    key={index}
+                                    displayName={currentUser.username}
+                                    year={currentUser.year}
+                                    major={currentUser.major}
+                                    pronouns={currentUser.pronouns}
+                                    classTags={currentUser.classes}
+                                    interestTags={currentUser.interests}
+                                    affiliationTags={currentUser.affiliations}
+                                    bio={currentUser.bio}
+                                    id={currentUser._id}
+                                />
+                            ))
+                        ) : (
+                            &lt;>&lt;/>
+                        )}
+                    &lt;/Box>
+                &lt;/Box>
+            &lt;/Box>
+        )
+    } else {
+        //if the user has no matches or the data is loading, return an empty box
+        return (
+            &lt;Box sx={style.root}>
+                &lt;Box sx={style.rowContainer} style={{ height: '45vh' }}>&lt;/Box>
+                &lt;CircularProgress color="primary" />
+            &lt;/Box>
+        )
+    }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Chat">Chat</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Mon Mar 07 2022 13:28:46 GMT-0800 (Pacific Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

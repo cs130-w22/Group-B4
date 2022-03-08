@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/ChipFilter.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/ChipFilter.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* eslint-disable react/jsx-props-no-spreading */
+import React, { useEffect } from 'react'
+import { Box, Chip, Autocomplete, TextField } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
+import PropTypes from 'prop-types'
+
+const style = {
+    root: {
+        paddingBottom: 4,
+        padding: '20px',
+    },
+    classChip: {
+        margin: 0.25,
+        borderRadius: 3.5,
+        backgroundColor: '#BEDDEC',
+        fontFamily: 'Work Sans',
+        color: '#373737',
+        fontWeight: 500,
+    },
+    interestChip: {
+        margin: 0.25,
+        borderRadius: 3.5,
+        backgroundColor: '#FAC898',
+        fontFamily: 'Work Sans',
+        color: '#373737',
+    },
+    affiliationChip: {
+        margin: 0.25,
+        borderRadius: 3.5,
+        backgroundColor: '#C1E1C1',
+        fontFamily: 'Work Sans',
+        color: '#373737',
+    },
+    filterTextField: {
+        fontSize: 50,
+        fontFamily: 'Work Sans',
+        color: '#373737',
+    },
+    chipsContainer: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        maxWidth: 300,
+    },
+}
+/**
+ * @component
+ * ChipFilter component
+ *      Takes in props from the various parent components (Sign Up, Explore, Profile).
+ *      Renders the given tags and allows user to change the tags based on the hooks that were
+ *      passed in by the parent.
+ */
+
+export default function ChipFilter(props) {
+    const { defaultShownTags, setTagOptions, tagOptions, type, setSelectedTags, selectedTags } =
+        props
+    let chipStyle
+    switch (type) {
+        case 'Classes':
+            chipStyle = style.classChip
+            break
+        case 'Interests':
+            chipStyle = style.interestChip
+            break
+        case 'Affiliations':
+            chipStyle = style.affiliationChip
+            break
+        default:
+            break
+    }
+    //associated with the delete option on each individual chip. Functionality and trigger
+    //is linked to the delete 'x' icon at the right of each chip.
+    const handleDelete = (selectedTag) => () => {
+        if (selectedTag !== '') {
+            setSelectedTags(selectedTags.filter((tagString) => tagString !== selectedTag))
+            const newTagOptions = tagOptions.concat(selectedTag).sort()
+            setTagOptions(newTagOptions)
+        }
+    }
+    useEffect(() => {
+        setSelectedTags(defaultShownTags)
+    }, [])
+    return (
+        &lt;Box sx={style.root}>
+            &lt;Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={tagOptions}
+                renderInput={(params) => (
+                    &lt;TextField
+                        style={{ width: 250 }}
+                        {...params}
+                        inputProps={{ ...params.inputProps }}
+                        label={type}
+                    />
+                )}
+                onChange={(_event, selectedItem) => {
+                    if (selectedItem !== null &amp;&amp; selectedItem !== '') {
+                        const newShownTags = selectedTags.concat(selectedItem)
+                        setSelectedTags(newShownTags)
+                        setTagOptions(tagOptions.filter((tagString) => tagString !== selectedItem))
+                    }
+                }}
+            />
+            &lt;Box sx={style.chipsContainer}>
+                {selectedTags.map((item) => (
+                    &lt;Chip
+                        sx={chipStyle}
+                        label={item}
+                        key={item}
+                        deleteIcon={&lt;CloseIcon />}
+                        onDelete={handleDelete(item)}
+                    />
+                ))}
+            &lt;/Box>
+        &lt;/Box>
+    )
+}
+// defaultShownTags: PropTypes.arrayOf({
+//     label: PropTypes.string.isRequired,
+// }).isRequired,
+
+ChipFilter.propTypes = {
+    setTagOptions: PropTypes.func.isRequired,
+    tagOptions: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+    defaultShownTags: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+    type: PropTypes.string.isRequired,
+    setSelectedTags: PropTypes.func.isRequired,
+    selectedTags: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Chat">Chat</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Mon Mar 07 2022 13:28:46 GMT-0800 (Pacific Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

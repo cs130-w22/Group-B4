@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/Profile.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/Profile.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import {
+    Button,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    TextField,
+    Box,
+    Typography,
+} from '@mui/material'
+import ChipFilter from '../components/ChipFilter'
+import { useCookies } from 'react-cookie'
+import logo from '../assets/bearLogo.png'
+
+//code for styling that will be used
+const styles = {
+    root: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: 3,
+    },
+    rowContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        width: '95%',
+    },
+    title: {
+        paddingRight: 2,
+        fontFamily: 'Work Sans',
+        fontSize: 40,
+        marginBottom: 3,
+        fontWeight: 'bold',
+    },
+    logoContainer: {
+        padding: 2,
+        display: 'flex',
+        flexDirection: 'row',
+        width: 300,
+    },
+    formContainer: {
+        padding: 5,
+        display: 'flex',
+        flexDirection: 'row',
+        boxShadow: '0 0px 4px rgba(0, 0, 0, 0.3)',
+        borderRadius: 4,
+    },
+    formColumn: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+    },
+}
+
+/**
+ *
+ * @component
+ *      Profile Component
+ *          This component allows the user to update their information such as their name, classes, affiliations, etc.
+ */
+
+export default function Profile() {
+    //set user to the value from local storage
+    let user = JSON.parse(localStorage.getItem('user'))
+    //set all state variable and functions to change them
+    const [schoolYear, setSchoolYear] = useState(user.year)
+    const [pronouns, setPronouns] = useState(user.pronouns)
+    // eslint-disable-next-line
+    const [signupError, setSignupError] = useState(false)
+
+    //selected tags
+    const [selectedClassTags, setSelectedClassTags] = useState([])
+    const [selectedAffiliationTags, setSelectedAffiliationTags] = useState([])
+    const [selectedInterestTags, setSelectedInterestTags] = useState([])
+
+    //available tag options
+    const [classesTagOptions, setClassesTagOptions] = useState([])
+    const [interestsTagOptions, setInterestsTagOptions] = useState([])
+    const [affiliationsTagOptions, setAffiliationsTagOptions] = useState([])
+
+    //allows us to navigate back to explore page on update form submission
+    const navigate = useNavigate()
+    useEffect(() => {
+        setClassesTagOptions(['CS 31', 'MATH 32A', 'PHYSICS 1A', 'BIO 1'])
+        setInterestsTagOptions(['Biking', 'Skating', 'Dancing'])
+        setAffiliationsTagOptions(['Theta Chi', 'DevX', 'GlobeMed', 'Climbing Club'])
+    }, [])
+
+    // eslint-disable-next-line
+    const [cookies, setCookie] = useCookies(['jwt'])
+
+    //called once the user updates their info
+    const handleFormSubmit = async (event) => {
+        event.preventDefault()
+        //grab all the values from the form
+        const name = event.target.elements.name.value
+        const schoolYear = event.target[2].value
+        const major = event.target.elements.major.value
+        const email = user.username
+        const hometown = event.target.elements.hometown.value
+        const bio = event.target.bio.value
+        const data = {
+            name: name,
+            username: email.toLowerCase(),
+            year: schoolYear,
+            major,
+            hometown,
+            pronouns,
+            bio,
+            classes: selectedClassTags,
+            interests: selectedInterestTags,
+            affiliations: selectedAffiliationTags,
+        }
+        //create the request object, with headers
+        let requestObj = {
+            method: 'Post',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: document.cookie,
+            },
+            body: JSON.stringify(data),
+        }
+        //make the api call to update the user with the request object just made
+        const response = await fetch('/api/user/updateUserInfo', requestObj)
+        if (response.status === 200) {
+            //set the local storage user to have the updated values on successful API call
+            user.name = data.name
+            user.year = data.year
+            user.major = data.major
+            user.hometown = data.hometown
+            user.pronouns = data.pronouns
+            user.bio = data.bio
+            user.classes = data.classes
+            user.interests = data.interests
+            user.affiliations = data.affiliations
+            localStorage.setItem('user', JSON.stringify(user))
+            navigate('/Explore')
+        } else if (response.status === 400) {
+            //error with the API call
+            console.log('bad response')
+        }
+    }
+
+    //Below is the form that is made, which allows the user to update their info
+    return (
+        &lt;Box sx={styles.root}>
+            &lt;Box sx={styles.rowContainer}>
+                &lt;Box sx={styles.logoContainer}>
+                    &lt;img src={logo} alt="Logo" style={styles.logo} />
+                    &lt;Typography sx={styles.title}>Profile&lt;/Typography>
+                &lt;/Box>
+            &lt;/Box>
+            &lt;form onSubmit={handleFormSubmit}>
+                &lt;Box sx={styles.formContainer}>
+                    &lt;Box sx={styles.formColumn}>
+                        &lt;TextField
+                            required
+                            label="Full Name"
+                            id="name"
+                            defaultValue={user.name}
+                            style={{ padding: '5px' }}
+                        />
+                        &lt;FormControl style={{ padding: '5px' }}>
+                            &lt;InputLabel>School Year&lt;/InputLabel>
+                            &lt;Select
+                                required
+                                value={schoolYear}
+                                onChange={(e, item) => {
+                                    setSchoolYear(item.props.value)
+                                }}
+                            >
+                                &lt;MenuItem value={'Freshman'}>Freshman&lt;/MenuItem>
+                                &lt;MenuItem value={'Sophmore'}>Sophmore&lt;/MenuItem>
+                                &lt;MenuItem value={'Junior'}>Junior&lt;/MenuItem>
+                                &lt;MenuItem value={'Senior'}>Senior&lt;/MenuItem>
+                                &lt;MenuItem value={'Senior+'}>Senior+&lt;/MenuItem>
+                            &lt;/Select>
+                        &lt;/FormControl>
+                        &lt;TextField
+                            required
+                            label="Major"
+                            id="major"
+                            defaultValue={user.major}
+                            style={{ padding: '5px' }}
+                        />
+                        &lt;TextField
+                            disabled
+                            label="Email"
+                            id="email"
+                            defaultValue={user.username}
+                            style={{ padding: '5px' }}
+                        />
+                    &lt;/Box>
+                    &lt;Box sx={styles.formColumn}>
+                        &lt;TextField
+                            label="Hometown"
+                            defaultValue={user.hometown}
+                            style={{ padding: '10px' }}
+                            id="hometown"
+                        />
+                        &lt;FormControl style={{ padding: '10px' }}>
+                            &lt;InputLabel>Pronouns&lt;/InputLabel>
+                            &lt;Select
+                                value={pronouns}
+                                onChange={(e, item) => setPronouns(item.props.value)}
+                                label="Pronouns"
+                            >
+                                &lt;MenuItem value={'he'}>He/Him/His&lt;/MenuItem>
+                                &lt;MenuItem value={'she'}>She/Her/Hers&lt;/MenuItem>
+                                &lt;MenuItem value={'they'}>They/Them/Theirs&lt;/MenuItem>
+                            &lt;/Select>
+                        &lt;/FormControl>
+                        &lt;TextField
+                            id="bio"
+                            style={{ padding: '10px' }}
+                            placeholder="Tell us a little about yourself!"
+                            multiline
+                            rows={5}
+                            maxRows={5}
+                            defaultValue={user.bio}
+                        />
+                    &lt;/Box>
+                    &lt;Box sx={styles.formColumn}>
+                        &lt;ChipFilter
+                            setTagOptions={setClassesTagOptions}
+                            type="Classes"
+                            tagOptions={classesTagOptions}
+                            defaultShownTags={user.classes}
+                            setSelectedTags={setSelectedClassTags}
+                            selectedTags={selectedClassTags}
+                        />
+                        &lt;ChipFilter
+                            setTagOptions={setInterestsTagOptions}
+                            type="Interests"
+                            tagOptions={interestsTagOptions}
+                            defaultShownTags={user.interests}
+                            setSelectedTags={setSelectedInterestTags}
+                            selectedTags={selectedInterestTags}
+                        />
+                        &lt;ChipFilter
+                            setTagOptions={setAffiliationsTagOptions}
+                            type="Affiliations"
+                            tagOptions={affiliationsTagOptions}
+                            defaultShownTags={user.affiliations}
+                            setSelectedTags={setSelectedAffiliationTags}
+                            selectedTags={selectedAffiliationTags}
+                        />
+                    &lt;/Box>
+                &lt;/Box>
+                &lt;Button fullWidth variant="contained" color="success" type="submit">
+                    Update Info
+                &lt;/Button>
+            &lt;/form>
+        &lt;/Box>
+    )
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Chat">Chat</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Mon Mar 07 2022 13:28:46 GMT-0800 (Pacific Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

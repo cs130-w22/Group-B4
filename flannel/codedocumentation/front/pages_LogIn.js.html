@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/LogIn.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/LogIn.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { IconButton, Button, Typography, TextField, Box } from '@mui/material'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import ExpandLessIcon from '@mui/icons-material/ExpandLess'
+import { useCookies } from 'react-cookie'
+import { useNavigate } from 'react-router-dom'
+import '../App.css'
+import logo from '../assets/bearLogo.png'
+
+const styles = {
+    root: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: 3,
+    },
+    rowContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        width: '95%',
+    },
+    title: {
+        paddingRight: 2,
+        fontFamily: 'Work Sans',
+        fontSize: 40,
+        marginBottom: 3,
+        fontWeight: 'bold',
+    },
+    logoContainer: {
+        padding: 2,
+        display: 'flex',
+        flexDirection: 'row',
+        width: 300,
+    },
+    formContainer: {
+        padding: 5,
+        display: 'flex',
+        flexDirection: 'column',
+        boxShadow: '0 0px 4px rgba(0, 0, 0, 0.3)',
+        borderRadius: 4,
+    },
+}
+/**
+ * @component
+ * LogIn Component
+ *      This Log In component is what you will see upon initial render. It takes in a username and password in which 
+ *      the /api/login route is called that verifies that these are valid and existing credentials. If the user does
+ *      not have an account, there is a link that when clicked on, will redirect the user to the sign up page. 
+ * 
+ */
+export default function LogIn() {
+    const navigate = useNavigate()
+    const [isExpanded, setIsExpanded] = useState(false)
+    const [loginError, setLoginError] = useState(false)
+    // eslint-disable-next-line
+    const [cookies, setCookie] = useCookies(['jwt'])
+    const handleSubmit = async (event) => {
+        event.preventDefault()
+        const username = event.target.elements.username.value
+        const password = event.target.elements.password.value
+        const data = {
+            username,
+            password
+        }
+
+        let requestObj = {
+            method: 'Post',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+            mode: 'cors',
+        }
+
+        const response = await fetch('/api/login', requestObj)
+        if (response.status === 200) {
+            const responseObj = await response.json()
+            setCookie('jwt', responseObj.jwt, { path: '/' })
+            // store user object in user's browser
+            localStorage.setItem('user', JSON.stringify(responseObj.user))
+            const cookies = document.cookie
+            // navigate to explore if successful
+            navigate('/Explore')
+        } else {
+            //have to try again -> bad login
+            setLoginError(true);
+        }
+    }
+    return (
+        //all the styles are defined above as a constant variable
+        &lt;Box sx={styles.root}>
+            &lt;Box sx={styles.rowContainer}>
+                &lt;Box sx={styles.logoContainer}>
+                    &lt;img src={logo} alt="Logo" style={styles.logo} />
+                    &lt;Typography sx={styles.title}>FLANNEL&lt;/Typography>
+                &lt;/Box>
+            &lt;/Box>
+            &lt;Box sx={styles.formContainer}>
+                &lt;form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
+                    &lt;h1
+                        style={{
+                            textAlign: 'center',
+                            fontFamily: 'Work Sans',
+                            fontSize: 40,
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        Sign In
+                    &lt;/h1>
+                    &lt;TextField
+                        required
+                        id="username"
+                        label="Username"
+                        style={{ padding: '5px' }}
+                        error={loginError}
+                    />
+                    &lt;TextField
+                        required
+                        id="password"
+                        style={{ padding: '5px' }}
+                        type="password"
+                        error={loginError}
+                        label="Password"
+                    />
+                    {loginError &amp;&amp; (
+                        &lt;p style={{ color: 'red' }}>Username or Password is incorrect&lt;/p>
+                    )}
+                    {/* see handleSubmit() function at line 58, button press triggers an event */}
+                    &lt;Button variant="outlined" type="submit" style={{ padding: '10px' }}>
+                        Sign In!
+                    &lt;/Button>
+                    &lt;Typography>
+                        &lt;Link to="/SignUp">Create an Account&lt;/Link>
+                    &lt;/Typography>
+                &lt;/form>
+            &lt;/Box>
+        &lt;/Box>
+    )
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Chat">Chat</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Mon Mar 07 2022 13:28:46 GMT-0800 (Pacific Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
